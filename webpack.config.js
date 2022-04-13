@@ -1,22 +1,22 @@
 /*********************************
  *    import webpack plugins
  ********************************/
-const path = require('path');
-const fs = require('fs');
-const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const GasPlugin = require('gas-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
-const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
-const moduleToCdn = require('module-to-cdn');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const path = require("path");
+const fs = require("fs");
+const webpack = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const GasPlugin = require("gas-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackInlineSourcePlugin = require("html-webpack-inline-source-plugin");
+const DynamicCdnWebpackPlugin = require("dynamic-cdn-webpack-plugin");
+const moduleToCdn = require("module-to-cdn");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 /*********************************
  *    set up environment variables
  ********************************/
-const dotenv = require('dotenv').config();
+const dotenv = require("dotenv").config();
 
 const parsed = dotenv.error ? {} : dotenv.parsed;
 const envVars = parsed || {};
@@ -24,50 +24,38 @@ const PORT = envVars.PORT || 3000;
 envVars.NODE_ENV = process.env.NODE_ENV;
 envVars.PORT = PORT;
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === "production";
 
 /*********************************
  *    define entrypoints
  ********************************/
 // our destination directory
-const destination = path.resolve(__dirname, 'dist');
+const destination = path.resolve(__dirname, "dist");
 
 // define server paths
-const serverEntry = './src/server/index.ts';
+const serverEntry = "./src/server/index.ts";
 
 // define appsscript.json file path
-const copyAppscriptEntry = './appsscript.json';
+const copyAppscriptEntry = "./appsscript.json";
 
 // define live development dialog paths
-const devDialogEntry = './dev/index.js';
+const devDialogEntry = "./dev/index.js";
 
 // define client entry points and output names
 const clientEntrypoints = [
   {
-    name: 'CLIENT - Dialog Demo',
-    entry: './src/client/dialog-demo/index.js',
-    filename: 'dialog-demo', // we'll add the .html suffix to these
-    template: './src/client/dialog-demo/index.html',
-  },
-  {
-    name: 'CLIENT - Dialog Demo Bootstrap',
-    entry: './src/client/dialog-demo-bootstrap/index.js',
-    filename: 'dialog-demo-bootstrap',
-    template: './src/client/dialog-demo-bootstrap/index.html',
-  },
-  {
-    name: 'CLIENT - Sidebar About Page',
-    entry: './src/client/sidebar-about-page/index.js',
-    filename: 'sidebar-about-page',
-    template: './src/client/sidebar-about-page/index.html',
+    name: "CLIENT - Caption Manager",
+    entry: "./src/client/index.js",
+    filename: "caption-manager", // we'll add the .html suffix to these
+    template: "./src/client/index.html",
   },
 ];
 
 // define certificate locations
 // see "npm run setup:https" script in package.json
-const keyPath = path.resolve(__dirname, './certs/key.pem');
-const certPath = path.resolve(__dirname, './certs/cert.pem');
-const pfxPath = path.resolve(__dirname, './certs/cert.pfx'); // if needed for Windows
+const keyPath = path.resolve(__dirname, "./certs/key.pem");
+const certPath = path.resolve(__dirname, "./certs/cert.pem");
+const pfxPath = path.resolve(__dirname, "./certs/cert.pfx"); // if needed for Windows
 
 /*********************************
  *    Declare settings
@@ -75,8 +63,8 @@ const pfxPath = path.resolve(__dirname, './certs/cert.pfx'); // if needed for Wi
 
 // webpack settings for copying files to the destination folder
 const copyFilesConfig = {
-  name: 'COPY FILES - appsscript.json',
-  mode: 'production', // unnecessary for this config, but removes console warning
+  name: "COPY FILES - appsscript.json",
+  mode: "production", // unnecessary for this config, but removes console warning
   entry: copyAppscriptEntry,
   output: {
     path: destination,
@@ -101,15 +89,15 @@ const sharedClientAndServerConfig = {
 // webpack settings used by all client entrypoints
 const clientConfig = ({ isDevClientWrapper }) => ({
   ...sharedClientAndServerConfig,
-  mode: isProd ? 'production' : 'development',
+  mode: isProd ? "production" : "development",
   output: {
     path: destination,
     // this file will get added to the html template inline
     // and should be put in .claspignore so it is not pushed
-    filename: 'main.js',
+    filename: "main.js",
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
   },
   module: {
     rules: [
@@ -119,18 +107,18 @@ const clientConfig = ({ isDevClientWrapper }) => ({
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: "babel-loader",
             // only enable react-refresh for dev builds, and not when building the dev client "wrapper"
             options: {
               plugins: [
                 !isProd &&
                   !isDevClientWrapper &&
-                  require.resolve('react-refresh/babel'),
+                  require.resolve("react-refresh/babel"),
               ].filter(Boolean),
             },
           },
           {
-            loader: 'ts-loader',
+            loader: "ts-loader",
           },
         ],
       },
@@ -138,13 +126,13 @@ const clientConfig = ({ isDevClientWrapper }) => ({
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           // only enable react-refresh for dev builds, and not when building the dev client "wrapper"
           options: {
             plugins: [
               !isProd &&
                 !isDevClientWrapper &&
-                require.resolve('react-refresh/babel'),
+                require.resolve("react-refresh/babel"),
             ].filter(Boolean),
           },
         },
@@ -152,7 +140,7 @@ const clientConfig = ({ isDevClientWrapper }) => ({
       // we could add support for scss here
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
@@ -165,12 +153,12 @@ const DynamicCdnWebpackPluginConfig = {
   // set "verbose" to true to print console logs on CDN usage while webpack builds
   verbose: false,
   resolver: (packageName, packageVersion, options) => {
-    const packageSuffix = isProd ? '.min.js' : '.js';
+    const packageSuffix = isProd ? ".min.js" : ".js";
     const moduleDetails = moduleToCdn(packageName, packageVersion, options);
 
     // don't externalize react during development due to issue with react-refresh
     // https://github.com/pmmmwh/react-refresh-webpack-plugin/issues/334
-    if (!isProd && packageName === 'react') {
+    if (!isProd && packageName === "react") {
       return null;
     }
 
@@ -183,17 +171,17 @@ const DynamicCdnWebpackPluginConfig = {
     // "name" should match the package being imported
     // "var" is important to get right -- this should be the exposed global. Look up "webpack externals" for info.
     switch (packageName) {
-      case 'react-transition-group':
+      case "react-transition-group":
         return {
           name: packageName,
-          var: 'ReactTransitionGroup',
+          var: "ReactTransitionGroup",
           version: packageVersion,
           url: `https://unpkg.com/react-transition-group@${packageVersion}/dist/react-transition-group${packageSuffix}`,
         };
-      case 'react-bootstrap':
+      case "react-bootstrap":
         return {
           name: packageName,
-          var: 'ReactBootstrap',
+          var: "ReactBootstrap",
           version: packageVersion,
           url: `https://unpkg.com/react-bootstrap@${packageVersion}/dist/react-bootstrap${packageSuffix}`,
         };
@@ -214,12 +202,12 @@ const clientConfigs = clientEntrypoints.map(clientEntrypoint => {
       !isProd && new webpack.HotModuleReplacementPlugin(),
       !isProd && new ReactRefreshWebpackPlugin(),
       new webpack.DefinePlugin({
-        'process.env': JSON.stringify(envVars),
+        "process.env": JSON.stringify(envVars),
       }),
       new HtmlWebpackPlugin({
         template: clientEntrypoint.template,
-        filename: `${clientEntrypoint.filename}${isProd ? '' : '-impl'}.html`,
-        inlineSource: '^[^(//)]+.(js|css)$', // embed all js and css inline, exclude packages with '//' for dynamic cdn insertion
+        filename: `${clientEntrypoint.filename}${isProd ? "" : "-impl"}.html`,
+        inlineSource: "^[^(//)]+.(js|css)$", // embed all js and css inline, exclude packages with '//' for dynamic cdn insertion
       }),
       // add the generated js code to the html file inline
       new HtmlWebpackInlineSourcePlugin(),
@@ -250,7 +238,7 @@ if (fs.existsSync(pfxPath)) {
   // use pfx file if it's found
   devServer.https = {
     pfx: fs.readFileSync(pfxPath),
-    passphrase: 'abc123',
+    passphrase: "abc123",
   };
 }
 
@@ -264,13 +252,13 @@ const devClientConfigs = clientEntrypoints.map(clientEntrypoint => {
     entry: devDialogEntry,
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': JSON.stringify(envVars),
+        "process.env": JSON.stringify(envVars),
       }),
       new HtmlWebpackPlugin({
-        template: './dev/index.html',
+        template: "./dev/index.html",
         // this should match the html files we load in src/server/ui.js
         filename: `${clientEntrypoint.filename}.html`,
-        inlineSource: '^[^(//)]+.(js|css)$', // embed all js and css inline, exclude packages with '//' for dynamic cdn insertion
+        inlineSource: "^[^(//)]+.(js|css)$", // embed all js and css inline, exclude packages with '//' for dynamic cdn insertion
       }),
       new HtmlWebpackInlineSourcePlugin(),
       new DynamicCdnWebpackPlugin({}),
@@ -281,18 +269,18 @@ const devClientConfigs = clientEntrypoints.map(clientEntrypoint => {
 // webpack settings used by the server-side code
 const serverConfig = {
   ...sharedClientAndServerConfig,
-  name: 'SERVER',
+  name: "SERVER",
   // server config can't use 'development' mode
   // https://github.com/fossamagna/gas-webpack-plugin/issues/135
-  mode: isProd ? 'production' : 'none',
+  mode: isProd ? "production" : "none",
   entry: serverEntry,
   output: {
-    filename: 'code.js',
+    filename: "code.js",
     path: destination,
-    libraryTarget: 'this',
+    libraryTarget: "this",
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: [".ts", ".js", ".json"],
   },
   module: {
     rules: [
@@ -302,10 +290,10 @@ const serverConfig = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: "babel-loader",
           },
           {
-            loader: 'ts-loader',
+            loader: "ts-loader",
           },
         ],
       },
@@ -313,7 +301,7 @@ const serverConfig = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
         },
       },
     ],
@@ -347,9 +335,9 @@ const serverConfig = {
   plugins: [
     new webpack.DefinePlugin({
       // replace any env variables in client-side code like PORT and NODE_ENV with actual values
-      'process.env': JSON.stringify(envVars),
-      'process.env.NODE_ENV': JSON.stringify(
-        isProd ? 'production' : 'development'
+      "process.env": JSON.stringify(envVars),
+      "process.env.NODE_ENV": JSON.stringify(
+        isProd ? "production" : "development"
       ),
     }),
     new GasPlugin({
