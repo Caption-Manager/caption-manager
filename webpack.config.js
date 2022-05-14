@@ -44,10 +44,10 @@ const devDialogEntry = "./dev/index.js";
 // define client entry points and output names
 const clientEntrypoints = [
   {
-    name: "CLIENT - Caption Manager",
-    entry: "./src/client/index.js",
-    filename: "caption-manager", // we'll add the .html suffix to these
-    template: "./src/client/index.html",
+    name: "Sidebar",
+    entry: "./src/client/views/Sidebar/index.js",
+    filename: "sidebar", // we'll add the .html suffix to these
+    template: "./src/client/views/Sidebar/index.html",
   },
 ];
 

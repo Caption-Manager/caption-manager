@@ -1,14 +1,11 @@
-export const onOpen = () => {
+export function onOpen() {
   const menu = DocumentApp.getUi()
     .createMenu("Caption Manager")
-    .addItem("Insert Caption", "openDialog");
-
+    .addItem("Open Sidebar", "openSidebar");
   menu.addToUi();
-};
+}
 
-export const openDialog = () => {
-  const html = HtmlService.createHtmlOutputFromFile("caption-manager")
-    .setWidth(600)
-    .setHeight(600);
-  DocumentApp.getUi().showModalDialog(html, "Insert Caption");
-};
+export function openSidebar() {
+  const html = HtmlService.createHtmlOutputFromFile("sidebar");
+  DocumentApp.getUi().showSidebar(html);
+}
