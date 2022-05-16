@@ -3,21 +3,25 @@ import React from "react";
 import { useDocumentInfo } from "./useDocumentInfo";
 // Components
 import CaptionEditor from "./CaptionEditor";
+// Types
+import { NotCaptionalizableElementInfo } from "../../../common/types";
 
 export default function Sidebar() {
-  const { caption } = useDocumentInfo();
-  const selectedElementInfo = {
-    exists: false,
-    isCaptionalizable: false,
-    element: {},
-  };
+  const { selectedElement } = useDocumentInfo();
 
-  if (!selectedElementInfo.exists) {
+  if (!selectedElement) {
     return <NoSelectedElement />;
-  } else if (!selectedElementInfo.isCaptionalizable) {
-    return <NotCaptionalizableElement />;
+  } else if (selectedElement.isCaptionalizable === false) {
+    return <NotCaptionalizableElement selectedElement={selectedElement} />;
   } else {
-    return <CaptionEditor caption={selectedElementInfo.element} />;
+    const { captionParts: docCaptionParts } = selectedElement;
+    return (
+      <CaptionEditor
+        initialLabel={docCaptionParts.label}
+        number={docCaptionParts.number}
+        initialDescription={docCaptionParts.description}
+      />
+    );
   }
 }
 
@@ -36,9 +40,11 @@ function NoSelectedElement() {
   );
 }
 
-function NotCaptionalizableElement() {
-  // TODO: add information about captionalizable elements
-  // and current selected element
+function NotCaptionalizableElement({
+  selectedElement,
+}: {
+  selectedElement: NotCaptionalizableElementInfo;
+}) {
   return (
     <div
       style={{
@@ -48,7 +54,14 @@ function NotCaptionalizableElement() {
       }}
     >
       <h3>Not Captionalizable element</h3>
-      <p>Select a captionalizable element in the document to insert caption</p>
+      <p>
+        {selectedElement.type} is not an element where you can insert a caption
+      </p>
+
+      <p>
+        Select an image, table or equation element in the document to insert
+        caption
+      </p>
     </div>
   );
 }

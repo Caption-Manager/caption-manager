@@ -1,5 +1,5 @@
 import { onOpen, openSidebar } from "./ui";
-import { getDocumentInfo, updateCaptions } from "./docs";
+import { getDocumentInfo, upsertCaption }  from "./caption";
 
 // Public functions must be exported as named exports
-export { onOpen, openSidebar, getDocumentInfo, updateCaptions };
+export { onOpen, openSidebar, getDocumentInfo, upsertCaption };
