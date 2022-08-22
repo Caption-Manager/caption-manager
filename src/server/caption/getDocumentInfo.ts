@@ -67,10 +67,10 @@ function getLabelFrom(type: GoogleAppsScript.Document.ElementType): string {
 
 function getNumberFrom(element: GoogleAppsScript.Document.Element): number {
   const captions = getCaptions(element.getType());
-  const elementPath = pathInDocument({ element });
+  const elementPath = pathInDocument(element);
   for (let i = 0; i < captions.length; i = i + 1) {
     const number = i + 1;
-    if (elementPath > pathInDocument({ element: captions[i] })) {
+    if (elementPath > pathInDocument(captions[i])) {
       return number + 1;
     }
   }
