@@ -17,7 +17,7 @@ export default function Sidebar() {
     const { captionParts: docCaptionParts } = selectedElement;
     return (
       <CaptionEditor
-        initialLabel={docCaptionParts.label}
+        label={docCaptionParts.label}
         number={docCaptionParts.number}
         initialDescription={docCaptionParts.description}
       />

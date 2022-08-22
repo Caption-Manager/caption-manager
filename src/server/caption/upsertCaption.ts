@@ -2,7 +2,9 @@ import getSelectedElement from "./getSelectedElement";
 import isCaptionalizable from "./isCaptionalizable";
 import getCaption from "./getCaption";
 import getNextElement from "./getNextElement";
+import applyCaptionStyles from "./applyCaptionStyles";
 // Types
+import updateCaption from "./updateCaption";
 import { CaptionText } from "../../common/types";
 
 export default function upsertCaption(text: CaptionText) {
@@ -19,11 +21,6 @@ export default function upsertCaption(text: CaptionText) {
   }
 }
 
-function updateCaption(caption: GoogleAppsScript.Document.Text, text: CaptionText) {
-  caption.setText(text);
-  caption.getParent().asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-}
-
 function insertCaption(element: GoogleAppsScript.Document.Element, text: CaptionText) {
   const body = DocumentApp.getActiveDocument().getBody();
   const nextElement = getNextElement(element);
@@ -38,6 +35,5 @@ function insertCaption(element: GoogleAppsScript.Document.Element, text: Caption
     paragraph = body.insertParagraph(nextElementIndex, text);
   }
 
-  // Apply styles on caption
-  paragraph.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  applyCaptionStyles(paragraph);
 }

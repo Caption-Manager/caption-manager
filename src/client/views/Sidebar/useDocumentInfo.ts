@@ -18,6 +18,7 @@ export function useDocumentInfo() {
       GAS.getDocumentInfo()
         .then(function onSuccess(info) {
           setDocumentInfo(info);
+          console.log(info)
         })
         .catch(function onError(error) {
           // TODO: fix this: we don't want to have to set the document info

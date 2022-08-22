@@ -8,47 +8,42 @@ import {
   CaptionLabel,
   CaptionNumber,
   CaptionDescription,
+  CaptionText,
 } from "../../../common/types";
 
 interface Props {
-  initialLabel: CaptionLabel;
+  label: CaptionLabel;
   number: CaptionNumber;
   initialDescription: CaptionDescription;
 }
 
 export default function CaptionEditor({
-  initialLabel,
+  label,
   number,
   initialDescription,
 }: Props) {
-  const [captionState, setCaptionState] = React.useState({
-    label: initialLabel,
-    description: initialDescription,
-  });
+  const [description, setDescription] = React.useState(initialDescription);
 
-  const captionParts = new CaptionParts(
-    captionState.label,
-    number,
-    captionState.description
+  React.useEffect(
+    function onNewSelectedElement() {
+      setDescription(initialDescription);
+    },
+    [initialDescription]
   );
 
-  function onChangeLabel(event: any) {
-    const { value: newLabel } = event.target;
-    setCaptionState(state => ({ ...state, label: newLabel }));
-  }
+  const { isLoading, error, saveCaption } = useSaveCaption();
+
+  const captionParts = new CaptionParts(label, number, description);
 
   function onChangeDescription(event: any) {
     const { value: newText } = event.target;
     const prefix = captionParts.getAsPrefix();
     const isDeletingPrefix = newText.length < prefix.length;
-    setCaptionState(state => ({
-      ...state,
-      description: isDeletingPrefix ? "" : newText.replace(prefix, ""),
-    }));
+    setDescription(isDeletingPrefix ? "" : newText.replace(prefix, ""));
   }
 
   function onSubmit() {
-    GAS.upsertCaption(captionParts.getAsText()).catch();
+    saveCaption(captionParts.getAsText());
   }
 
   return (
@@ -62,32 +57,42 @@ export default function CaptionEditor({
         />
       </div>
 
-      <div>
-        <p>Options</p>
-        <div style={{ paddingLeft: "15px" }}>
-          <label htmlFor="select">Label: </label>
-          <select value={captionState.label} onChange={onChangeLabel}>
-            {["Figure", "Table"].map(label => (
-              <option value={label}>{label}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div />
-
       <hr />
       <div
         style={{
           width: "100%",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <button onClick={onSubmit} className="action">
-          Ok
+        <button disabled={isLoading} onClick={onSubmit} className="action">
+          {isLoading ? "Loading..." : "Save"}
         </button>
+
+        <p style={{ color: "red" }}>{error}</p>
       </div>
     </div>
   );
+}
+
+function useSaveCaption() {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<null | string>(null);
+
+  function saveCaption(text: CaptionText) {
+    setError(null);
+    setIsLoading(true);
+
+    GAS.upsertCaption(text)
+      .then(() => GAS.updateCaptionNumbers())
+      .then(() => setIsLoading(false))
+      .catch(function onError(error) {
+        setError(error.message);
+        setIsLoading(false);
+      });
+  }
+
+  return { isLoading, error, saveCaption };
 }
