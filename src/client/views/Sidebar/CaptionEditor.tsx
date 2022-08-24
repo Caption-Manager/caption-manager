@@ -1,4 +1,15 @@
 import React from "react";
+// Components
+import {
+  Sidebar,
+  TextInput,
+  ErrorText,
+  PrimaryButton,
+  Divider,
+  Select,
+  Bold,
+  NormalText,
+} from "../../components";
 // Services
 import GAS from "../../services/GAS";
 // Utils
@@ -10,30 +21,39 @@ import {
   CaptionDescription,
   CaptionText,
 } from "../../../common/types";
+import { CloseButton, CreateButton } from "../../components";
+
+const userLabels = ["Figure", "Table", "Equation"];
 
 interface Props {
-  label: CaptionLabel;
+  initialLabel: CaptionLabel;
   number: CaptionNumber;
   initialDescription: CaptionDescription;
 }
 
 export default function CaptionEditor({
-  label,
+  initialLabel,
   number,
   initialDescription,
 }: Props) {
+  const [label, setLabel] = React.useState(initialLabel);
   const [description, setDescription] = React.useState(initialDescription);
 
   React.useEffect(
     function onNewSelectedElement() {
+      setLabel(initialLabel);
       setDescription(initialDescription);
     },
-    [initialDescription]
+    [initialLabel, initialDescription]
   );
 
   const { isLoading, error, saveCaption } = useSaveCaption();
 
   const captionParts = new CaptionParts(label, number, description);
+
+  function onChangeLabel(event: any) {
+    setLabel(event.target.value);
+  }
 
   function onChangeDescription(event: any) {
     const { value: newText } = event.target;
@@ -47,32 +67,74 @@ export default function CaptionEditor({
   }
 
   return (
-    <div style={{ padding: "3px", overflowX: "hidden" }}>
-      <div className="inline form-group">
-        <label htmlFor="caption">Caption</label>
-        <input
-          value={captionParts.getAsText()}
-          onChange={onChangeDescription}
-          type="text"
-        />
-      </div>
+    <Sidebar>
+      <TextInput
+        label={"Caption"}
+        value={captionParts.getAsText()}
+        onChange={onChangeDescription}
+      />
 
-      <hr />
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <button disabled={isLoading} onClick={onSubmit} className="action">
-          {isLoading ? "Loading..." : "Save"}
-        </button>
+      <Options
+        labels={[...userLabels, initialLabel]}
+        onChangeLabel={onChangeLabel}
+      />
 
-        <p style={{ color: "red" }}>{error}</p>
+      <div className="block">
+        <PrimaryButton disabled={isLoading} onClick={onSubmit}>
+          {isLoading ? "Loading..." : "Save caption"}
+        </PrimaryButton>
+        <ErrorText>{error}</ErrorText>
       </div>
+    </Sidebar>
+  );
+}
+
+function Options({ labels, onChangeLabel }) {
+  return (
+    <div style={{ marginTop: 15, marginBottom: 15 }}>
+      <OptionsDivider />
+      <LabeledSelect
+        label="Label:"
+        options={labels.map(l => ({ key: l, value: l, text: l }))}
+        onChange={onChangeLabel}
+      />
+
+      <CloseButton onClick={() => {}}>New label</CloseButton>
+      <CreateButton disabled onClick={() => {}}>
+        Delete label
+      </CreateButton>
+      <Divider />
+    </div>
+  );
+}
+
+function OptionsDivider() {
+  return (
+    <div style={{ display: "flex" }}>
+      <NormalText style={{ marginRight: 5 }}>
+        <Bold>Options</Bold>
+      </NormalText>
+
+      <div style={{ width: "100%", marginTop: 2 }}>
+        <Divider />
+      </div>
+    </div>
+  );
+}
+
+function LabeledSelect(props: { label: string; options: any; onChange: any }) {
+  const { label, options, onChange } = props;
+  return (
+    <div
+      style={{
+        display: "flex",
+        marginTop: 5,
+        marginBottom: 15,
+        alignItems: "center",
+      }}
+    >
+      <NormalText style={{ marginRight: 20 }}>{label}</NormalText>
+      <Select options={options} onChange={onChange} />
     </div>
   );
 }

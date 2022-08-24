@@ -3,6 +3,7 @@ import React from "react";
 import { useDocumentInfo } from "./useDocumentInfo";
 // Components
 import CaptionEditor from "./CaptionEditor";
+import { Bold, Header, NormalText, Paragraph } from "../../components";
 // Types
 import { NotCaptionalizableElementInfo } from "../../../common/types";
 
@@ -17,7 +18,7 @@ export default function Sidebar() {
     const { captionParts: docCaptionParts } = selectedElement;
     return (
       <CaptionEditor
-        label={docCaptionParts.label}
+        initialLabel={docCaptionParts.label}
         number={docCaptionParts.number}
         initialDescription={docCaptionParts.description}
       />
@@ -25,17 +26,19 @@ export default function Sidebar() {
   }
 }
 
+const padded: any = {
+  padding: "10px",
+  overflowX: "hidden",
+};
+
 function NoSelectedElement() {
   return (
-    <div
-      style={{
-        padding: "10px",
-        overflowX: "hidden",
-        textAlign: "center",
-      }}
-    >
-      <h3>No selected element</h3>
-      <p>Select a captionalizable element in the document to insert caption</p>
+    <div style={padded}>
+      <Header>No selected element</Header>
+      <NormalText>
+        Select an Image, Table or Equation in document to insert or edit a
+        caption.
+      </NormalText>
     </div>
   );
 }
@@ -46,22 +49,13 @@ function NotCaptionalizableElement({
   selectedElement: NotCaptionalizableElementInfo;
 }) {
   return (
-    <div
-      style={{
-        padding: "10px",
-        overflowX: "hidden",
-        textAlign: "center",
-      }}
-    >
-      <h3>Not Captionalizable element</h3>
-      <p>
-        {selectedElement.type} is not an element where you can insert a caption
-      </p>
-
-      <p>
-        Select an image, table or equation element in the document to insert
-        caption
-      </p>
+    <div style={padded}>
+      <Header>Invalid selected element</Header>
+      <Paragraph>
+        You can't insert or edit a caption in a{" "}
+        <Bold>{selectedElement.type}</Bold> element. Select an Image, Table or
+        Equation instead.
+      </Paragraph>
     </div>
   );
 }

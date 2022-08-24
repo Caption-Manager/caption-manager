@@ -6,4 +6,3 @@ export default function applyCaptionStyles(captionParagraph: GoogleAppsScript.Do
 
   captionParagraph.setAttributes(styleAttributes);
 }
-
