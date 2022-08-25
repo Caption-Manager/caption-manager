@@ -7,21 +7,21 @@ export default function getElements(type: GoogleAppsScript.Document.ElementType)
     case DocumentApp.ElementType.TABLE_CELL:
       return body.getTables();
     case DocumentApp.ElementType.EQUATION:
-      return getEquations(body);
+      return getCustomElements(body, DocumentApp.ElementType.EQUATION);
     default:
       throw new Error(`Unknown type ${type} to get element from`);
   }
 }
 
-function getEquations(body: GoogleAppsScript.Document.Body) {
+function getCustomElements(body: GoogleAppsScript.Document.Body, type: GoogleAppsScript.Document.ElementType) {
   const rangeElements = [];
   let searchResult = null;
-  while (searchResult = body.findElement(DocumentApp.ElementType.EQUATION, searchResult)) {
+  while (searchResult = body.findElement(type, searchResult)) {
     rangeElements.push(searchResult)
   }
 
-  const equations = rangeElements.map(function toEquationElement(rangeElement) {
+  const elements = rangeElements.map(function toEquationElement(rangeElement) {
     return rangeElement.getElement().asEquation();
   });
-  return equations;
+  return elements;
 }

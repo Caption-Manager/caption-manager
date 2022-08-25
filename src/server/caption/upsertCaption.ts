@@ -6,10 +6,23 @@ import applyCaptionStyles from "./applyCaptionStyles";
 import updateCaption from "./updateCaption";
 import { CaptionText } from "../../common/types";
 
-export default function upsertCaption(text: CaptionText) {
+
+/**
+ * Update (if the @type {Caption} already exists) or insert (on next paragraph) 
+ * a @type {Caption} with the specified @type {CaptionText} for the currently selected element.
+ * If no element or an invalid element is selected on document, throws an error.
+ *
+ * @param {CaptionText} text A string that has a label, number and description.
+ * @return {void}
+ * @customfunction
+*/
+export default function upsertCaption(text: CaptionText): void {
   const selectedElement = getSelectedElement();
   if (!selectedElement || !isCaptionalizable(selectedElement)) {
-    throw new Error(`You must have a captionalizable selected element to upsert a caption`)
+    throw new Error(
+      `You must have a captionalizable selected element (table, image or equation) to upsert a caption.
+      ${selectedElement.getType().toString()} element is not a valid element.`
+    );
   }
 
   const caption = getCaption(selectedElement);
@@ -20,10 +33,13 @@ export default function upsertCaption(text: CaptionText) {
   }
 }
 
-function insertCaption(element: GoogleAppsScript.Document.Element, text: CaptionText) {
+function insertCaption(
+  element: GoogleAppsScript.Document.Element,
+  text: CaptionText
+) {
   const body = DocumentApp.getActiveDocument().getBody();
   const nextElement = getNextElement(element);
-  
+
   let paragraph: GoogleAppsScript.Document.Paragraph;
   if (!nextElement) {
     // This means the element is at document end

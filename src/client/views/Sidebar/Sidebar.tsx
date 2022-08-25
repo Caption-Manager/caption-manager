@@ -11,8 +11,13 @@ import {
   Paragraph,
   Collapsible,
 } from "../../components";
+// Utils
+import { capitalizeOnlyFirstLetter } from "../../../common/utils";
 // Types
-import { NotCaptionalizableElementInfo } from "../../../common/types";
+import {
+  SelectedElementInfo,
+  NotCaptionalizableElementInfo,
+} from "../../../common/types";
 
 export default function Sidebar() {
   const { selectedElement } = useDocumentInfo();
@@ -20,13 +25,18 @@ export default function Sidebar() {
     <SidebarLayout>
       <Content selectedElement={selectedElement} />
       <SidebarLayout.Bottom style={{ padding: 0 }}>
-        <Collapsible header={"Collapsable"}></Collapsible>
+        <Collapsible header={"Caption styles"}>Insert code here</Collapsible>
+        <Collapsible header={"List generator"}>Insert code here</Collapsible>
       </SidebarLayout.Bottom>
     </SidebarLayout>
   );
 }
 
-function Content({ selectedElement }) {
+function Content({
+  selectedElement,
+}: {
+  selectedElement: SelectedElementInfo;
+}) {
   if (!selectedElement) {
     return <NoSelectedElement />;
   } else if (selectedElement.isCaptionalizable === false) {
@@ -44,14 +54,15 @@ function Content({ selectedElement }) {
   }
 }
 
-const padded: any = {
+const centeredLayout: React.CSSProperties = {
+  textAlign: "center",
   padding: "10px",
   overflowX: "hidden",
 };
 
 function NoSelectedElement() {
   return (
-    <div style={padded}>
+    <div style={centeredLayout}>
       <Header>No selected element</Header>
       <NormalText>
         Select an image, table or equation in document to insert or edit a
@@ -67,12 +78,12 @@ function NotCaptionalizableElement({
   selectedElement: NotCaptionalizableElementInfo;
 }) {
   return (
-    <div style={padded}>
+    <div style={centeredLayout}>
       <Header>Invalid selected element</Header>
       <Paragraph>
         You can't insert or edit a caption in a{" "}
-        <Bold>{selectedElement.type}</Bold> element. Select an image, table or
-        equation instead.
+        <Bold>{capitalizeOnlyFirstLetter(selectedElement.type)}</Bold> element.
+        Select an image, table or equation instead.
       </Paragraph>
     </div>
   );
