@@ -4,13 +4,12 @@ export default function getElements(type: GoogleAppsScript.Document.ElementType)
     case DocumentApp.ElementType.INLINE_IMAGE:
       return body.getImages();
     case DocumentApp.ElementType.TABLE:
-    case DocumentApp.ElementType.TABLE_ROW:
     case DocumentApp.ElementType.TABLE_CELL:
       return body.getTables();
     case DocumentApp.ElementType.EQUATION:
       return getEquations(body);
     default:
-      throw new Error("Unknown type to get captions");
+      throw new Error(`Unknown type ${type} to get element from`);
   }
 }
 

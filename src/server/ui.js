@@ -1,7 +1,7 @@
 export function onOpen() {
   const menu = DocumentApp.getUi()
     .createMenu("Caption Manager")
-    .addItem("Open Sidebar", "openSidebar");
+    .addItem("Open sidebar", "openSidebar");
   menu.addToUi();
 }
 

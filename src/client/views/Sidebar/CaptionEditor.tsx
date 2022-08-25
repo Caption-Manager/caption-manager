@@ -6,38 +6,46 @@ import {
   ErrorText,
   PrimaryButton,
   Divider,
-  Select,
   Bold,
   NormalText,
+  Checkbox,
+  Collapsible,
 } from "../../components";
 // Services
 import GAS from "../../services/GAS";
 // Utils
-import { CaptionParts } from "../../../common/caption/CaptionParts";
+import { capitalizeOnlyFirstLetter, CaptionParts } from "../../../common/utils";
 // Types
 import {
   CaptionLabel,
   CaptionNumber,
   CaptionDescription,
   CaptionText,
+  CaptionParentType,
 } from "../../../common/types";
-import { CloseButton, CreateButton } from "../../components";
-
-const userLabels = ["Figure", "Table", "Equation"];
 
 interface Props {
   initialLabel: CaptionLabel;
   number: CaptionNumber;
   initialDescription: CaptionDescription;
+  selectedElementType: CaptionParentType;
 }
 
 export default function CaptionEditor({
   initialLabel,
   number,
   initialDescription,
+  selectedElementType,
 }: Props) {
   const [label, setLabel] = React.useState(initialLabel);
   const [description, setDescription] = React.useState(initialDescription);
+  const {
+    isLoading,
+    autoUpdateCaptions,
+    setAutoUpdateCaptions,
+    error,
+    handleSubmit,
+  } = useHandleSubmit();
 
   React.useEffect(
     function onNewSelectedElement() {
@@ -47,36 +55,41 @@ export default function CaptionEditor({
     [initialLabel, initialDescription]
   );
 
-  const { isLoading, error, saveCaption } = useSaveCaption();
-
   const captionParts = new CaptionParts(label, number, description);
 
-  function onChangeLabel(event: any) {
+  function onChangeLabel(event: React.ChangeEvent<HTMLInputElement>) {
     setLabel(event.target.value);
   }
 
-  function onChangeDescription(event: any) {
-    const { value: newText } = event.target;
+  function onChangeDescription(event: React.ChangeEvent<HTMLInputElement>) {
+    const newText = event.target.value;
     const prefix = captionParts.getAsPrefix();
     const isDeletingPrefix = newText.length < prefix.length;
     setDescription(isDeletingPrefix ? "" : newText.replace(prefix, ""));
   }
 
+  function onChangeAutoUpdateCaptions() {
+    setAutoUpdateCaptions(!autoUpdateCaptions);
+  }
+
   function onSubmit() {
-    saveCaption(captionParts.getAsText());
+    handleSubmit(selectedElementType, label, captionParts.getAsText());
   }
 
   return (
-    <Sidebar>
+    <React.Fragment>
       <TextInput
-        label={"Caption"}
+        label={"Caption:"}
         value={captionParts.getAsText()}
         onChange={onChangeDescription}
       />
 
       <Options
-        labels={[...userLabels, initialLabel]}
+        label={label}
         onChangeLabel={onChangeLabel}
+        autoUpdateCaptions={autoUpdateCaptions}
+        onChangeAutoUpdateCaptons={onChangeAutoUpdateCaptions}
+        selectedElementType={selectedElementType}
       />
 
       <div className="block">
@@ -85,34 +98,41 @@ export default function CaptionEditor({
         </PrimaryButton>
         <ErrorText>{error}</ErrorText>
       </div>
-    </Sidebar>
+    </React.Fragment>
   );
 }
 
-function Options({ labels, onChangeLabel }) {
+function Options({
+  label,
+  onChangeLabel,
+  autoUpdateCaptions,
+  onChangeAutoUpdateCaptons,
+  selectedElementType,
+}) {
   return (
     <div style={{ marginTop: 15, marginBottom: 15 }}>
-      <OptionsDivider />
-      <LabeledSelect
-        label="Label:"
-        options={labels.map(l => ({ key: l, value: l, text: l }))}
+      <DividerWithLeftText text={"Options"} />
+      <TextInput
+        label={`Label for ${humanReadableType(selectedElementType)}`}
+        value={label}
         onChange={onChangeLabel}
       />
-
-      <CloseButton onClick={() => {}}>New label</CloseButton>
-      <CreateButton disabled onClick={() => {}}>
-        Delete label
-      </CreateButton>
+      <Checkbox
+        checked={autoUpdateCaptions}
+        label={"Auto update captions"}
+        style={{ marginTop: 10 }}
+        onChange={onChangeAutoUpdateCaptons}
+      />
       <Divider />
     </div>
   );
 }
 
-function OptionsDivider() {
+function DividerWithLeftText({ text }: any) {
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", marginBottom: 5 }}>
       <NormalText style={{ marginRight: 5 }}>
-        <Bold>Options</Bold>
+        <Bold>{text}</Bold>
       </NormalText>
 
       <div style={{ width: "100%", marginTop: 2 }}>
@@ -122,39 +142,50 @@ function OptionsDivider() {
   );
 }
 
-function LabeledSelect(props: { label: string; options: any; onChange: any }) {
-  const { label, options, onChange } = props;
-  return (
-    <div
-      style={{
-        display: "flex",
-        marginTop: 5,
-        marginBottom: 15,
-        alignItems: "center",
-      }}
-    >
-      <NormalText style={{ marginRight: 20 }}>{label}</NormalText>
-      <Select options={options} onChange={onChange} />
-    </div>
-  );
-}
-
-function useSaveCaption() {
+function useHandleSubmit() {
   const [isLoading, setIsLoading] = React.useState(false);
+  const [autoUpdateCaptions, setAutoUpdateCaptions] = React.useState(true);
   const [error, setError] = React.useState<null | string>(null);
 
-  function saveCaption(text: CaptionText) {
+  function handleSubmit(
+    type: CaptionParentType,
+    label: string,
+    text: CaptionText
+  ) {
     setError(null);
     setIsLoading(true);
 
-    GAS.upsertCaption(text)
-      .then(() => GAS.updateCaptionNumbers())
-      .then(() => setIsLoading(false))
+    GAS.setUserLabel(type, label)
+      .then(function onStoredUserLabel() {
+        return GAS.upsertCaption(text);
+      })
+      .then(function onCaptionUpserted() {
+        if (!autoUpdateCaptions) return;
+        else return GAS.updateCaptions(label);
+      })
+      .then(function onFinish() {
+        setIsLoading(false);
+      })
       .catch(function onError(error) {
         setError(error.message);
         setIsLoading(false);
       });
   }
 
-  return { isLoading, error, saveCaption };
+  return {
+    isLoading,
+    autoUpdateCaptions,
+    setAutoUpdateCaptions,
+    error,
+    handleSubmit,
+  };
+}
+
+function humanReadableType(type: CaptionParentType) {
+  switch (type) {
+    case "INLINE_IMAGE":
+      return "Image";
+    default:
+      return capitalizeOnlyFirstLetter(type);
+  }
 }

@@ -13,9 +13,16 @@ export function Sidebar(props: SidebarProps) {
   );
 }
 
-function Bottom(props: { children: React.ReactNode }) {
-  const { children } = props;
-  return <div className="sidebar bottom">{children}</div>;
+function Bottom(props: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) {
+  const { children, style } = props;
+  return (
+    <div className="sidebar bottom" style={style}>
+      {children}
+    </div>
+  );
 }
 
 Sidebar.Bottom = Bottom;

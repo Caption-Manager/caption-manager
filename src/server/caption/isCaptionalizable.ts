@@ -1,5 +1,5 @@
-import { CAPTION_TYPES } from "../../common/types";
+import { CAPTIONALIZABLE_ELEMENT_TYPES } from "../../common/constants";
 
 export default function isCaptionalizable(element: GoogleAppsScript.Document.Element) {
-  return CAPTION_TYPES.some(type => type === element.getType());
+  return CAPTIONALIZABLE_ELEMENT_TYPES.some(type => type === element.getType());
 }

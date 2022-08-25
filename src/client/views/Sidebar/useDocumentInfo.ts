@@ -10,7 +10,7 @@ const INITIAL_DOCUMENT_INFO = {
 
 // See:
 // https://stackoverflow.com/questions/24773177/how-to-poll-a-google-doc-from-an-add-on/24773178#24773178
-export function useDocumentInfo() {
+export function useDocumentInfo(): DocumentInfo {
   const [documentInfo, setDocumentInfo] = React.useState<DocumentInfo>(INITIAL_DOCUMENT_INFO);
 
   React.useEffect(function onMount() {
@@ -18,7 +18,6 @@ export function useDocumentInfo() {
       GAS.getDocumentInfo()
         .then(function onSuccess(info) {
           setDocumentInfo(info);
-          console.log(info)
         })
         .catch(function onError(error) {
           // TODO: fix this: we don't want to have to set the document info

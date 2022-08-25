@@ -1,9 +1,8 @@
-import getSelectedElement from "./getSelectedElement";
+import getSelectedElement from "../utils/getSelectedElement";
 import isCaptionalizable from "./isCaptionalizable";
 import getCaption from "./getCaption";
 import getNextElement from "./getNextElement";
 import applyCaptionStyles from "./applyCaptionStyles";
-// Types
 import updateCaption from "./updateCaption";
 import { CaptionText } from "../../common/types";
 

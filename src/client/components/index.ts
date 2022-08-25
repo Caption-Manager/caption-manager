@@ -3,4 +3,5 @@ export * from './Button';
 export * from './TextInput';
 export * from './Typography';
 export * from './Divider';
-export * from './Select';
+export * from './Checkbox';
+export * from './Collapsible';

@@ -1,6 +1,7 @@
 import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
-import pathInDocument from "./pathInDocument";
+import pathInDocument from "../utils/pathInDocument";
+import getUserLabels from "../storage/getUserLabels";
 
 export default function getCaptionParts(element: GoogleAppsScript.Document.Element) {
   const caption = getCaption(element);
@@ -12,17 +13,17 @@ export default function getCaptionParts(element: GoogleAppsScript.Document.Eleme
 }
 
 function getLabel(type: GoogleAppsScript.Document.ElementType): string {
+  const userLabels = getUserLabels();
   switch (type) {
     case DocumentApp.ElementType.INLINE_IMAGE:
-      return "Figure";
+      return userLabels.INLINE_IMAGE;
     case DocumentApp.ElementType.TABLE:
-    case DocumentApp.ElementType.TABLE_ROW:
     case DocumentApp.ElementType.TABLE_CELL:
-      return "Table";
+      return userLabels.TABLE;
     case DocumentApp.ElementType.EQUATION:
-      return "Equation";
+      return userLabels.EQUATION;
     default:
-      throw new Error("Unknown type to get label from");
+      throw new Error(`Unknown type ${type} to get label from`);
   }
 }
 
@@ -41,7 +42,7 @@ function getNumber(element: GoogleAppsScript.Document.Element): number {
   return number;
 }
 
-function getDescription(caption: GoogleAppsScript.Document.Text) {
+export function getDescription(caption: GoogleAppsScript.Document.Text) {
   const text = caption.getText();
   // TODO: this assumes the separator has spaces in between,
   // like " - " or " / ". It's a good idea to incorporate the separator

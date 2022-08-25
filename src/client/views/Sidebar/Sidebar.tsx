@@ -3,13 +3,30 @@ import React from "react";
 import { useDocumentInfo } from "./useDocumentInfo";
 // Components
 import CaptionEditor from "./CaptionEditor";
-import { Bold, Header, NormalText, Paragraph } from "../../components";
+import {
+  Sidebar as SidebarLayout,
+  Bold,
+  Header,
+  NormalText,
+  Paragraph,
+  Collapsible,
+} from "../../components";
 // Types
 import { NotCaptionalizableElementInfo } from "../../../common/types";
 
 export default function Sidebar() {
   const { selectedElement } = useDocumentInfo();
+  return (
+    <SidebarLayout>
+      <Content selectedElement={selectedElement} />
+      <SidebarLayout.Bottom style={{ padding: 0 }}>
+        <Collapsible header={"Collapsable"}></Collapsible>
+      </SidebarLayout.Bottom>
+    </SidebarLayout>
+  );
+}
 
+function Content({ selectedElement }) {
   if (!selectedElement) {
     return <NoSelectedElement />;
   } else if (selectedElement.isCaptionalizable === false) {
@@ -21,6 +38,7 @@ export default function Sidebar() {
         initialLabel={docCaptionParts.label}
         number={docCaptionParts.number}
         initialDescription={docCaptionParts.description}
+        selectedElementType={selectedElement.type}
       />
     );
   }
@@ -36,7 +54,7 @@ function NoSelectedElement() {
     <div style={padded}>
       <Header>No selected element</Header>
       <NormalText>
-        Select an Image, Table or Equation in document to insert or edit a
+        Select an image, table or equation in document to insert or edit a
         caption.
       </NormalText>
     </div>
@@ -53,8 +71,8 @@ function NotCaptionalizableElement({
       <Header>Invalid selected element</Header>
       <Paragraph>
         You can't insert or edit a caption in a{" "}
-        <Bold>{selectedElement.type}</Bold> element. Select an Image, Table or
-        Equation instead.
+        <Bold>{selectedElement.type}</Bold> element. Select an image, table or
+        equation instead.
       </Paragraph>
     </div>
   );
