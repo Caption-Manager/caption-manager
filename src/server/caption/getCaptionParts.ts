@@ -1,14 +1,25 @@
 import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
-import pathInDocument from "../utils/pathInDocument";
+import positionInDocument from "../position/positionInDocument";
 import getUserLabels from "../storage/getUserLabels";
+import { CaptionParts } from "../../common/types";
+import { getDescription } from "./getCaptionPartsFromString";
 
-export default function getCaptionParts(element: GoogleAppsScript.Document.Element) {
+/**
+ * Gets a @type {CaptionParts} representation of the caption of a given element.
+ * If the element doesn't contain a caption, creates a caption with the user-specified label
+ * correct number given its position in document and an empty description. 
+ *
+ * @param {GoogleAppsScript.Document.Element} element An element that can contain a Caption.
+ * @return {CaptionParts} An object representation of the caption text.
+ * @customfunction
+*/
+export default function getCaptionParts(element: GoogleAppsScript.Document.Element): CaptionParts {
   const caption = getCaption(element);
   return {
     label: getLabel(element.getType()),
     number: getNumber(element),
-    description: caption ? getDescription(caption) : "",
+    description: caption ? getDescription(caption.getText()) : "",
   }
 }
 
@@ -31,22 +42,15 @@ function getNumber(element: GoogleAppsScript.Document.Element): number {
   let number = 1;
   
   const captions = getCaptions(element.getType());
-  const elementPath = pathInDocument(element);
+  const elementPosition = positionInDocument(element);
   for (const caption of captions) {
-    if (elementPath < pathInDocument(caption)) return number;
+    if (elementPosition < positionInDocument(caption)) return number;
     else number = number + 1;
   }
 
-  // If the elementPath is smaller than all other element paths,
+  // If the elementPosition is smaller than all other element positions,
   // it must be the first element
   return number;
 }
 
-export function getDescription(caption: GoogleAppsScript.Document.Text) {
-  const text = caption.getText();
-  // TODO: this assumes the separator has spaces in between,
-  // like " - " or " / ". It's a good idea to incorporate the separator
-  // into the text structure interface
-  const [label, number, separator, ...descriptionWords] = text.split(" ");
-  return descriptionWords.join(" ");
-}
+

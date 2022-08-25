@@ -1,10 +1,10 @@
-import { CaptionParts } from "./CaptionParts";
-import { LabelKey } from "./Label";
+import { CaptionParts } from "./Caption";
+import { StorageLabelKey } from "./Storage";
 
 export interface CaptionalizableElementInfo {
   isCaptionalizable: true;
   captionParts: CaptionParts;
-  type: LabelKey;
+  type: StorageLabelKey;
 }
 
 export interface NotCaptionalizableElementInfo {

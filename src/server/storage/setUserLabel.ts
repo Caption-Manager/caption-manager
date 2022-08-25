@@ -1,11 +1,13 @@
-import { DEFAULT_LABELS } from '../../common/constants';
-import { LabelKey } from '../../common/types';
+import { StorageLabelKey } from '../../common/types';
 
-export default function setUserLabel(key: LabelKey, label: string) {
+export default function setUserLabel(key: StorageLabelKey, label: string) {
   try {
     const Properties = PropertiesService.getUserProperties();
     Properties.setProperty(key, label);
   } catch (error) {
-    return DEFAULT_LABELS[key];
+    // TODO: currently we let the client deal with this error
+    // but maybe we could try to retry or have multiple storage
+    // services
+    throw error;
   }
 }

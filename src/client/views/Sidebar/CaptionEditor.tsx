@@ -17,14 +17,14 @@ import {
   CaptionNumber,
   CaptionDescription,
   CaptionText,
-  CaptionParentType,
+  StorageLabelKey,
 } from "../../../common/types";
 
 interface Props {
   initialLabel: CaptionLabel;
   number: CaptionNumber;
   initialDescription: CaptionDescription;
-  selectedElementType: CaptionParentType;
+  selectedElementType: StorageLabelKey;
 }
 
 export default function CaptionEditor({
@@ -58,6 +58,8 @@ export default function CaptionEditor({
   }
 
   function onChangeDescription(event: React.ChangeEvent<HTMLInputElement>) {
+    // TODO: fix wrong description when user tries to delete
+    // just part of the prefix
     const newText = event.target.value;
     const prefix = captionParts.getAsPrefix();
     const isDeletingPrefix = newText.length < prefix.length;
@@ -103,7 +105,7 @@ interface OptionsProps {
   onChangeLabel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   autoUpdateCaptions: boolean;
   onChangeAutoUpdateCaptions: () => void;
-  selectedElementType: CaptionParentType;
+  selectedElementType: StorageLabelKey;
 }
 
 function Options({
@@ -138,7 +140,7 @@ function useHandleSubmit() {
   const [error, setError] = React.useState<null | string>(null);
 
   function handleSubmit(
-    type: CaptionParentType,
+    type: StorageLabelKey,
     label: string,
     text: CaptionText
   ) {
@@ -158,6 +160,7 @@ function useHandleSubmit() {
       })
       .catch(function onError(error) {
         setError(error.message);
+        console.error(error);
         setIsLoading(false);
       });
   }
@@ -171,7 +174,7 @@ function useHandleSubmit() {
   };
 }
 
-function humanReadableType(type: CaptionParentType) {
+function humanReadableType(type: StorageLabelKey) {
   switch (type) {
     case "INLINE_IMAGE":
       return "Image";

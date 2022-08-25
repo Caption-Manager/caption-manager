@@ -1,6 +1,6 @@
 import updateCaption from "./updateCaption";
-import { getDescription } from "./getCaptionParts";
-import getSelectedElement from "../utils/getSelectedElement";
+import { getDescription } from "./getCaptionPartsFromString";
+import getFirstSelectedElement from "../utils/getFirstSelectedElement";
 import getCaptions from "./getCaptions";
 import isCaptionalizable from "./isCaptionalizable";
 
@@ -14,18 +14,19 @@ import isCaptionalizable from "./isCaptionalizable";
  * @customfunction
 */
 export default function updateCaptions(label: string): void {
-  const selectedElement = getSelectedElement();
+  const selectedElement = getFirstSelectedElement();
   if (!selectedElement || !isCaptionalizable(selectedElement)) {
-    throw new Error(
-      `You must have a captionalizable selected element (table, image or equation) to upsert a caption.
-      ${selectedElement.getType().toString()} element is not a valid element.`
+    const baseErrorMessage = "You must have a captionalizable selected element (table, image or equation) to upsert a caption.";
+    throw new Error(!selectedElement ? 
+      baseErrorMessage : 
+      `${baseErrorMessage} ${selectedElement.getType().toString()} element is not a valid element.`
     );
   }
   
   let number = 1;
   const captions = getCaptions(selectedElement.getType());
   for (const caption of captions) {
-    updateCaption(caption, `${label} ${number++} - ${getDescription(caption)}`);
+    updateCaption(caption, `${label} ${number++} - ${getDescription(caption.getText())}`);
   }
 }
 
