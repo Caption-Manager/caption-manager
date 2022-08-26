@@ -1,10 +1,10 @@
 import { onOpen, openSidebar } from "./ui";
-import { getDocumentInfo, upsertCaption, updateCaptions }  from "./caption";
-import { setUserLabel } from './storage';
+import { getDocumentInfo, upsertCaption, updateCaptions } from "./caption";
+import { setUserLabel } from "./storage";
 
 // Public functions must be exported as named exports
-export { 
-  // Ui 
+export {
+  // Ui
   onOpen,
   openSidebar,
   // Caption
@@ -12,5 +12,5 @@ export {
   upsertCaption,
   updateCaptions,
   // Storage
-  setUserLabel
+  setUserLabel,
 };

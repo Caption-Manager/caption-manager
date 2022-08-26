@@ -1,26 +1,31 @@
 import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
-import positionInDocument from "../position/positionInDocument";
-import getUserLabels from "../storage/getUserLabels";
-import { CaptionParts } from "../../common/types";
 import { getDescription } from "./getCaptionPartsFromString";
+import getUserLabels from "../storage/getUserLabels";
+import positionInDocument from "../position/positionInDocument";
+import {
+  CaptionalizableSelectedElement,
+  CaptionParts,
+} from "../../common/types";
 
 /**
  * Gets a @type {CaptionParts} representation of the caption of a given element.
  * If the element doesn't contain a caption, creates a caption with the user-specified label
- * correct number given its position in document and an empty description. 
+ * correct number given its position in document and an empty description.
  *
- * @param {GoogleAppsScript.Document.Element} element An element that can contain a Caption.
+ * @param {CaptionalizableSelectedElement} element An element that can contain a Caption.
  * @return {CaptionParts} An object representation of the caption text.
  * @customfunction
-*/
-export default function getCaptionParts(element: GoogleAppsScript.Document.Element): CaptionParts {
+ */
+export default function getCaptionParts(
+  element: CaptionalizableSelectedElement
+): CaptionParts {
   const caption = getCaption(element);
   return {
     label: getLabel(element.getType()),
     number: getNumber(element),
     description: caption ? getDescription(caption.getText()) : "",
-  }
+  };
 }
 
 function getLabel(type: GoogleAppsScript.Document.ElementType): string {
@@ -28,7 +33,6 @@ function getLabel(type: GoogleAppsScript.Document.ElementType): string {
   switch (type) {
     case DocumentApp.ElementType.INLINE_IMAGE:
       return userLabels.INLINE_IMAGE;
-    case DocumentApp.ElementType.TABLE:
     case DocumentApp.ElementType.TABLE_CELL:
       return userLabels.TABLE;
     case DocumentApp.ElementType.EQUATION:
@@ -38,9 +42,9 @@ function getLabel(type: GoogleAppsScript.Document.ElementType): string {
   }
 }
 
-function getNumber(element: GoogleAppsScript.Document.Element): number {
+function getNumber(element: CaptionalizableSelectedElement): number {
   let number = 1;
-  
+
   const captions = getCaptions(element.getType());
   const elementPosition = positionInDocument(element);
   for (const caption of captions) {
@@ -52,5 +56,3 @@ function getNumber(element: GoogleAppsScript.Document.Element): number {
   // it must be the first element
   return number;
 }
-
-

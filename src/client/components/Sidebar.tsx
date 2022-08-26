@@ -1,7 +1,7 @@
 import * as React from "react";
 
 interface SidebarProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export function Sidebar(props: SidebarProps) {
@@ -14,7 +14,7 @@ export function Sidebar(props: SidebarProps) {
 }
 
 function Bottom(props: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   style?: React.CSSProperties;
 }) {
   const { children, style } = props;

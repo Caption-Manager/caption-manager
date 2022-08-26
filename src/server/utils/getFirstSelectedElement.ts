@@ -3,7 +3,7 @@
  *
  * @return {GoogleAppsScript.Document.Element}
  * @customfunction
-*/
+ */
 export default function getFirstSelectedElement(): GoogleAppsScript.Document.Element {
   const selection = DocumentApp.getActiveDocument().getSelection();
   if (!selection) return null;

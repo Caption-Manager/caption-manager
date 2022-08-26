@@ -1,4 +1,8 @@
-import { CaptionParts as ICaptionParts, CaptionPrefix, CaptionText } from "../types";
+import {
+  CaptionParts as ICaptionParts,
+  CaptionPrefix,
+  CaptionText,
+} from "../types";
 
 export class CaptionParts implements ICaptionParts {
   label: string;

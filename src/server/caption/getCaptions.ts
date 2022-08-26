@@ -1,6 +1,5 @@
-import { Caption } from "../../common/types";
 import getCaption from "./getCaption";
-// import getElements from "./getElements";
+import { Caption, CaptionalizableSelectedElement } from "../../common/types";
 
 /**
  * Gets all captions (@type {Caption[]}) for a given element type.
@@ -8,27 +7,30 @@ import getCaption from "./getCaption";
  * @param {GoogleAppsScript.Document.ElementType} type An element type.
  * @return {Caption[]} An array of captions.
  * @customfunction
-*/
-export default function getCaptions(type: GoogleAppsScript.Document.ElementType): Caption[]  {
-  const elements = getElements(type);
-  return elements.map(element => getCaption(element)).filter(Boolean);
+ */
+export default function getCaptions(
+  type: GoogleAppsScript.Document.ElementType
+): Caption[] {
+  return getElements(type)
+    .map(getCaption)
+    .filter(Boolean);
 }
 
 /**
  * Gets an array of elements of the specified element type.
  *
  * @param {GoogleAppsScript.Document.ElementType} type An element type.
- * @return {any} TODO: write this.
+ * @return {CaptionalizableSelectedElement[]} An list of found elements.
  * @customfunction
-*/
-function getElements(type: GoogleAppsScript.Document.ElementType): GoogleAppsScript.Document.Element[] {
-  const body = DocumentApp.getActiveDocument().getBody();
+ */
+function getElements(
+  type: GoogleAppsScript.Document.ElementType
+): CaptionalizableSelectedElement[] {
   switch (type) {
     case DocumentApp.ElementType.INLINE_IMAGE:
       return getCustomElements(DocumentApp.ElementType.INLINE_IMAGE);
-    case DocumentApp.ElementType.TABLE: 
     case DocumentApp.ElementType.TABLE_CELL:
-      return getCustomElements(DocumentApp.ElementType.TABLE);
+      return getCustomElements(DocumentApp.ElementType.TABLE_CELL);
     case DocumentApp.ElementType.EQUATION:
       return getCustomElements(DocumentApp.ElementType.EQUATION);
     default:
@@ -40,10 +42,12 @@ function getElements(type: GoogleAppsScript.Document.ElementType): GoogleAppsScr
  * Retrieves all elements contained in the section.
  *
  * @param {GoogleAppsScript.Document.ElementType} type An element type.
- * @return {GoogleAppsScript.Document.Element[]} A list of found elements.
+ * @return {CaptionalizableSelectedElement} A list of found elements.
  * @customfunction
-*/
-function getCustomElements(type: GoogleAppsScript.Document.ElementType): GoogleAppsScript.Document.Element[] {
+ */
+function getCustomElements(
+  type: GoogleAppsScript.Document.ElementType
+): CaptionalizableSelectedElement[] {
   const body = DocumentApp.getActiveDocument().getBody();
 
   const rangeElements: GoogleAppsScript.Document.RangeElement[] = [];
@@ -55,5 +59,5 @@ function getCustomElements(type: GoogleAppsScript.Document.ElementType): GoogleA
   }
 
   const elements = rangeElements.map(rangeElement => rangeElement.getElement());
-  return elements;
+  return elements as any;
 }

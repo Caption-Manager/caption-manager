@@ -5,13 +5,15 @@ import { DocumentInfo } from "../../../common/types";
 import GAS from "../../services/GAS";
 
 const INITIAL_DOCUMENT_INFO = {
-  selectedElement: null
+  selectedElement: null,
 };
 
 // See:
 // https://stackoverflow.com/questions/24773177/how-to-poll-a-google-doc-from-an-add-on/24773178#24773178
 export function useDocumentInfo(): DocumentInfo {
-  const [documentInfo, setDocumentInfo] = React.useState<DocumentInfo>(INITIAL_DOCUMENT_INFO);
+  const [documentInfo, setDocumentInfo] = React.useState<DocumentInfo>(
+    INITIAL_DOCUMENT_INFO
+  );
 
   React.useEffect(function onMount() {
     const pollingIntervalId = setInterval(function onInterval() {
@@ -23,8 +25,8 @@ export function useDocumentInfo(): DocumentInfo {
           // TODO: fix this: we don't want to have to set the document info
           // to it's initial value when an error occurs...
           // Just receive a new document info
-          setDocumentInfo(INITIAL_DOCUMENT_INFO)
-          console.log(error.message || error)
+          setDocumentInfo(INITIAL_DOCUMENT_INFO);
+          console.error(error.message || error);
         });
     }, 2000);
 

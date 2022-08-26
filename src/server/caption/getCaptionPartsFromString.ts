@@ -9,7 +9,7 @@ export default function getCaptionPartsFromString(text: string): CaptionParts {
   // to account for a multiple word label
   const [label, number, separator, ...descriptionWords] = text.split(" ");
   const description = descriptionWords.join(" ");
-  return { label, number: Number(number), description }
+  return { label, number: Number(number), description };
 }
 
 export function getDescription(text: string): CaptionDescription {

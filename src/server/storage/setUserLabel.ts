@@ -1,4 +1,4 @@
-import { StorageLabelKey } from '../../common/types';
+import { StorageLabelKey } from "../../common/types";
 
 export default function setUserLabel(key: StorageLabelKey, label: string) {
   try {

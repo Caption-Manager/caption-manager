@@ -1,31 +1,24 @@
-import getFirstSelectedElement from "../utils/getFirstSelectedElement";
-import isCaptionalizable from "./isCaptionalizable";
+import getCaptionalizableSelectedElement from "./getCaptionalizableSelectedElement";
 import getCaption from "./getCaption";
+import updateCaption from "./updateCaption";
 import getNextSiblingParagraph from "./getNextSiblingParagraph";
 import applyCaptionStyles from "./applyCaptionStyles";
-import updateCaption from "./updateCaption";
-import { CaptionText } from "../../common/types";
-
+import {
+  CaptionalizableSelectedElement,
+  CaptionText,
+} from "../../common/types";
 
 /**
- * Update (if the @type {Caption} already exists) or insert a @type {Caption} with 
+ * Update (if the @type {Caption} already exists) or insert a @type {Caption} with
  * the specified @type {CaptionText} for the currently selected element.
  * If no element or an invalid element is selected on document, throws an error.
  *
  * @param {CaptionText} text A string that has a label, number and description.
  * @return {void}
  * @customfunction
-*/
+ */
 export default function upsertCaption(text: CaptionText): void {
-  const selectedElement = getFirstSelectedElement();
-  if (!selectedElement || !isCaptionalizable(selectedElement)) {
-    const baseErrorMessage = "You must have a captionalizable selected element (table, image or equation) to upsert a caption.";
-    throw new Error(!selectedElement ? 
-      baseErrorMessage : 
-      `${baseErrorMessage} ${selectedElement.getType().toString()} element is not a valid element.`
-    );
-  }
-
+  const selectedElement = getCaptionalizableSelectedElement();
   const caption = getCaption(selectedElement);
   if (caption) {
     updateCaption(caption, text);
@@ -38,13 +31,13 @@ export default function upsertCaption(text: CaptionText): void {
  * Inserts a @type {Caption} with specified @type {CaptionText} for the currently selected
  * element.
  *
- * @param {GoogleAppsScript.Document.Element} element The selected element to insert the caption.
+ * @param {CaptionalizableSelectedElement} element The selected element to insert the caption.
  * @param {CaptionText} text A string that has a label, number and description.
  * @return {void}
  * @customfunction
-*/
+ */
 function insertCaption(
-  element: GoogleAppsScript.Document.Element,
+  element: CaptionalizableSelectedElement,
   text: CaptionText
 ): void {
   const body = DocumentApp.getActiveDocument().getBody();
@@ -62,4 +55,3 @@ function insertCaption(
 
   applyCaptionStyles(paragraph);
 }
-

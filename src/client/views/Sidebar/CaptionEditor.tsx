@@ -136,7 +136,7 @@ function Options({
 
 function useHandleSubmit() {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [autoUpdateCaptions, setAutoUpdateCaptions] = React.useState(true);
+  const [autoUpdateCaptions, setAutoUpdateCaptions] = React.useState(false);
   const [error, setError] = React.useState<null | string>(null);
 
   function handleSubmit(

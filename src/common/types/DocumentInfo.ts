@@ -12,8 +12,11 @@ export interface NotCaptionalizableElementInfo {
   type: string;
 }
 
-export type SelectedElementInfo = CaptionalizableElementInfo | NotCaptionalizableElementInfo | null;
+export type SelectedElementInfo =
+  | CaptionalizableElementInfo
+  | NotCaptionalizableElementInfo
+  | null;
 
 export interface DocumentInfo {
   selectedElement: SelectedElementInfo | null;
-};
+}

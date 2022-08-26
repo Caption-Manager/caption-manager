@@ -1,7 +1,7 @@
 import * as React from "react";
 
 interface TypographyProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   style?: React.CSSProperties;
 }
 
