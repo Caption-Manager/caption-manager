@@ -4,9 +4,7 @@ import { DocumentInfo } from "../../../common/types";
 // Types
 import GAS from "../../services/GAS";
 
-const INITIAL_DOCUMENT_INFO = {
-  selectedElement: null,
-};
+const INITIAL_DOCUMENT_INFO = { selectedElement: null };
 
 // See:
 // https://stackoverflow.com/questions/24773177/how-to-poll-a-google-doc-from-an-add-on/24773178#24773178

@@ -29,10 +29,10 @@ export interface CaptionParts {
 export type Caption = GoogleAppsScript.Document.Text;
 
 /**
- * TODO: we can't have the CaptionalizableSelectedElementType, which would be
- * useful to enforce we are getting 
-  * Element that can be selected on active document and can contain a Caption.
+  * Element that can both be selected on document and contain a Caption.
 */
 export type CaptionalizableSelectedElement = GoogleAppsScript.Document.InlineImage 
 | GoogleAppsScript.Document.TableCell 
 | GoogleAppsScript.Document.Equation;
+
+export type CaptionalizableSelectedElementType = "INLINE_IMAGE" | "TABLE_CELL" | "EQUATION";

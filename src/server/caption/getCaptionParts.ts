@@ -3,22 +3,19 @@ import getCaptions from "./getCaptions";
 import { getDescription } from "./getCaptionPartsFromString";
 import getUserLabels from "../storage/getUserLabels";
 import positionInDocument from "../position/positionInDocument";
-import {
-  CaptionalizableSelectedElement,
-  CaptionParts,
-} from "../../common/types";
+import { CaptionParts } from "../../common/types";
 
 /**
  * Gets a @type {CaptionParts} representation of the caption of a given element.
  * If the element doesn't contain a caption, creates a caption with the user-specified label
  * correct number given its position in document and an empty description.
  *
- * @param {CaptionalizableSelectedElement} element An element that can contain a Caption.
+ * @param {GoogleAppsScript.Document.Element} element An element.
  * @return {CaptionParts} An object representation of the caption text.
  * @customfunction
  */
 export default function getCaptionParts(
-  element: CaptionalizableSelectedElement
+  element: GoogleAppsScript.Document.Element
 ): CaptionParts {
   const caption = getCaption(element);
   return {
@@ -42,7 +39,7 @@ function getLabel(type: GoogleAppsScript.Document.ElementType): string {
   }
 }
 
-function getNumber(element: CaptionalizableSelectedElement): number {
+function getNumber(element: GoogleAppsScript.Document.Element): number {
   let number = 1;
 
   const captions = getCaptions(element.getType());

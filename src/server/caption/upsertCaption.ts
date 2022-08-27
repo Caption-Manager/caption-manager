@@ -1,12 +1,9 @@
 import getCaptionalizableSelectedElement from "./getCaptionalizableSelectedElement";
 import getCaption from "./getCaption";
 import updateCaption from "./updateCaption";
-import getNextSiblingParagraph from "./getNextSiblingParagraph";
+import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
 import applyCaptionStyles from "./applyCaptionStyles";
-import {
-  CaptionalizableSelectedElement,
-  CaptionText,
-} from "../../common/types";
+import { CaptionText } from "../../common/types";
 
 /**
  * Update (if the @type {Caption} already exists) or insert a @type {Caption} with
@@ -31,17 +28,17 @@ export default function upsertCaption(text: CaptionText): void {
  * Inserts a @type {Caption} with specified @type {CaptionText} for the currently selected
  * element.
  *
- * @param {CaptionalizableSelectedElement} element The selected element to insert the caption.
+ * @param {GoogleAppsScript.Document.Element} element Selected element to insert the caption.
  * @param {CaptionText} text A string that has a label, number and description.
  * @return {void}
  * @customfunction
  */
 function insertCaption(
-  element: CaptionalizableSelectedElement,
+  element: GoogleAppsScript.Document.Element,
   text: CaptionText
 ): void {
   const body = DocumentApp.getActiveDocument().getBody();
-  const nextSiblingParagraph = getNextSiblingParagraph(element);
+  const nextSiblingParagraph = getNextBodyChildParagraph(element);
 
   let paragraph: GoogleAppsScript.Document.Paragraph;
   if (!nextSiblingParagraph) {

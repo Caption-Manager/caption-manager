@@ -10,7 +10,7 @@ import {
 // Services
 import GAS from "../../services/GAS";
 // Utils
-import { capitalizeOnlyFirstLetter, CaptionParts } from "../../../common/utils";
+import { CaptionParts } from "../../../common/utils";
 // Types
 import {
   CaptionLabel,
@@ -18,13 +18,14 @@ import {
   CaptionDescription,
   CaptionText,
   StorageLabelKey,
+  CaptionalizableSelectedElementType,
 } from "../../../common/types";
 
 interface Props {
   initialLabel: CaptionLabel;
   number: CaptionNumber;
   initialDescription: CaptionDescription;
-  selectedElementType: StorageLabelKey;
+  selectedElementType: CaptionalizableSelectedElementType;
 }
 
 export default function CaptionEditor({
@@ -41,7 +42,7 @@ export default function CaptionEditor({
     setAutoUpdateCaptions,
     error,
     handleSubmit,
-  } = useHandleSubmit();
+  } = useHandleSubmit(selectedElementType);
 
   React.useEffect(
     function onNewSelectedElement() {
@@ -71,7 +72,7 @@ export default function CaptionEditor({
   }
 
   function onSubmit() {
-    handleSubmit(selectedElementType, label, captionParts.getAsText());
+    handleSubmit(label, captionParts.getAsText());
   }
 
   return (
@@ -105,7 +106,7 @@ interface OptionsProps {
   onChangeLabel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   autoUpdateCaptions: boolean;
   onChangeAutoUpdateCaptions: () => void;
-  selectedElementType: StorageLabelKey;
+  selectedElementType: CaptionalizableSelectedElementType;
 }
 
 function Options({
@@ -134,20 +135,16 @@ function Options({
   );
 }
 
-function useHandleSubmit() {
+function useHandleSubmit(type: CaptionalizableSelectedElementType) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [autoUpdateCaptions, setAutoUpdateCaptions] = React.useState(false);
   const [error, setError] = React.useState<null | string>(null);
 
-  function handleSubmit(
-    type: StorageLabelKey,
-    label: string,
-    text: CaptionText
-  ) {
+  function handleSubmit(label: string, text: CaptionText) {
     setError(null);
     setIsLoading(true);
 
-    GAS.setUserLabel(type, label)
+    GAS.setUserLabel(getStorageLabelKeyFromType(type), label)
       .then(function onStoredUserLabel() {
         return GAS.upsertCaption(text);
       })
@@ -160,7 +157,6 @@ function useHandleSubmit() {
       })
       .catch(function onError(error) {
         setError(error.message);
-        console.error(error);
         setIsLoading(false);
       });
   }
@@ -174,11 +170,31 @@ function useHandleSubmit() {
   };
 }
 
-function humanReadableType(type: StorageLabelKey) {
+function getStorageLabelKeyFromType(
+  type: CaptionalizableSelectedElementType
+): StorageLabelKey {
+  switch (type) {
+    case "INLINE_IMAGE":
+      return "INLINE_IMAGE";
+    case "TABLE_CELL":
+      return "TABLE";
+    case "EQUATION":
+      return "EQUATION";
+    default:
+      // This should be impossible
+      throw new Error(`Invalid type ${type} to get storage key from.`);
+  }
+}
+
+function humanReadableType(type: CaptionalizableSelectedElementType) {
   switch (type) {
     case "INLINE_IMAGE":
       return "Image";
+    case "TABLE_CELL":
+      return "Table";
+    case "EQUATION":
+      return "Equation";
     default:
-      return capitalizeOnlyFirstLetter(type);
+      return "Unknown";
   }
 }

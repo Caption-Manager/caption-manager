@@ -1,19 +1,26 @@
-import { CaptionalizableSelectedElement } from "../../common/types";
 import getFirstSelectedElement from "../utils/getFirstSelectedElement";
 import isCaptionalizable from "./isCaptionalizable";
 
-export default function getCaptionalizableSelectedElement() {
+const BASE_ERROR_MESSAGE =
+  "You must have a captionalizable selected element (table, image or equation) to upsert a caption.";
+
+/**
+ * Gets the first selected element as a @type {GoogleAppsScript.Document.Element}.
+ * If no selected element or the element is not captionalizable, throwns an error.
+ *
+ * @return {GoogleAppsScript.Document.Element} The selected element as a captionalizable element.
+ * @customfunction
+ */
+export default function getCaptionalizableSelectedElement(): GoogleAppsScript.Document.Element {
   const selectedElement = getFirstSelectedElement();
-  if (!selectedElement || !isCaptionalizable(selectedElement)) {
-    const baseErrorMessage =
-      "You must have a captionalizable selected element (table, image or equation) to upsert a caption.";
+
+  if (!selectedElement) throw new Error(BASE_ERROR_MESSAGE);
+  if (!isCaptionalizable(selectedElement)) {
+    const elementType = selectedElement.getType().toString();
     throw new Error(
-      !selectedElement
-        ? baseErrorMessage
-        : `${baseErrorMessage} ${selectedElement
-            .getType()
-            .toString()} element is not a valid element.`
+      `${BASE_ERROR_MESSAGE} \n ${elementType} element is not a valid element.`
     );
   }
-  return (selectedElement as unknown) as CaptionalizableSelectedElement;
+
+  return selectedElement;
 }

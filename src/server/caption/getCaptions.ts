@@ -1,5 +1,5 @@
 import getCaption from "./getCaption";
-import { Caption, CaptionalizableSelectedElement } from "../../common/types";
+import { Caption } from "../../common/types";
 
 /**
  * Gets all captions (@type {Caption[]}) for a given element type.
@@ -20,17 +20,18 @@ export default function getCaptions(
  * Gets an array of elements of the specified element type.
  *
  * @param {GoogleAppsScript.Document.ElementType} type An element type.
- * @return {CaptionalizableSelectedElement[]} An list of found elements.
+ * @return {GoogleAppsScript.Document.Element[]} An list of found elements.
  * @customfunction
  */
 function getElements(
   type: GoogleAppsScript.Document.ElementType
-): CaptionalizableSelectedElement[] {
+): GoogleAppsScript.Document.Element[] {
   switch (type) {
     case DocumentApp.ElementType.INLINE_IMAGE:
       return getCustomElements(DocumentApp.ElementType.INLINE_IMAGE);
     case DocumentApp.ElementType.TABLE_CELL:
-      return getCustomElements(DocumentApp.ElementType.TABLE_CELL);
+      // To get the right Table count, we must get Tables instead of Table Cell
+      return getCustomElements(DocumentApp.ElementType.TABLE);
     case DocumentApp.ElementType.EQUATION:
       return getCustomElements(DocumentApp.ElementType.EQUATION);
     default:
@@ -42,12 +43,12 @@ function getElements(
  * Retrieves all elements contained in the section.
  *
  * @param {GoogleAppsScript.Document.ElementType} type An element type.
- * @return {CaptionalizableSelectedElement} A list of found elements.
+ * @return {GoogleAppsScript.Document.Element[]} A list of found elements.
  * @customfunction
  */
 function getCustomElements(
   type: GoogleAppsScript.Document.ElementType
-): CaptionalizableSelectedElement[] {
+): GoogleAppsScript.Document.Element[] {
   const body = DocumentApp.getActiveDocument().getBody();
 
   const rangeElements: GoogleAppsScript.Document.RangeElement[] = [];
@@ -59,5 +60,5 @@ function getCustomElements(
   }
 
   const elements = rangeElements.map(rangeElement => rangeElement.getElement());
-  return elements as any;
+  return elements;
 }

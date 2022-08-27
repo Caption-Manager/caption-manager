@@ -1,19 +1,19 @@
 import getUserLabels from "../storage/getUserLabels";
 import getCaptionPartsFromString from "./getCaptionPartsFromString";
-import getNextSiblingParagraph from "./getNextSiblingParagraph";
+import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
 import { includes, removeLineBreaks } from "../../common/utils";
-import { Caption, CaptionalizableSelectedElement } from "../../common/types";
+import { Caption } from "../../common/types";
 
 /**
  * Gets the @type {Caption} for a given element.
  * If no @type {Caption} is found, returns null.
  *
- * @param {CaptionalizableSelectedElement} element An element that can contain a Caption.
+ * @param {GoogleAppsScript.Document.Element} element An element.
  * @return {Caption|null} The Caption element or null if no caption is found.
  * @customfunction
  */
 export default function getCaption(
-  element: CaptionalizableSelectedElement
+  element: GoogleAppsScript.Document.Element
 ): Caption | null {
   if (element.isAtDocumentEnd()) return null;
 
@@ -21,7 +21,7 @@ export default function getCaption(
     const captionFromText = getCaptionFromText(element);
     if (captionFromText) return captionFromText;
 
-    const captionFromNextSiblingParagraph = getCaptionFromNextSiblingParagraph(
+    const captionFromNextSiblingParagraph = getCaptionFromNextBodyChildParagraph(
       element
     );
     if (captionFromNextSiblingParagraph) return captionFromNextSiblingParagraph;
@@ -32,11 +32,20 @@ export default function getCaption(
   }
 }
 
+/**
+ * Tries to get the @type {Caption} from the text immediately after the @type {GoogleAppsScript.Document.Element}.
+ * If no @type {Caption} is found, returns null.
+ *
+ * @param {GoogleAppsScript.Document.Element} element An element.
+ * @return {Caption|null} The Caption element or null if no caption is found.
+ * @customfunction
+ */
 function getCaptionFromText(
-  element: CaptionalizableSelectedElement
+  element: GoogleAppsScript.Document.Element
 ): Caption | null {
   // What we are trying to address here is the scenario where we have a caption which is not
-  // in a following paragraph, but in the same paragraph, as a text following the element.
+  // in a following paragraph, but in the same paragraph of the element, as a text
+  // following the element.
   // Visually, it looks like a normal Caption though, but it's just a Text with starting with
   // a line break (like "\n Figure 1 - Some description").
 
@@ -57,6 +66,42 @@ function getCaptionFromText(
   }
 
   const maybeCaption = nextSibling.asText();
+  return getCaptionAfterVerifyParts(maybeCaption);
+}
+
+/**
+ * Tries to get the @type {Caption} from the next body child paragraph.
+ * This is useful because the direct next sibling (element.getNextSibling()) can be a
+ * Paragraph inside a Table Cell, which will definitely not contain a Caption.
+ * If no @type {Caption} is found, returns null.
+ *
+ * @param {GoogleAppsScript.Document.Element} element An element.
+ * @return {Caption|null} The Caption element or null if no caption is found.
+ * @customfunction
+ */
+function getCaptionFromNextBodyChildParagraph(
+  element: GoogleAppsScript.Document.Element
+): Caption | null {
+  const nextElement = getNextBodyChildParagraph(element);
+  const paragraphFirstChild = nextElement.asParagraph().getChild(0);
+  if (paragraphFirstChild.getType() !== DocumentApp.ElementType.TEXT)
+    return null;
+
+  const maybeCaption = paragraphFirstChild.asText();
+  return getCaptionAfterVerifyParts(maybeCaption);
+}
+
+/**
+ * Gets the @type {Caption} after verifying that its parts indeed look like a caption
+ * If it doesn't looke like a @type {Caption}, returns null.
+ *
+ * @param {GoogleAppsScript.Document.Element} element An element.
+ * @return {Caption|null} The Caption element or null if it doesn't look like a caption.
+ * @customfunction
+ */
+function getCaptionAfterVerifyParts(
+  maybeCaption: GoogleAppsScript.Document.Text
+): Caption | null {
   const { label, number } = getCaptionPartsFromString(maybeCaption.getText());
 
   if (isNaN(number)) return null;
@@ -64,7 +109,7 @@ function getCaptionFromText(
   const userLabels = getUserLabels();
   const userLabelValues = Object.keys(userLabels).map(key => userLabels[key]); // TODO: update this line to more recent Javascript
 
-  // This is exactly the kind of scenario we are trying to address here:
+  // This is exactly the kind of scenario we are trying to address:
   // We have a Caption with text "\n Figure 10 - Some text", where "\n"
   // is a line break. So visually it looks like it's a normal caption.
   // We remove the line break and check if the label matches one of the
@@ -83,20 +128,4 @@ function getCaptionFromText(
   // wrong position, so we maybe could updateCaption() here, but not sure
   // if this is desirable
   return maybeCaption as Caption;
-}
-
-function getCaptionFromNextSiblingParagraph(
-  element: CaptionalizableSelectedElement
-): Caption | null {
-  const nextElement = getNextSiblingParagraph(element);
-  if (
-    !nextElement ||
-    nextElement.getType() !== DocumentApp.ElementType.PARAGRAPH
-  )
-    return null;
-
-  const paragraphFirstChild = nextElement.asParagraph().getChild(0);
-  if (paragraphFirstChild.getType() !== DocumentApp.ElementType.TEXT)
-    return null;
-  return paragraphFirstChild.asText();
 }

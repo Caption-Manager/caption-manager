@@ -1,13 +1,12 @@
 import { includes } from "../../common/utils";
-import { CaptionalizableSelectedElement } from "../../common/types";
 
 /**
- * Gets the next paragraph that can contain a caption. The direct next sibling
- * (element.getNextSibling()) can be a Paragraph inside a Table Cell, for instance.
- * So we must
+ * Gets the next paragraph, which is direct child of the body, that can contain a caption.
+ * This is useful because the direct next sibling (element.getNextSibling()) can be a Paragraph
+ * inside a Table Cell, which will definitely not contain a Caption.
  *
- * @param {CaptionalizableSelectedElement} element An element type.
- * @return {GoogleAppsScript.Document.ElementType} A paragraph element type. We don't return a
+ * @param {GoogleAppsScript.Document.Element} element An element.
+ * @return {GoogleAppsScript.Document.ElementType} A paragraph element. We don't return a
  * @type {GoogleAppsScript.Document.Paragraph} to facilitate typing.
  *
  * See:
@@ -15,8 +14,8 @@ import { CaptionalizableSelectedElement } from "../../common/types";
  *
  * @customfunction
  */
-export default function getNextSiblingParagraph(
-  element: CaptionalizableSelectedElement
+export default function getNextBodyChildParagraph(
+  element: GoogleAppsScript.Document.Element
 ): GoogleAppsScript.Document.Element | null {
   let nextSibling: GoogleAppsScript.Document.Element;
   const elementType = element.getType();
@@ -37,7 +36,9 @@ export default function getNextSiblingParagraph(
       .getNextSibling();
   } else {
     throw new Error(
-      `Unknown type ${element.getType().toString()} to get next element`
+      `Unknown type ${element
+        .getType()
+        .toString()} to get next body child paragraph`
     );
   }
 
