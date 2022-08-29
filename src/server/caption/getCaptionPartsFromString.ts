@@ -22,6 +22,6 @@ export default function getCaptionPartsFromString(
   return { label, number: Number(number), description };
 }
 
-export function getDescription(text: string): CaptionDescription {
-  return getCaptionPartsFromString(text).description;
+export function getDescription(string: string): CaptionDescription {
+  return getCaptionPartsFromString(string).description;
 }

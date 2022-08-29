@@ -1,7 +1,7 @@
 import getUserLabels from "../storage/getUserLabels";
 import getCaptionPartsFromString from "./getCaptionPartsFromString";
 import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
-import { includes, removeLineBreaks } from "../../common/utils";
+import { removeLineBreaks } from "../../common/utils";
 import { Caption } from "../../common/types";
 
 /**
@@ -21,10 +21,11 @@ export default function getCaption(
     const captionFromText = getCaptionFromText(element);
     if (captionFromText) return captionFromText;
 
-    const captionFromNextSiblingParagraph = getCaptionFromNextBodyChildParagraph(
+    const captionFromNextBodyChildParagraph = getCaptionFromNextBodyChildParagraph(
       element
     );
-    if (captionFromNextSiblingParagraph) return captionFromNextSiblingParagraph;
+    if (captionFromNextBodyChildParagraph)
+      return captionFromNextBodyChildParagraph;
 
     return null;
   } catch (error) {
@@ -51,10 +52,10 @@ function getCaptionFromText(
 
   // This can only happen with equations or images, as these elements can preceede a Text element
   if (
-    !includes(
-      [DocumentApp.ElementType.EQUATION, DocumentApp.ElementType.INLINE_IMAGE],
-      element.getType()
-    )
+    [
+      DocumentApp.ElementType.EQUATION,
+      DocumentApp.ElementType.INLINE_IMAGE,
+    ].includes(element.getType())
   ) {
     return null;
   }
@@ -82,8 +83,10 @@ function getCaptionFromText(
 function getCaptionFromNextBodyChildParagraph(
   element: GoogleAppsScript.Document.Element
 ): Caption | null {
-  const nextElement = getNextBodyChildParagraph(element);
-  const paragraphFirstChild = nextElement.asParagraph().getChild(0);
+  const nextParagraph = getNextBodyChildParagraph(element);
+  if (!nextParagraph) return null;
+
+  const paragraphFirstChild = nextParagraph.asParagraph().getChild(0);
   if (paragraphFirstChild.getType() !== DocumentApp.ElementType.TEXT)
     return null;
 
@@ -106,20 +109,20 @@ function getCaptionAfterVerifyParts(
 
   if (isNaN(number)) return null;
 
-  const userLabels = getUserLabels();
-  const userLabelValues = Object.keys(userLabels).map(key => userLabels[key]); // TODO: update this line to more recent Javascript
-
   // This is exactly the kind of scenario we are trying to address:
   // We have a Caption with text "\n Figure 10 - Some text", where "\n"
   // is a line break. So visually it looks like it's a normal caption.
   // We remove the line break and check if the label matches one of the
   // user's labels.
-  const labelWithoutLineBreaks = removeLineBreaks(label);
-  if (
-    !userLabelValues.some(userLabel => userLabel === labelWithoutLineBreaks)
-  ) {
-    return null;
-  }
+  // const userLabels = getUserLabels();
+  // const labelWithoutLineBreaks = removeLineBreaks(label);
+  // if (
+  //   !Object.values(userLabels).some(
+  //     userLabel => userLabel === labelWithoutLineBreaks
+  //   )
+  // ) {
+  //   return null;
+  // }
 
   // At this point we know have something like `{Valid User Label} {number}`
   // So probably this is indeed a Caption. But we could later add more

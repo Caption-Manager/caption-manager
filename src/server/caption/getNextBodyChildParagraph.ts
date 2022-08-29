@@ -17,20 +17,20 @@ import { includes } from "../../common/utils";
 export default function getNextBodyChildParagraph(
   element: GoogleAppsScript.Document.Element
 ): GoogleAppsScript.Document.Element | null {
-  let nextSibling: GoogleAppsScript.Document.Element;
+  let nextParagraph: GoogleAppsScript.Document.Element;
   const elementType = element.getType();
 
   if (
-    includes(
-      [DocumentApp.ElementType.INLINE_IMAGE, DocumentApp.ElementType.EQUATION],
-      elementType
-    )
+    [
+      DocumentApp.ElementType.INLINE_IMAGE,
+      DocumentApp.ElementType.EQUATION,
+    ].includes(elementType)
   ) {
-    nextSibling = element.getParent().getNextSibling();
+    nextParagraph = element.getParent().getNextSibling();
   } else if (elementType === DocumentApp.ElementType.TABLE) {
-    nextSibling = element.getNextSibling();
+    nextParagraph = element.getNextSibling();
   } else if (elementType === DocumentApp.ElementType.TABLE_CELL) {
-    nextSibling = element
+    nextParagraph = element
       .getParent()
       .getParent()
       .getNextSibling();
@@ -43,9 +43,9 @@ export default function getNextBodyChildParagraph(
   }
 
   if (
-    !nextSibling ||
-    nextSibling.getType() !== DocumentApp.ElementType.PARAGRAPH
+    !nextParagraph ||
+    nextParagraph.getType() !== DocumentApp.ElementType.PARAGRAPH
   )
     return null;
-  return nextSibling;
+  return nextParagraph;
 }
