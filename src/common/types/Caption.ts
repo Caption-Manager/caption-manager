@@ -6,12 +6,12 @@ export type CaptionDescription = string;
   * A CaptionPrefix is a string representation of a Caption without its
   * description.
 */
-export type CaptionPrefix = `${CaptionLabel} ${CaptionNumber} - `;
+export type CaptionPrefix = `${CaptionLabel} ${CaptionNumber}`;
 
 /**
   * A CaptionText is the string representation of a Caption.
 */
-export type CaptionText = `${CaptionLabel} ${CaptionNumber} - ${CaptionDescription}`;
+export type CaptionText = `${CaptionLabel} ${CaptionNumber} ${CaptionDescription}`;
 
 /**
   * An object representation of the @type {CaptionText}.

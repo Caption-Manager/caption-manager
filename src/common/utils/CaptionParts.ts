@@ -16,10 +16,10 @@ export class CaptionParts implements ICaptionParts {
   }
 
   getAsPrefix(): CaptionPrefix {
-    return `${this.label} ${this.number} - `;
+    return `${this.label} ${this.number}`;
   }
 
   getAsText(): CaptionText {
-    return `${this.getAsPrefix()}${this.description}`;
+    return `${this.getAsPrefix()} ${this.description}`;
   }
 }

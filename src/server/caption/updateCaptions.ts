@@ -19,7 +19,8 @@ export default function updateCaptions(label: string): void {
   for (const caption of captions) {
     updateCaption(
       caption,
-      `${label} ${number++} - ${getDescription(caption.getText())}`
+      `${label} ${number} ${getDescription(caption.getText())}`
     );
+    number = number + 1;
   }
 }

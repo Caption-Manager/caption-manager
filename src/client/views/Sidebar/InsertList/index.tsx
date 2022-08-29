@@ -26,7 +26,13 @@ export default function InsertList() {
     <Form>
       <Segment basic>
         <Header size="small">Element</Header>
-        <Dropdown text={type} placeholder="Select an element" selection fluid>
+        <Dropdown
+          value={type}
+          text={type}
+          placeholder="Select an element"
+          selection
+          fluid
+        >
           <Dropdown.Menu>
             <Dropdown.Item
               value={"Image"}
@@ -51,9 +57,7 @@ export default function InsertList() {
             />
           </Dropdown.Menu>
         </Dropdown>
-        {/* </Segment> */}
 
-        {/* <Segment> */}
         <Header size="small">Type</Header>
         <Grid columns={2} centered>
           <Grid.Column textAlign="center">

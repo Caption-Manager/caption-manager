@@ -200,8 +200,13 @@ function useHandleSubmit(type: CaptionalizableSelectedElementType) {
         GAS.setUserLabel(getStorageLabelKeyFromType(type), label),
         GAS.upsertCaption(text),
       ]);
+
       if (autoUpdateCaptions) {
         await GAS.updateCaptions(label);
+      }
+
+      if (bookmark) {
+        await GAS.upsertBookmark();
       }
     } catch (error) {
       setError(error.message || "We couldn't update your caption");

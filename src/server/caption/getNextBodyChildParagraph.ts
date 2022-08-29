@@ -1,5 +1,3 @@
-import { includes } from "../../common/utils";
-
 /**
  * Gets the next paragraph, which is direct child of the body, that can contain a caption.
  * This is useful because the direct next sibling (element.getNextSibling()) can be a Paragraph

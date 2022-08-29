@@ -14,6 +14,9 @@ export default function updateCaption(
   caption: Caption,
   text: CaptionText
 ): void {
+  // This is a bit problematic, as the text can contain a bookmark
+  // and using "setText" removes the bookmark. The partial solution
+  // is reinserting the bookmark after updating the caption
   caption.setText(text);
   applyCaptionStyles(caption.getParent().asParagraph());
 }

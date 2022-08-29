@@ -2,8 +2,8 @@ import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
 import { getDescription } from "./getCaptionPartsFromString";
 import getUserLabels from "../storage/getUserLabels";
-import positionInDocument from "../position/positionInDocument";
-import { CaptionParts } from "../../common/types";
+import { Caption, CaptionParts } from "../../common/types";
+import { Path, RelativeDocumentPath } from "../path";
 
 /**
  * Gets a @type {CaptionParts} representation of the caption of a given element.
@@ -41,15 +41,13 @@ function getLabel(type: GoogleAppsScript.Document.ElementType): string {
 
 function getNumber(element: GoogleAppsScript.Document.Element): number {
   let number = 1;
-
   const captions = getCaptions(element.getType());
-  const elementPosition = positionInDocument(element);
   for (const caption of captions) {
-    if (elementPosition < positionInDocument(caption)) return number;
+    if (Path(element).isBefore(caption as any)) return number;
     else number = number + 1;
   }
 
-  // If the elementPosition is smaller than all other element positions,
-  // it must be the first element
+  // If the element is positioned before all other captions,
+  // it must be the first caption
   return number;
 }

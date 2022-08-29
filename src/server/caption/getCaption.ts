@@ -1,7 +1,5 @@
-import getUserLabels from "../storage/getUserLabels";
 import getCaptionPartsFromString from "./getCaptionPartsFromString";
 import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
-import { removeLineBreaks } from "../../common/utils";
 import { Caption } from "../../common/types";
 
 /**
@@ -67,6 +65,8 @@ function getCaptionFromText(
   }
 
   const maybeCaption = nextSibling.asText();
+  // It's likely that the obtained caption here is in the wrong position,
+  // so we maybe could adjust the position here, but not sure if this is even desirable
   return getCaptionAfterVerifyParts(maybeCaption);
 }
 
@@ -98,37 +98,27 @@ function getCaptionFromNextBodyChildParagraph(
  * Gets the @type {Caption} after verifying that its parts indeed look like a caption
  * If it doesn't looke like a @type {Caption}, returns null.
  *
- * @param {GoogleAppsScript.Document.Element} element An element.
+ * @param {GoogleAppsScript.Document.Element} maybeCaption An element that maya be a Caption.
  * @return {Caption|null} The Caption element or null if it doesn't look like a caption.
  * @customfunction
  */
 function getCaptionAfterVerifyParts(
   maybeCaption: GoogleAppsScript.Document.Text
 ): Caption | null {
-  const { label, number } = getCaptionPartsFromString(maybeCaption.getText());
-
+  const { number } = getCaptionPartsFromString(maybeCaption.getText());
   if (isNaN(number)) return null;
 
-  // This is exactly the kind of scenario we are trying to address:
-  // We have a Caption with text "\n Figure 10 - Some text", where "\n"
-  // is a line break. So visually it looks like it's a normal caption.
-  // We remove the line break and check if the label matches one of the
-  // user's labels.
-  // const userLabels = getUserLabels();
-  // const labelWithoutLineBreaks = removeLineBreaks(label);
-  // if (
-  //   !Object.values(userLabels).some(
-  //     userLabel => userLabel === labelWithoutLineBreaks
-  //   )
-  // ) {
-  //   return null;
-  // }
+  // At this point we know have something like `{string} {number}`
+  // So probably this is indeed a Caption. But we could add more
+  // checks like comparing Text element styles or checking the description.
 
-  // At this point we know have something like `{Valid User Label} {number}`
-  // So probably this is indeed a Caption. But we could later add more
-  // checks like comparing Text element styles or checking the separator or
-  // description text. Also, it's likely that the obtained caption is in the
-  // wrong position, so we maybe could updateCaption() here, but not sure
-  // if this is desirable
+  // Also, this can cause bugs if the user has a captionizable element without caption
+  // whose next text has the structure `{string} {number} {string}`.
+  // One idea was to have an unique identifier to the caption, like specific
+  // empty characters (see https://emptycharacter.com/). Then we could identify a
+  // caption by verifying if it conforms to the interface
+  // `${string} {number}{specific empty space}`. The problem with this approach is that
+  // if the user decides to manually change the caption and deletes the specific empty
+  // space, it would no longer be recognized as a caption.
   return maybeCaption as Caption;
 }
