@@ -171,6 +171,23 @@ const DynamicCdnWebpackPluginConfig = {
     // "name" should match the package being imported
     // "var" is important to get right -- this should be the exposed global. Look up "webpack externals" for info.
     switch (packageName) {
+      case "semantic-ui-react":
+        return {
+          name: packageName,
+          var: "SemanticUIReact",
+          version: packageVersion,
+          url: `https://unpkg.com/browse/semantic-ui-react@${packageVersion}}/dist/umd/semantic-ui-react.min.js`,
+        };
+
+      // TODO: Add Semantic-Ui configuration
+      // Example for react-transition-group
+      // case 'react-transition-group':
+      //   return {
+      //     name: packageName,
+      //     var: 'ReactTransitionGroup',
+      //     version: packageVersion,
+      //     url: `https://unpkg.com/react-transition-group@${packageVersion}/dist/react-transition-group${packageSuffix}`,
+      //   };
       default:
         return null;
     }

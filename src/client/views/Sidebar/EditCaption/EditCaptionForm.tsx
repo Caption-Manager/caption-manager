@@ -1,16 +1,19 @@
 import React from "react";
 // Components
 import {
-  TextInput,
-  ErrorText,
-  PrimaryButton,
-  Divider,
+  Form,
+  Input,
+  Segment,
+  Accordion,
   Checkbox,
-} from "../../components";
+  Button,
+  Icon,
+  Message,
+} from "semantic-ui-react";
 // Services
-import GAS from "../../services/GAS";
+import GAS from "../../../services/GAS";
 // Utils
-import { CaptionParts } from "../../../common/utils";
+import { CaptionParts } from "../../../../common/utils";
 // Types
 import {
   CaptionLabel,
@@ -19,7 +22,7 @@ import {
   CaptionText,
   StorageLabelKey,
   CaptionalizableSelectedElementType,
-} from "../../../common/types";
+} from "../../../../common/types";
 
 interface Props {
   initialLabel: CaptionLabel;
@@ -28,7 +31,7 @@ interface Props {
   selectedElementType: CaptionalizableSelectedElementType;
 }
 
-export default function CaptionEditor({
+export default function EditCaptionForm({
   initialLabel,
   number,
   initialDescription,
@@ -40,6 +43,8 @@ export default function CaptionEditor({
     isLoading,
     autoUpdateCaptions,
     setAutoUpdateCaptions,
+    bookmark,
+    setBookmark,
     error,
     handleSubmit,
   } = useHandleSubmit(selectedElementType);
@@ -59,27 +64,35 @@ export default function CaptionEditor({
   }
 
   function onChangeDescription(event: React.ChangeEvent<HTMLInputElement>) {
-    // TODO: fix wrong description when user tries to delete
-    // just part of the prefix
-    const newText = event.target.value;
-    const prefix = captionParts.getAsPrefix();
-    const isDeletingPrefix = newText.length < prefix.length;
-    setDescription(isDeletingPrefix ? "" : newText.replace(prefix, ""));
+    setDescription(event.target.value);
   }
 
   function onChangeAutoUpdateCaptions() {
     setAutoUpdateCaptions(!autoUpdateCaptions);
   }
 
+  function onChangeBookmark() {
+    setBookmark(!bookmark);
+  }
+
   function onSubmit() {
     handleSubmit(label, captionParts.getAsText());
   }
 
+  function onKeyPress(event) {
+    if (event.key === "Enter") {
+      handleSubmit(label, captionParts.getAsText());
+    }
+  }
+
   return (
-    <React.Fragment>
-      <TextInput
-        label={"Caption:"}
-        value={captionParts.getAsText()}
+    <Form>
+      <Input
+        label={captionParts.getAsPrefix()}
+        placeholder="Write your description here..."
+        fluid
+        autoFocus
+        value={description}
         onChange={onChangeDescription}
       />
 
@@ -88,16 +101,29 @@ export default function CaptionEditor({
         onChangeLabel={onChangeLabel}
         autoUpdateCaptions={autoUpdateCaptions}
         onChangeAutoUpdateCaptions={onChangeAutoUpdateCaptions}
+        bookmark={bookmark}
+        onChangeBookmark={onChangeBookmark}
         selectedElementType={selectedElementType}
       />
 
-      <div className="block">
-        <PrimaryButton disabled={isLoading} onClick={onSubmit}>
-          {isLoading ? "Loading..." : "Save caption"}
-        </PrimaryButton>
-        <ErrorText>{error}</ErrorText>
-      </div>
-    </React.Fragment>
+      <Button
+        loading={isLoading}
+        disabled={isLoading}
+        onClick={onSubmit}
+        onKeyPress={onKeyPress}
+        primary
+        style={{ marginTop: 20 }}
+      >
+        Save caption
+      </Button>
+
+      {error && (
+        <Message negative>
+          <Message.Header>Something went wrong</Message.Header>
+          <p>{error}</p>
+        </Message>
+      )}
+    </Form>
   );
 }
 
@@ -106,6 +132,8 @@ interface OptionsProps {
   onChangeLabel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   autoUpdateCaptions: boolean;
   onChangeAutoUpdateCaptions: () => void;
+  bookmark: boolean;
+  onChangeBookmark: () => void;
   selectedElementType: CaptionalizableSelectedElementType;
 }
 
@@ -114,57 +142,80 @@ function Options({
   onChangeLabel,
   autoUpdateCaptions,
   onChangeAutoUpdateCaptions,
+  bookmark,
+  onChangeBookmark,
   selectedElementType,
 }: OptionsProps) {
+  const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
+
   return (
-    <div style={{ marginTop: 15, marginBottom: 15 }}>
-      <Divider leftText="Options" />
-      <TextInput
-        label={`Label for ${humanReadableType(selectedElementType)}`}
-        value={label}
-        onChange={onChangeLabel}
-      />
-      <Checkbox
-        checked={autoUpdateCaptions}
-        label={"Auto update captions"}
-        style={{ marginTop: 10 }}
-        onChange={onChangeAutoUpdateCaptions}
-      />
-      <Divider />
-    </div>
+    <Accordion>
+      <Accordion.Title
+        onClick={() => setIsOptionsOpen(p => !p)}
+        active={isOptionsOpen}
+      >
+        <Icon name="dropdown" />
+        Options
+      </Accordion.Title>
+
+      <Accordion.Content active={isOptionsOpen}>
+        <Segment basic>
+          <Form.Input
+            inline
+            value={label}
+            label={`Label for ${humanReadableType(selectedElementType)}`}
+            onChange={onChangeLabel}
+          />
+
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <Checkbox
+              checked={autoUpdateCaptions}
+              style={{ marginBottom: 10 }}
+              label={"Auto update captions"}
+              onChange={onChangeAutoUpdateCaptions}
+            />
+            <Checkbox
+              checked={bookmark}
+              label={"Bookmark"}
+              onChange={onChangeBookmark}
+            />
+          </div>
+        </Segment>
+      </Accordion.Content>
+    </Accordion>
   );
 }
 
 function useHandleSubmit(type: CaptionalizableSelectedElementType) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [autoUpdateCaptions, setAutoUpdateCaptions] = React.useState(false);
+  const [bookmark, setBookmark] = React.useState(false);
   const [error, setError] = React.useState<null | string>(null);
 
-  function handleSubmit(label: string, text: CaptionText) {
+  async function handleSubmit(label: string, text: CaptionText) {
     setError(null);
     setIsLoading(true);
-
-    GAS.setUserLabel(getStorageLabelKeyFromType(type), label)
-      .then(function onStoredUserLabel() {
-        return GAS.upsertCaption(text);
-      })
-      .then(function onCaptionUpserted() {
-        if (!autoUpdateCaptions) return;
-        else return GAS.updateCaptions(label);
-      })
-      .then(function onFinish() {
-        setIsLoading(false);
-      })
-      .catch(function onError(error) {
-        setError(error.message);
-        setIsLoading(false);
-      });
+    try {
+      await Promise.all([
+        GAS.setUserLabel(getStorageLabelKeyFromType(type), label),
+        GAS.upsertCaption(text),
+      ]);
+      if (autoUpdateCaptions) {
+        await GAS.updateCaptions(label);
+      }
+    } catch (error) {
+      setError(error.message || "We couldn't update your caption");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return {
     isLoading,
     autoUpdateCaptions,
     setAutoUpdateCaptions,
+    bookmark,
+    setBookmark,
     error,
     handleSubmit,
   };
@@ -182,19 +233,19 @@ function getStorageLabelKeyFromType(
       return "EQUATION";
     default:
       // This should be impossible
-      throw new Error(`Invalid type ${type} to get storage key from.`);
+      return type;
   }
 }
 
 function humanReadableType(type: CaptionalizableSelectedElementType) {
   switch (type) {
     case "INLINE_IMAGE":
-      return "Image";
+      return "Inline Image";
     case "TABLE_CELL":
       return "Table";
     case "EQUATION":
       return "Equation";
     default:
-      return "Unknown";
+      return type;
   }
 }
