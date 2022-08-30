@@ -12,18 +12,26 @@ import {
   DropdownItemProps,
   Label,
 } from "semantic-ui-react";
+// Services
+import GAS from "../../../services/GAS";
 // Utils
 import * as Validation from "../../../../common/utils/Validation";
+import * as HumanReadable from "../../../../common/utils/HumanReadable";
+// Types
+import {
+  CaptionalizableSelectedElementType,
+  ListType,
+} from "../../../../common/types";
 
 interface FormValues {
-  [key: string]: string | undefined;
+  element: CaptionalizableSelectedElementType | undefined;
+  type: ListType | undefined;
 }
 
 interface ValidationErrors {
-  [key: string]: string | null;
+  element: string | null;
+  type: string | null;
 }
-
-type ListType = "Numbered" | "Bookmarked";
 
 export default function InsertList() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -43,9 +51,15 @@ export default function InsertList() {
   function onSelectElement(e, { value: selectedElement }: DropdownItemProps) {
     setErrors(e => ({
       ...e,
-      element: Validation.validate("element", selectedElement as string),
+      element: Validation.validate(
+        "element",
+        selectedElement as CaptionalizableSelectedElementType
+      ),
     }));
-    setValues(v => ({ ...v, element: selectedElement as string }));
+    setValues(v => ({
+      ...v,
+      element: selectedElement as CaptionalizableSelectedElementType,
+    }));
   }
 
   function onSelectType(selectedType: ListType) {
@@ -71,7 +85,7 @@ export default function InsertList() {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      await wait();
+      await GAS.insertList(values.element, values.type);
     } catch (error) {
       setSubmitError(error.message || "Please try again later");
     } finally {
@@ -129,10 +143,11 @@ function ElementDropdown({
   error,
   onSelectElement,
 }: ElementDropdownProps) {
+  // TODO: type Dropdown.Item with CaptionalizableElementType
   return (
     <Form.Dropdown
       value={value}
-      text={value}
+      text={HumanReadable.type(value as CaptionalizableSelectedElementType)}
       error={error}
       label={"Element"}
       placeholder="Select an element"
@@ -142,21 +157,21 @@ function ElementDropdown({
     >
       <Dropdown.Menu>
         <Dropdown.Item
-          value={"Image"}
+          value={"INLINE_IMAGE"}
           icon="image"
           text="Image"
           onClick={onSelectElement}
           active={value === "Image"}
         />
         <Dropdown.Item
-          value={"Table"}
+          value={"TABLE_CELL"}
           icon="table"
           text="Table"
           onClick={onSelectElement}
           active={value === "Table"}
         />
         <Dropdown.Item
-          value={"Equation"}
+          value={"EQUATION"}
           icon="calculator"
           text="Equation"
           onClick={onSelectElement}
@@ -187,10 +202,10 @@ function ListTypeRadioButtons({
             icon={
               <Icon name="ordered list" size="big" style={{ marginLeft: 8 }} />
             }
-            checked={value === "Numbered"}
-            onClick={() => onButtonClick("Numbered")}
+            checked={value === "DEFAULT"}
+            onClick={() => onButtonClick("DEFAULT")}
           >
-            Numbered
+            Default
           </TypeRadioButton>
         </Grid.Column>
 
@@ -204,8 +219,8 @@ function ListTypeRadioButtons({
                 style={{ marginLeft: 8 }}
               />
             }
-            checked={value === "Bookmarked"}
-            onClick={() => onButtonClick("Bookmarked")}
+            checked={value === "BOOKMARKED"}
+            onClick={() => onButtonClick("BOOKMARKED")}
           >
             Bookmarked
           </TypeRadioButton>

@@ -3,20 +3,16 @@ import React from "react";
 import {
   Segment,
   Accordion,
-  Icon,
   AccordionTitleProps,
+  Icon,
 } from "semantic-ui-react";
 import EditCaption from "./EditCaption";
 import InsertList from "./InsertList";
-// Services
-import GAS from "../../services/GAS";
+import Help from "./Help";
 // Constants
 import { SIDEBAR_WIDTH } from "./constants";
-// Types
-import { DocumentInfo } from "../../../common/types";
 
 export default function Sidebar() {
-  const { selectedElement } = useDocumentInfo();
   const { activeIndexes, onItemClick } = useAccordion();
   return (
     <Segment
@@ -40,7 +36,7 @@ export default function Sidebar() {
           onClick={onItemClick}
           active={activeIndexes.includes(0)}
         >
-          <EditCaption selectedElement={selectedElement} />
+          <EditCaption />
         </AccordionItem>
 
         <AccordionItem
@@ -58,60 +54,11 @@ export default function Sidebar() {
           onClick={onItemClick}
           active={activeIndexes.includes(2)}
         >
-          WriteWrite help code hereWrite help code hereWrite help code hereWrite
-          help code hereWrite help code hereWrite help code hereWrite help code
-          hereWrite help code hereWrite help code hereWrite help code hereWrite
-          help code hereWrite help code hereWrite help code hereWrite help code
-          hereWrite help code hereWrite help code hereWrite help code hereWrite
-          help code hereWrite help code hereWrite help code hereWrite help code
-          hereWrite help code hereWrite help code hereWrite help code hereWrite
-          help code hereWrite help code hereWrite help code hereWrite help code
-          here help code here Write help code hereWrite help code hereWrite help
-          code hereWrite help code hereWrite help code hereWrite help code
-          hereWrite help code hereWrite help code hereWrite help code hereWrite
-          help code hereWrite help code hereWrite help code hereWrite help code
-          hereWrite help code hereWrite help code hereWrite help code hereWrite
-          help code hereWrite help code hereWrite help code hereWrite help code
-          hereWrite help code hereWrite help code hereWrite help code hereWrite
-          help code hereWrite help code here
+          <Help />
         </AccordionItem>
       </Accordion>
     </Segment>
   );
-}
-
-const INITIAL_DOCUMENT_INFO = { selectedElement: null };
-
-// See:
-// https://stackoverflow.com/questions/24773177/how-to-poll-a-google-doc-from-an-add-on/24773178#24773178
-export function useDocumentInfo(): DocumentInfo {
-  const [documentInfo, setDocumentInfo] = React.useState<DocumentInfo>(
-    INITIAL_DOCUMENT_INFO
-  );
-
-  React.useEffect(function onMount() {
-    const pollingIntervalId = setInterval(async function onInterval() {
-      try {
-        const documentInfo = await GAS.getDocumentInfo();
-        setDocumentInfo(documentInfo);
-      } catch (error) {
-        // TODO: fix this: we don't want to have to set the document info
-        // to it's initial value when an error occurs...
-        // Just receive a new document info
-        setDocumentInfo(INITIAL_DOCUMENT_INFO);
-        console.error(error.message || error);
-      }
-    }, 2000);
-
-    return function onUnmount() {
-      clearInterval(pollingIntervalId);
-    };
-  }, []);
-
-  // TODO: fix this
-  // For some strange reason, sometimes "documentInfo" is null
-  // so we return an the initial document info instead
-  return documentInfo || INITIAL_DOCUMENT_INFO;
 }
 
 function useAccordion() {
@@ -155,7 +102,9 @@ function AccordionItem({
         <Icon name="dropdown" />
         {title}
       </Accordion.Title>
-      <Accordion.Content active={active}>{children}</Accordion.Content>
+      <Accordion.Content active={active}>
+        {active && children}
+      </Accordion.Content>
     </React.Fragment>
   );
 }

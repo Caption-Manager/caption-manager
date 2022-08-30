@@ -9,11 +9,13 @@ import {
   Button,
   Icon,
   Message,
+  Popup,
 } from "semantic-ui-react";
 // Services
 import GAS from "../../../services/GAS";
 // Utils
 import * as Validation from "../../../../common/utils/Validation";
+import * as HumanReadable from "../../../../common/utils/HumanReadable";
 // Types
 import {
   CaptionLabel,
@@ -40,7 +42,7 @@ interface FormValues {
 }
 
 interface ValidationErrors {
-  [key: string]: string | null;
+  label: string;
 }
 
 export default function EditCaptionForm({
@@ -148,7 +150,7 @@ export default function EditCaptionForm({
     <Form>
       <Input
         label={captionPrefix}
-        placeholder="Write your description here..."
+        placeholder="Write a description here..."
         fluid
         autoFocus
         value={values.description}
@@ -209,6 +211,7 @@ function Options({
   selectedElementType,
 }: OptionsProps) {
   const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
+  const humanReadableType = HumanReadable.type(selectedElementType);
   return (
     <Accordion>
       <Accordion.Title
@@ -223,18 +226,26 @@ function Options({
         <Segment basic>
           <Form.Input
             value={label}
-            label={`Label for ${humanReadableType(selectedElementType)}`}
+            label={`Label for ${humanReadableType}`}
             onChange={onChangeLabel}
             error={labelError}
           />
 
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <Checkbox
-              checked={autoUpdateCaptions}
-              style={{ marginBottom: 10 }}
-              label={"Auto update captions"}
-              onChange={onChangeAutoUpdateCaptions}
+            <Popup
+              content={`This will update all captions of type "${humanReadableType}"
+               with the provided label and correct number`}
+              trigger={
+                <Checkbox
+                  checked={autoUpdateCaptions}
+                  style={{ marginBottom: 10 }}
+                  label={"Auto update captions"}
+                  onChange={onChangeAutoUpdateCaptions}
+                />
+              }
+              mouseEnterDelay={500}
             />
+
             <Checkbox
               checked={bookmark}
               label={"Bookmark"}
@@ -259,19 +270,6 @@ function getStorageLabelKeyFromType(
       return "EQUATION";
     default:
       // This should be impossible
-      return type;
-  }
-}
-
-function humanReadableType(type: CaptionalizableSelectedElementType) {
-  switch (type) {
-    case "INLINE_IMAGE":
-      return "Image";
-    case "TABLE_CELL":
-      return "Table";
-    case "EQUATION":
-      return "Equation";
-    default:
       return type;
   }
 }

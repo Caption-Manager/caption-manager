@@ -1,20 +1,16 @@
 import React from "react";
+// Hooks
+import useDocumentInfo from "./useDocumentInfo";
 // Components
 import { Message } from "semantic-ui-react";
 import EditCaptionForm from "./EditCaptionForm";
 // Utils
 import { capitalizeOnlyFirstLetter } from "../../../../common/utils";
 // Types
-import {
-  SelectedElementInfo,
-  NotCaptionalizableElementInfo,
-} from "../../../../common/types";
+import { NotCaptionalizableElementInfo } from "../../../../common/types";
 
-interface Props {
-  selectedElement: SelectedElementInfo;
-}
-
-export default function EditCaption({ selectedElement }: Props) {
+export default function EditCaption() {
+  const { selectedElement } = useDocumentInfo();
   if (!selectedElement) {
     return <NoSelectedElement />;
   } else if (selectedElement.isCaptionalizable === false) {
