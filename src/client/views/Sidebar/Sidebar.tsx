@@ -62,7 +62,7 @@ export default function Sidebar() {
 }
 
 function useAccordion() {
-  const [activeIndexes, setActiveIndexes] = React.useState([1]);
+  const [activeIndexes, setActiveIndexes] = React.useState([0]);
 
   function onItemClick(event: any, data: AccordionTitleProps) {
     const newIndex = Number(data.index);
