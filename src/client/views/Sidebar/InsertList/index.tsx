@@ -15,27 +15,27 @@ import {
 // Utils
 import * as Validation from "../../../../common/utils/Validation";
 
-interface Values {
+interface FormValues {
   [key: string]: string | undefined;
 }
 
-interface Errors {
+interface ValidationErrors {
   [key: string]: string | null;
 }
 
 type ListType = "Numbered" | "Bookmarked";
 
 export default function InsertList() {
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
-  const [values, setValues] = React.useState<Values>({
+  const [values, setValues] = React.useState<FormValues>({
     element: undefined,
     type: undefined,
   });
 
-  const [errors, setErrors] = React.useState<Errors>({
+  const [errors, setErrors] = React.useState<ValidationErrors>({
     element: null,
     type: null,
   });
@@ -56,11 +56,11 @@ export default function InsertList() {
     setValues(v => ({ ...v, type: selectedType }));
   }
 
-  async function handleSubmit() {
-    if (isLoading) return;
+  async function onSubmit() {
+    if (isSubmitting) return;
     setHasSubmitted(true);
 
-    const errors = {
+    const errors: ValidationErrors = {
       element: Validation.validate("element", values.element),
       type: Validation.validate("list_type", values.type),
     };
@@ -68,20 +68,20 @@ export default function InsertList() {
     const hasValidationErrors = Object.values(errors).some(Boolean);
     if (hasValidationErrors) return;
 
-    setIsLoading(true);
+    setIsSubmitting(true);
     setSubmitError(null);
     try {
       await wait();
     } catch (error) {
       setSubmitError(error.message || "Please try again later");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   }
 
   const hasValidationErrors = Object.values(errors).some(Boolean);
   const disableSubmitButton =
-    isLoading || (hasSubmitted && hasValidationErrors);
+    isSubmitting || (hasSubmitted && hasValidationErrors);
 
   return (
     <Form>
@@ -100,9 +100,9 @@ export default function InsertList() {
       </Segment>
 
       <Button
-        loading={isLoading}
+        loading={isSubmitting}
         disabled={disableSubmitButton}
-        onClick={handleSubmit}
+        onClick={onSubmit}
         primary
       >
         Insert list

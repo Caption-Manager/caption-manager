@@ -13,7 +13,7 @@ import {
 // Services
 import GAS from "../../../services/GAS";
 // Utils
-import { CaptionParts } from "../../../../common/utils";
+import * as Validation from "../../../../common/utils/Validation";
 // Types
 import {
   CaptionLabel,
@@ -22,6 +22,7 @@ import {
   CaptionText,
   StorageLabelKey,
   CaptionalizableSelectedElementType,
+  CaptionPrefix,
 } from "../../../../common/types";
 
 interface Props {
@@ -31,85 +32,144 @@ interface Props {
   selectedElementType: CaptionalizableSelectedElementType;
 }
 
+interface FormValues {
+  label: CaptionLabel;
+  description: CaptionDescription;
+  autoUpdateCaptions: boolean;
+  bookmark: boolean;
+}
+
+interface ValidationErrors {
+  [key: string]: string | null;
+}
+
 export default function EditCaptionForm({
   initialLabel,
   number,
   initialDescription,
   selectedElementType,
 }: Props) {
-  const [label, setLabel] = React.useState(initialLabel);
-  const [description, setDescription] = React.useState(initialDescription);
-  const {
-    isLoading,
-    autoUpdateCaptions,
-    setAutoUpdateCaptions,
-    bookmark,
-    setBookmark,
-    error,
-    handleSubmit,
-  } = useHandleSubmit(selectedElementType);
+  const [isSubmiting, setIsSubmiting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+
+  const [values, setValues] = React.useState<FormValues>({
+    label: initialLabel,
+    description: initialDescription,
+    autoUpdateCaptions: false,
+    bookmark: false,
+  });
+
+  const [errors, setErrors] = React.useState<ValidationErrors>({
+    label: null,
+  });
 
   React.useEffect(
     function onNewSelectedElement() {
-      setLabel(initialLabel);
-      setDescription(initialDescription);
+      setValues(v => ({
+        ...v,
+        label: initialLabel,
+        description: initialDescription,
+      }));
+      setErrors(e => ({
+        ...e,
+        label: Validation.validate("label", initialLabel),
+      }));
     },
     [initialLabel, initialDescription]
   );
 
-  const captionParts = new CaptionParts(label, number, description);
-
   function onChangeLabel(event: React.ChangeEvent<HTMLInputElement>) {
-    setLabel(event.target.value);
+    const newLabel = event.target.value;
+    setErrors(e => ({ ...e, label: Validation.validate("label", newLabel) }));
+    setValues(v => ({ ...v, label: newLabel }));
   }
 
   function onChangeDescription(event: React.ChangeEvent<HTMLInputElement>) {
-    setDescription(event.target.value);
+    setValues(v => ({ ...v, description: event.target.value }));
   }
 
   function onChangeAutoUpdateCaptions() {
-    setAutoUpdateCaptions(!autoUpdateCaptions);
+    setValues(v => ({ ...v, autoUpdateCaptions: !v.autoUpdateCaptions }));
   }
 
   function onChangeBookmark() {
-    setBookmark(!bookmark);
+    setValues(v => ({ ...v, bookmark: !v.bookmark }));
   }
 
-  function onSubmit() {
-    handleSubmit(label, captionParts.getAsText());
+  async function handleSubmit() {
+    if (isSubmiting) return;
+
+    // We could focus on the input instead
+    const errors: ValidationErrors = {
+      label: Validation.validate("label", values.label),
+    };
+    setErrors(errors);
+    const hasValidationErrors = Object.values(errors).some(Boolean);
+    if (hasValidationErrors) return;
+
+    setIsSubmiting(true);
+    setSubmitError(null);
+    try {
+      const captionText: CaptionText = `${values.label} ${number} ${values.description}`;
+      await Promise.all([
+        GAS.setUserLabel(
+          getStorageLabelKeyFromType(selectedElementType),
+          values.label
+        ),
+        GAS.upsertCaption(captionText),
+      ]);
+
+      if (values.autoUpdateCaptions) {
+        await GAS.updateCaptions(values.label);
+      }
+
+      if (values.bookmark) {
+        await GAS.upsertBookmark();
+      }
+    } catch (error) {
+      setSubmitError(error.message || "We couldn't update your caption");
+    } finally {
+      setIsSubmiting(false);
+    }
   }
 
   function onKeyPress(event) {
     if (event.key === "Enter") {
-      handleSubmit(label, captionParts.getAsText());
+      handleSubmit();
     }
   }
+
+  const captionPrefix: CaptionPrefix = `${values.label} ${number}`;
+
+  const hasValidationErrors = Object.values(errors).some(Boolean);
+  const disableSubmitButton = isSubmiting || hasValidationErrors;
 
   return (
     <Form>
       <Input
-        label={captionParts.getAsPrefix()}
+        label={captionPrefix}
         placeholder="Write your description here..."
         fluid
         autoFocus
-        value={description}
+        value={values.description}
         onChange={onChangeDescription}
       />
 
       <Options
-        label={label}
+        label={values.label}
+        labelError={errors.label}
         onChangeLabel={onChangeLabel}
-        autoUpdateCaptions={autoUpdateCaptions}
+        autoUpdateCaptions={values.autoUpdateCaptions}
         onChangeAutoUpdateCaptions={onChangeAutoUpdateCaptions}
-        bookmark={bookmark}
+        bookmark={values.bookmark}
         onChangeBookmark={onChangeBookmark}
         selectedElementType={selectedElementType}
       />
 
       <Button
-        loading={isLoading}
-        disabled={isLoading}
-        onClick={onSubmit}
+        loading={isSubmiting}
+        disabled={disableSubmitButton}
+        onClick={handleSubmit}
         onKeyPress={onKeyPress}
         primary
         style={{ marginTop: 20 }}
@@ -117,10 +177,10 @@ export default function EditCaptionForm({
         Save caption
       </Button>
 
-      {error && (
+      {submitError && (
         <Message negative>
           <Message.Header>Something went wrong</Message.Header>
-          <p>{error}</p>
+          <p>{submitError}</p>
         </Message>
       )}
     </Form>
@@ -129,6 +189,7 @@ export default function EditCaptionForm({
 
 interface OptionsProps {
   label: string;
+  labelError: string | null;
   onChangeLabel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   autoUpdateCaptions: boolean;
   onChangeAutoUpdateCaptions: () => void;
@@ -139,6 +200,7 @@ interface OptionsProps {
 
 function Options({
   label,
+  labelError,
   onChangeLabel,
   autoUpdateCaptions,
   onChangeAutoUpdateCaptions,
@@ -147,7 +209,6 @@ function Options({
   selectedElementType,
 }: OptionsProps) {
   const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
-
   return (
     <Accordion>
       <Accordion.Title
@@ -161,10 +222,10 @@ function Options({
       <Accordion.Content active={isOptionsOpen}>
         <Segment basic>
           <Form.Input
-            inline
             value={label}
             label={`Label for ${humanReadableType(selectedElementType)}`}
             onChange={onChangeLabel}
+            error={labelError}
           />
 
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -186,46 +247,6 @@ function Options({
   );
 }
 
-function useHandleSubmit(type: CaptionalizableSelectedElementType) {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [autoUpdateCaptions, setAutoUpdateCaptions] = React.useState(false);
-  const [bookmark, setBookmark] = React.useState(false);
-  const [error, setError] = React.useState<null | string>(null);
-
-  async function handleSubmit(label: string, text: CaptionText) {
-    setError(null);
-    setIsLoading(true);
-    try {
-      await Promise.all([
-        GAS.setUserLabel(getStorageLabelKeyFromType(type), label),
-        GAS.upsertCaption(text),
-      ]);
-
-      if (autoUpdateCaptions) {
-        await GAS.updateCaptions(label);
-      }
-
-      if (bookmark) {
-        await GAS.upsertBookmark();
-      }
-    } catch (error) {
-      setError(error.message || "We couldn't update your caption");
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  return {
-    isLoading,
-    autoUpdateCaptions,
-    setAutoUpdateCaptions,
-    bookmark,
-    setBookmark,
-    error,
-    handleSubmit,
-  };
-}
-
 function getStorageLabelKeyFromType(
   type: CaptionalizableSelectedElementType
 ): StorageLabelKey {
@@ -245,7 +266,7 @@ function getStorageLabelKeyFromType(
 function humanReadableType(type: CaptionalizableSelectedElementType) {
   switch (type) {
     case "INLINE_IMAGE":
-      return "Inline Image";
+      return "Image";
     case "TABLE_CELL":
       return "Table";
     case "EQUATION":
