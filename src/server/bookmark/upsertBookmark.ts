@@ -26,6 +26,8 @@ export default function upsertBookmark(
 
   const bookmark = getBookmark(caption);
   if (bookmark) {
+    // TODO: this is not actually finding the bookmark
+    // There's probably something wrong with "getBookmark" here
     bookmark.remove();
   }
 
