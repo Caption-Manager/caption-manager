@@ -115,7 +115,7 @@ export function useDocumentInfo(): DocumentInfo {
 }
 
 function useAccordion() {
-  const [activeIndexes, setActiveIndexes] = React.useState([0]);
+  const [activeIndexes, setActiveIndexes] = React.useState([1]);
 
   function onItemClick(event: any, data: AccordionTitleProps) {
     const newIndex = Number(data.index);

@@ -38,7 +38,7 @@ function NoSelectedElement() {
       <Message info>
         <Message.Header>No selected element</Message.Header>
         <p>
-          Select an image, table or equation in document to insert or edit a
+          Select an image, table or equation in document to edit or insert a
           caption.
         </p>
       </Message>
