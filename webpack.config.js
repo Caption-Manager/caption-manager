@@ -174,7 +174,7 @@ const DynamicCdnWebpackPluginConfig = {
       case "semantic-ui-react":
         return {
           name: packageName,
-          var: "SemanticUIReact",
+          var: "semanticUIReact",
           version: packageVersion,
           url: `https://unpkg.com/semantic-ui-react@${packageVersion}/dist/umd/semantic-ui-react.min.js`,
         };
