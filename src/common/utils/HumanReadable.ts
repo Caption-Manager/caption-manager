@@ -8,10 +8,15 @@ export function type(type: string) {
       return "Table";
     case "EQUATION":
       return "Equation";
-    default:
-      return type
-        .split("_")
-        .map(capitalizeOnlyFirstLetter)
-        .join(" ");
+    default: {
+      if (typeof type === "string") {
+        return type
+          .split("_")
+          .map(capitalizeOnlyFirstLetter)
+          .join(" ");
+      } else {
+        return type;
+      }
+    }
   }
 }

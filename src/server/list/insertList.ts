@@ -1,11 +1,13 @@
-import { CaptionalizableSelectedElementType } from "../../common/types";
-import { ListType } from "../../common/types";
 import { removeLineBreaks } from "../../common/utils";
 import { upsertBookmark } from "../bookmark";
 import getCaptions from "../caption/getCaptions";
 import stringToElementType from "../utils/stringToElementType";
 import { HEADER_ATTRIBUTES, PARAGRAPH_ITEM_ATTRIBUTES } from "./constants";
 import * as HumanReadable from "../../common/utils/HumanReadable";
+import {
+  CaptionalizableSelectedElementType,
+  ListType,
+} from "../../common/types";
 
 export default function insertList(
   elementType: CaptionalizableSelectedElementType,

@@ -36,7 +36,9 @@ export default function Sidebar() {
           onClick={onItemClick}
           active={activeIndexes.includes(0)}
         >
-          <EditCaption />
+          {/* This prevents unnecessary polling while 
+          the component is not mounted */}
+          {activeIndexes.includes(0) && <EditCaption />}
         </AccordionItem>
 
         <AccordionItem
@@ -102,9 +104,7 @@ function AccordionItem({
         <Icon name="dropdown" />
         {title}
       </Accordion.Title>
-      <Accordion.Content active={active}>
-        {active && children}
-      </Accordion.Content>
+      <Accordion.Content active={active}>{children}</Accordion.Content>
     </React.Fragment>
   );
 }

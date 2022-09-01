@@ -147,7 +147,7 @@ function ElementDropdown({
   return (
     <Form.Dropdown
       value={value}
-      text={HumanReadable.type(value as CaptionalizableSelectedElementType)}
+      text={HumanReadable.type(value)}
       error={error}
       label={"Element"}
       placeholder="Select an element"
