@@ -1,21 +1,21 @@
 import { DEFAULT_LABELS, Labels } from "../../common/constants";
 
 /**
- *  Gets the user stored labels. These labels persist through
+ *  Gets the document stored labels. These labels persist through
  * sessions.
  * @return {string} The final position of the element.
  * @customfunction
  */
-export default function getUserLabels(): Labels {
+export default function getDocumentLabels(): Labels {
   try {
-    const Properties = PropertiesService.getUserProperties();
-    const userProperties = Properties.getProperties();
+    const Properties = PropertiesService.getDocumentProperties();
+    const documentProperties = Properties.getProperties();
 
-    const userLabels = {};
+    const documentLabels = {};
     for (const key in DEFAULT_LABELS) {
-      userLabels[key] = userProperties[key] || DEFAULT_LABELS[key];
+      documentLabels[key] = documentProperties[key] || DEFAULT_LABELS[key];
     }
-    return userLabels as Labels;
+    return documentLabels as Labels;
   } catch (error) {
     // TODO: currently we just return the default labels.
     // This means that user will lose his stored labels.

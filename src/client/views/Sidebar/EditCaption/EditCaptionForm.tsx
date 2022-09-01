@@ -114,7 +114,7 @@ export default function EditCaptionForm({
     try {
       const captionText: CaptionText = `${values.label} ${number} ${values.description}`;
       await Promise.all([
-        GAS.setUserLabel(
+        GAS.setDocumentLabel(
           getStorageLabelKeyFromType(selectedElementType),
           values.label
         ),

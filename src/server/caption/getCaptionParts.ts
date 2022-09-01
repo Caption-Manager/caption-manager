@@ -1,7 +1,7 @@
 import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
 import { getDescription } from "./getCaptionPartsFromString";
-import getUserLabels from "../storage/getUserLabels";
+import getDocumentLabels from "../storage/getDocumentLabels";
 import { CaptionParts } from "../../common/types";
 import { Path } from "../path";
 
@@ -26,14 +26,14 @@ export default function getCaptionParts(
 }
 
 function getLabel(type: GoogleAppsScript.Document.ElementType): string {
-  const userLabels = getUserLabels();
+  const documentLabels = getDocumentLabels();
   switch (type) {
     case DocumentApp.ElementType.INLINE_IMAGE:
-      return userLabels.INLINE_IMAGE;
+      return documentLabels.INLINE_IMAGE;
     case DocumentApp.ElementType.TABLE_CELL:
-      return userLabels.TABLE;
+      return documentLabels.TABLE;
     case DocumentApp.ElementType.EQUATION:
-      return userLabels.EQUATION;
+      return documentLabels.EQUATION;
     default:
       throw new Error(`Unknown type ${type} to get label from`);
   }

@@ -1,6 +1,6 @@
 import { onOpen, openSidebar } from "./ui";
 import { getDocumentInfo, upsertCaption, updateCaptions } from "./caption";
-import { setUserLabel } from "./storage";
+import { setDocumentLabel } from "./storage";
 import { upsertBookmark } from "./bookmark";
 import { insertList } from "./list";
 
@@ -14,7 +14,7 @@ export {
   upsertCaption,
   updateCaptions,
   // Storage
-  setUserLabel,
+  setDocumentLabel,
   // Bookmark
   upsertBookmark,
   // List
