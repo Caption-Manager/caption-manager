@@ -5,7 +5,7 @@ import { upsertBookmark } from "../bookmark";
 import getCaptions from "../caption/getCaptions";
 import stringToElementType from "../utils/stringToElementType";
 import { HEADER_ATTRIBUTES, PARAGRAPH_ITEM_ATTRIBUTES } from "./constants";
-import * as HumanReable from "../../common/utils/HumanReadable";
+import * as HumanReadable from "../../common/utils/HumanReadable";
 
 export default function insertList(
   elementType: CaptionalizableSelectedElementType,
@@ -17,7 +17,7 @@ export default function insertList(
 
   const header = body.insertParagraph(
     initialParagraphIndex,
-    `List of ${HumanReable.type(elementType)}s`
+    `List of ${HumanReadable.type(elementType)}s`
   );
   header.setAttributes(HEADER_ATTRIBUTES);
 

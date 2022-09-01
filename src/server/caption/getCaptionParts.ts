@@ -2,8 +2,8 @@ import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
 import { getDescription } from "./getCaptionPartsFromString";
 import getUserLabels from "../storage/getUserLabels";
-import { Caption, CaptionParts } from "../../common/types";
-import { Path, RelativeDocumentPath } from "../path";
+import { CaptionParts } from "../../common/types";
+import { Path } from "../path";
 
 /**
  * Gets a @type {CaptionParts} representation of the caption of a given element.
