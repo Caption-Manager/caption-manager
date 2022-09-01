@@ -14,16 +14,8 @@ import getBookmark from "./getBookmark";
  * @customfunction
  */
 export default function upsertBookmark(
-  caption?: Caption
+  caption: Caption
 ): GoogleAppsScript.Document.Bookmark {
-  if (!caption) {
-    // We should change this when we refactor to pass the
-    // element as an argument
-    const selectedElement = getCaptionalizableSelectedElement();
-    caption = getCaption(selectedElement);
-    if (!caption) throw new Error("No caption found for selected element");
-  }
-
   const bookmark = getBookmark(caption);
   if (bookmark) {
     // TODO: this is not actually finding the bookmark

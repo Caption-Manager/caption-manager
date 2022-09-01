@@ -21,8 +21,6 @@ import {
   CaptionLabel,
   CaptionNumber,
   CaptionDescription,
-  CaptionText,
-  StorageLabelKey,
   CaptionalizableSelectedElementType,
   CaptionPrefix,
 } from "../../../../common/types";
@@ -112,22 +110,11 @@ export default function EditCaptionForm({
     setIsSubmiting(true);
     setSubmitError(null);
     try {
-      const captionText: CaptionText = `${values.label} ${number} ${values.description}`;
-      await Promise.all([
-        GAS.setDocumentLabel(
-          getStorageLabelKeyFromType(selectedElementType),
-          values.label
-        ),
-        GAS.upsertCaption(captionText),
-      ]);
-
-      if (values.autoUpdateCaptions) {
-        await GAS.updateCaptions(values.label);
-      }
-
-      if (values.bookmark) {
-        await GAS.upsertBookmark();
-      }
+      const { label, description, autoUpdateCaptions, bookmark } = values;
+      await GAS.onSaveCaption(
+        { label, number, description },
+        { autoUpdateCaptions, bookmark }
+      );
     } catch (error) {
       setSubmitError(error.message || "We couldn't update your caption");
     } finally {
@@ -256,20 +243,4 @@ function Options({
       </Accordion.Content>
     </Accordion>
   );
-}
-
-function getStorageLabelKeyFromType(
-  type: CaptionalizableSelectedElementType
-): StorageLabelKey {
-  switch (type) {
-    case "INLINE_IMAGE":
-      return "INLINE_IMAGE";
-    case "TABLE_CELL":
-      return "TABLE";
-    case "EQUATION":
-      return "EQUATION";
-    default:
-      // This should be impossible
-      return type;
-  }
 }

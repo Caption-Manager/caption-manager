@@ -12,10 +12,12 @@ import { getDescription } from "./getCaptionPartsFromString";
  * @return {void}
  * @customfunction
  */
-export default function updateCaptions(label: string): void {
-  const selectedElement = getCaptionalizableSelectedElement();
+export default function updateCaptions(
+  type: GoogleAppsScript.Document.ElementType,
+  label: string
+): void {
   let number = 1;
-  const captions = getCaptions(selectedElement.getType());
+  const captions = getCaptions(type);
   for (const caption of captions) {
     updateCaption(
       caption,

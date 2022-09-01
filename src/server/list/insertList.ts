@@ -1,5 +1,5 @@
 import { removeLineBreaks } from "../../common/utils";
-import { upsertBookmark } from "../bookmark";
+import upsertBookmark from "../bookmark/upsertBookmark";
 import getCaptions from "../caption/getCaptions";
 import stringToElementType from "../utils/stringToElementType";
 import { HEADER_ATTRIBUTES, PARAGRAPH_ITEM_ATTRIBUTES } from "./constants";

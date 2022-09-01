@@ -1,7 +1,5 @@
 import { onOpen, openSidebar } from "./ui";
-import { getDocumentInfo, upsertCaption, updateCaptions } from "./caption";
-import { setDocumentLabel } from "./storage";
-import { upsertBookmark } from "./bookmark";
+import { getDocumentInfo, onSaveCaption } from "./caption";
 import { insertList } from "./list";
 
 // Public functions must be exported as named exports
@@ -11,12 +9,7 @@ export {
   openSidebar,
   // Caption
   getDocumentInfo,
-  upsertCaption,
-  updateCaptions,
-  // Storage
-  setDocumentLabel,
-  // Bookmark
-  upsertBookmark,
+  onSaveCaption,
   // List
   insertList,
 };

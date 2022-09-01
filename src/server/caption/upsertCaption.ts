@@ -14,13 +14,15 @@ import { CaptionText } from "../../common/types";
  * @return {void}
  * @customfunction
  */
-export default function upsertCaption(text: CaptionText): void {
-  const selectedElement = getCaptionalizableSelectedElement();
-  const caption = getCaption(selectedElement);
+export default function upsertCaption(
+  element: GoogleAppsScript.Document.Element,
+  text: CaptionText
+): void {
+  const caption = getCaption(element);
   if (caption) {
     updateCaption(caption, text);
   } else {
-    insertCaption(selectedElement, text);
+    insertCaption(element, text);
   }
 }
 

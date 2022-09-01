@@ -275,12 +275,3 @@ function TypeRadioButton({
     </Segment>
   );
 }
-
-async function wait() {
-  return new Promise<void>((resolve, reject) => {
-    setTimeout(() => {
-      if (Math.random() > 0.5) resolve();
-      else reject("A bad error");
-    }, 500);
-  });
-}
