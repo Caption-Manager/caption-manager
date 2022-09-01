@@ -1,16 +1,12 @@
-export function equalArrays(a: Array<any>, b: Array<any>) {
-  if (a === b) return true;
-  if (a == null || b == null) return false;
-  if (a.length !== b.length) return false;
+export function equalArrays(array: Array<any>, otherArray: Array<any>) {
+  if (array === otherArray) return true;
+  if (array == null || otherArray == null) return false;
+  if (array.length !== otherArray.length) return false;
 
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  // Please note that calling sort on an array will modify that array.
-  // you might want to clone your array first.
-
-  for (var i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
+  for (let i = 0; i < array.length; i = i + 1) {
+    if (array[i] !== otherArray[i]) return false;
   }
+
   return true;
 }
 

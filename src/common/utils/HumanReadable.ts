@@ -1,6 +1,6 @@
-import { CaptionalizableSelectedElementType } from "../../common/types";
+import { capitalizeOnlyFirstLetter } from "./String";
 
-export function type(type: CaptionalizableSelectedElementType) {
+export function type(type: string) {
   switch (type) {
     case "INLINE_IMAGE":
       return "Image";
@@ -9,6 +9,9 @@ export function type(type: CaptionalizableSelectedElementType) {
     case "EQUATION":
       return "Equation";
     default:
-      return type;
+      return type
+        .split("_")
+        .map(capitalizeOnlyFirstLetter)
+        .join(" ");
   }
 }

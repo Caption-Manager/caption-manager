@@ -38,16 +38,18 @@ function insertCaption(
   text: CaptionText
 ): void {
   const body = DocumentApp.getActiveDocument().getBody();
-  const nextSiblingParagraph = getNextBodyChildParagraph(element);
+  const nextBodyChildParagraph = getNextBodyChildParagraph(element);
 
   let paragraph: GoogleAppsScript.Document.Paragraph;
-  if (!nextSiblingParagraph) {
+  if (!nextBodyChildParagraph) {
     // This means the element is at document end
     // element.isAtDocumentEnd() doesn't work though
     paragraph = body.appendParagraph(text);
   } else {
-    const nextSiblingParagraphIndex = body.getChildIndex(nextSiblingParagraph);
-    paragraph = body.insertParagraph(nextSiblingParagraphIndex, text);
+    const nextBodyChildParagraphIndex = body.getChildIndex(
+      nextBodyChildParagraph
+    );
+    paragraph = body.insertParagraph(nextBodyChildParagraphIndex, text);
   }
 
   applyCaptionStyles(paragraph);
