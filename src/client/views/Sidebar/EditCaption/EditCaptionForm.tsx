@@ -57,7 +57,7 @@ export default function EditCaptionForm({
   const [values, setValues] = React.useState<FormValues>({
     label: initialLabel,
     description: initialDescription,
-    autoUpdateCaptions: false,
+    autoUpdateCaptions: true,
     bookmark: false,
   });
 
