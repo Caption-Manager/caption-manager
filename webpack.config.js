@@ -151,7 +151,7 @@ const clientConfig = ({ isDevClientWrapper }) => ({
 // see https://github.com/enuchi/React-Google-Apps-Script#adding-new-libraries-and-packages
 const DynamicCdnWebpackPluginConfig = {
   // set "verbose" to true to print console logs on CDN usage while webpack builds
-  verbose: true,
+  verbose: isProd ? true : false,
   resolver: (packageName, packageVersion, options) => {
     const packageSuffix = isProd ? ".min.js" : ".js";
     const moduleDetails = moduleToCdn(packageName, packageVersion, options);
@@ -169,9 +169,10 @@ const DynamicCdnWebpackPluginConfig = {
 
     // define custom CDN configuration for new packages
     // "name" should match the package being imported
-    // "var" is important to get right -- this should be the exposed global. Look up "webpack externals" for info.
+    // FnF
     switch (packageName) {
       case "semantic-ui-react":
+        F;
         return {
           name: packageName,
           var: "semanticUIReact",
