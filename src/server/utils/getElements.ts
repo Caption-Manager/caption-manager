@@ -1,5 +1,5 @@
 /**
- * Retrieves all elements contained in the section.
+ * Retrieves all elements contained in the body.
  *
  * @param {GoogleAppsScript.Document.ElementType} type An element type.
  * @return {GoogleAppsScript.Document.Element[]} A list of found elements.

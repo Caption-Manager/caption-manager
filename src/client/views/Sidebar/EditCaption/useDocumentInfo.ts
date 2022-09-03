@@ -12,7 +12,9 @@ export default function useDocumentInfo(): DocumentInfo {
   );
 
   React.useEffect(function onMount() {
-    const pollingIntervalId = setInterval(async function onInterval() {
+    let timeoutId: number | undefined;
+
+    (async function pollDocumentInfoIIFE() {
       try {
         const documentInfo = await GAS.getDocumentInfo();
         setDocumentInfo(documentInfo);
@@ -22,11 +24,15 @@ export default function useDocumentInfo(): DocumentInfo {
         // Just receive a new document info
         setDocumentInfo(INITIAL_DOCUMENT_INFO);
         console.error(error.message || error);
+      } finally {
+        timeoutId = setTimeout(function onTimeout() {
+          pollDocumentInfoIIFE();
+        }, 2000);
       }
-    }, 2000);
+    })();
 
     return function onUnmount() {
-      clearInterval(pollingIntervalId);
+      if (typeof timeoutId === "number") clearTimeout(timeoutId);
     };
   }, []);
 
