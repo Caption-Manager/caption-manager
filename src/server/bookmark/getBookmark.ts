@@ -35,15 +35,15 @@ function isBookmarkInsideCaption(
   caption: Caption
 ): boolean {
   const bookmarkElement = bookmark.getPosition().getElement();
-  const bookmarkElementPath = Path(bookmarkElement);
+  const pathedBookmarkElement = Path(bookmarkElement);
   if (
-    !bookmarkElementPath.contains(caption as any) ||
-    !bookmarkElementPath.isEqual(caption as any)
+    pathedBookmarkElement.contains(caption as any) ||
+    pathedBookmarkElement.isEqual(caption as any)
   ) {
-    return false;
+    // Maybe we could add other checks here, like see if the caption is
+    // the first child of the bookmark element
+    return true;
   }
 
-  // Maybe we could add other checks here, like see if the caption is
-  // the first child of the bookmark element
-  return true;
+  return false;
 }

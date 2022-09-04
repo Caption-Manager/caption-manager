@@ -16,8 +16,9 @@ export default function upsertBookmark(
 ): GoogleAppsScript.Document.Bookmark {
   const bookmark = getBookmark(caption);
   if (bookmark) {
-    // TODO: this is not actually finding the bookmark
-    // There's probably something wrong with "getBookmark" here
+    // We could just return the bookmark here, but removing the bookmark
+    // and inserting a new one guarantees that the inserted bookmark
+    // will have the format we want.
     bookmark.remove();
   }
 
@@ -35,7 +36,12 @@ function insertBookmark(caption: Caption): GoogleAppsScript.Document.Bookmark {
   const document = DocumentApp.getActiveDocument();
   const bookmarkPosition = document.newPosition(
     (caption as unknown) as GoogleAppsScript.Document.Element,
-    1 // characters after beginning of text
+    // THIS IS VERY IMPORTANT: currently, if we don't insert the bookmark
+    // in the end (last character) of the caption, we can't reliable
+    // update the caption (see updateCaption.ts) without removing the bookmark
+    // TODO: remove this comment when "updateCaption" is able to update a caption
+    // without removing a bookmark
+    caption.getText().length
   );
   const bookmark = document.addBookmark(bookmarkPosition);
   return bookmark;

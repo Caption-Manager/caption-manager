@@ -1,5 +1,8 @@
 import applyCaptionStyles from "./applyCaptionStyles";
 import { Caption, CaptionText } from "../../common/types";
+import getBookmark from "../bookmark/getBookmark";
+import upsertBookmark from "../bookmark/upsertBookmark";
+import { removeLineBreaks } from "../../common/utils";
 
 /**
  * Updates a @type {Caption} with specified @type {CaptionText} for the currently selected
@@ -14,9 +17,19 @@ export default function updateCaption(
   caption: Caption,
   text: CaptionText
 ): void {
-  // This is a bit problematic, as the text can contain a bookmark
-  // and using "setText" removes the bookmark. The partial solution
-  // is reinserting the bookmark after updating the caption
-  caption.setText(text);
+  editTextWithoutRemovingBookmark(caption, text);
   applyCaptionStyles(caption.getParent().asParagraph());
+}
+
+function editTextWithoutRemovingBookmark(caption: Caption, text: CaptionText) {
+  // This is a bit problematic, because "setText" removes an existing bookmark,
+  // if any. The current way of replacing text RELIES on the assumption that the
+  // bookmark is positioned on the END (last character) of the caption text
+
+  // TODO: we should change this to be able to replace the text no matter
+  // where the bookmark is positioned
+
+  // Also, we need to remove line breaks, otherwise (don't know exatcly why)
+  // the provided searchPattern doesn't work
+  caption.replaceText(removeLineBreaks(caption.getText()), text);
 }

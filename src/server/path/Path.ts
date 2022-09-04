@@ -1,7 +1,14 @@
 import comparePathInDocument, {
   RelativeDocumentPath,
 } from "./comparePathInDocument";
-import pathInDocument from "./pathInDocument";
+
+interface PathedElement {
+  isBefore: (otherElement: GoogleAppsScript.Document.Element) => boolean;
+  isAfter: (otherElement: GoogleAppsScript.Document.Element) => boolean;
+  contains: (otherElement: GoogleAppsScript.Document.Element) => boolean;
+  isContainedBy: (otherElement: GoogleAppsScript.Document.Element) => boolean;
+  isEqual: (otherElement: GoogleAppsScript.Document.Element) => boolean;
+}
 
 /**
  * Wrapper on top of path internal functions to make sure path comparisons
@@ -12,9 +19,9 @@ import pathInDocument from "./pathInDocument";
  * to compare or get paths.
  * @customfunction
  */
-export default function Path(element: GoogleAppsScript.Document.Element) {
-  const elementPath = pathInDocument(element);
-
+export default function Path(
+  element: GoogleAppsScript.Document.Element
+): PathedElement {
   return {
     isBefore(otherElement: GoogleAppsScript.Document.Element) {
       return [
@@ -49,10 +56,6 @@ export default function Path(element: GoogleAppsScript.Document.Element) {
         comparePathInDocument(element, otherElement) ===
         RelativeDocumentPath.SAME
       );
-    },
-
-    getPath() {
-      return elementPath;
     },
   };
 }

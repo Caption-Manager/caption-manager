@@ -1,4 +1,5 @@
 import { CaptionParts } from "../../common/types";
+import removeBookmark from "../bookmark/removeBookmark";
 import upsertBookmark from "../bookmark/upsertBookmark";
 import setDocumentLabel from "../storage/setDocumentLabel";
 import getCaption from "./getCaption";
@@ -26,5 +27,7 @@ export default function onSaveCaption(
 
   if (options.bookmark) {
     upsertBookmark(getCaption(selectedElement));
+  } else {
+    removeBookmark(getCaption(selectedElement));
   }
 }
