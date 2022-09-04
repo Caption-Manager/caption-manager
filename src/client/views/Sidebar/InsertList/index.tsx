@@ -135,7 +135,7 @@ export default function InsertList() {
 interface ElementDropdownProps {
   value: string | undefined;
   error: string | null;
-  onSelectElement: (e, { value: selectedElement }: DropdownItemProps) => void;
+  onSelectElement: (e, { value }: DropdownItemProps) => void;
 }
 
 function ElementDropdown({

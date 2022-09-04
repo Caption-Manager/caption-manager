@@ -1,4 +1,3 @@
-import getCaptionalizableSelectedElement from "./getCaptionalizableSelectedElement";
 import getCaptions from "./getCaptions";
 import updateCaption from "./updateCaption";
 import { getDescription } from "./getCaptionPartsFromString";

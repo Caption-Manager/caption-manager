@@ -1,6 +1,4 @@
 import { Caption } from "../../common/types";
-import getCaption from "../caption/getCaption";
-import getCaptionalizableSelectedElement from "../caption/getCaptionalizableSelectedElement";
 import getBookmark from "./getBookmark";
 
 /**

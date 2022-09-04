@@ -1,4 +1,4 @@
-import { CaptionParts, StorageLabelKey } from "../../common/types";
+import { CaptionParts } from "../../common/types";
 import upsertBookmark from "../bookmark/upsertBookmark";
 import setDocumentLabel from "../storage/setDocumentLabel";
 import getCaption from "./getCaption";
@@ -17,7 +17,7 @@ export default function onSaveCaption(
 ) {
   const selectedElement = getCaptionalizableSelectedElement();
 
-  setDocumentLabel(getStorageLabelKey(selectedElement), label);
+  setDocumentLabel(selectedElement.getType(), label);
   upsertCaption(selectedElement, `${label} ${number} ${description}`);
 
   if (options.autoUpdateCaptions) {
@@ -26,20 +26,5 @@ export default function onSaveCaption(
 
   if (options.bookmark) {
     upsertBookmark(getCaption(selectedElement));
-  }
-}
-
-function getStorageLabelKey(
-  element: GoogleAppsScript.Document.Element
-): StorageLabelKey {
-  switch (element.getType()) {
-    case DocumentApp.ElementType.INLINE_IMAGE:
-      return "INLINE_IMAGE";
-    case DocumentApp.ElementType.TABLE_CELL:
-      return "TABLE";
-    case DocumentApp.ElementType.EQUATION:
-      return "EQUATION";
-    default:
-    // This should be impossible
   }
 }

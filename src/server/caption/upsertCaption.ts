@@ -1,4 +1,3 @@
-import getCaptionalizableSelectedElement from "./getCaptionalizableSelectedElement";
 import getCaption from "./getCaption";
 import updateCaption from "./updateCaption";
 import getNextBodyChildParagraph from "./getNextBodyChildParagraph";

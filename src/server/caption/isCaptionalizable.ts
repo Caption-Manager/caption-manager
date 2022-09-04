@@ -1,4 +1,8 @@
-import { CAPTIONALIZABLE_ELEMENT_TYPES } from "../../common/constants";
+const CAPTIONALIZABLE_ELEMENT_TYPES = [
+  DocumentApp.ElementType.INLINE_IMAGE,
+  DocumentApp.ElementType.TABLE_CELL,
+  DocumentApp.ElementType.EQUATION,
+] as const;
 
 /**
  * Determines whether the element can contain a caption or not.
