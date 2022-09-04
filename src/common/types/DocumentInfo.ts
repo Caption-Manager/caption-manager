@@ -1,12 +1,16 @@
 import { CaptionalizableSelectedElementType, CaptionParts } from "./Caption";
 
+export interface CaptionInfo extends CaptionParts {
+  isBookmarked: boolean;
+}
+
 /**
  * Information about a captionalizable element selected
  * on document.
  */
 export interface CaptionalizableElementInfo {
   isCaptionalizable: true;
-  captionParts: CaptionParts;
+  caption: CaptionInfo;
   type: CaptionalizableSelectedElementType;
 }
 

@@ -1,6 +1,6 @@
 import getFirstSelectedElement from "../utils/getFirstSelectedElement";
 import isCaptionalizable from "./isCaptionalizable";
-import getCaptionParts from "./getCaptionParts";
+import getCaptionInfo from "./getCaptionInfo";
 import {
   DocumentInfo,
   SelectedElementInfo,
@@ -29,6 +29,6 @@ function getSelectedElementInfo(): SelectedElementInfo {
     type: selectedElement
       .getType()
       .toString() as CaptionalizableSelectedElementType,
-    captionParts: getCaptionParts(selectedElement),
+    caption: getCaptionInfo(selectedElement),
   };
 }

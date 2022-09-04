@@ -2,26 +2,28 @@ import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
 import { getDescription } from "./getCaptionPartsFromString";
 import getDocumentLabels from "../storage/getDocumentLabels";
-import { CaptionParts } from "../../common/types";
+import { CaptionInfo } from "../../common/types";
 import { Path } from "../path";
+import getBookmark from "../bookmark/getBookmark";
 
 /**
- * Gets a @type {CaptionParts} representation of the caption of a given element.
+ * Gets a @type {CaptionInfo} representation of the caption of a given element.
  * If the element doesn't contain a caption, creates a caption with the user-specified label
  * correct number given its position in document and an empty description.
  *
  * @param {GoogleAppsScript.Document.Element} element An element.
- * @return {CaptionParts} An object representation of the caption text.
+ * @return {CaptionInfo} An object containing information of the catpion.
  * @customfunction
  */
-export default function getCaptionParts(
+export default function getCaptionInfo(
   element: GoogleAppsScript.Document.Element
-): CaptionParts {
+): CaptionInfo {
   const caption = getCaption(element);
   return {
     label: getLabel(element.getType()),
     number: getNumber(element),
     description: caption ? getDescription(caption.getText()) : "",
+    isBookmarked: Boolean(getBookmark(caption)),
   };
 }
 

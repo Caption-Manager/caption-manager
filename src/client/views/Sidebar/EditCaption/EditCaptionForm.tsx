@@ -29,6 +29,7 @@ interface Props {
   initialLabel: CaptionLabel;
   number: CaptionNumber;
   initialDescription: CaptionDescription;
+  isInitiallyBookmarked: boolean;
   selectedElementType: CaptionalizableSelectedElementType;
 }
 
@@ -47,6 +48,7 @@ export default function EditCaptionForm({
   initialLabel,
   number,
   initialDescription,
+  isInitiallyBookmarked,
   selectedElementType,
 }: Props) {
   const [isSubmiting, setIsSubmiting] = React.useState(false);
@@ -56,7 +58,7 @@ export default function EditCaptionForm({
     label: initialLabel,
     description: initialDescription,
     autoUpdateCaptions: true,
-    bookmark: false,
+    bookmark: isInitiallyBookmarked,
   });
 
   const [errors, setErrors] = React.useState<ValidationErrors>({
@@ -69,13 +71,14 @@ export default function EditCaptionForm({
         ...v,
         label: initialLabel,
         description: initialDescription,
+        bookmark: isInitiallyBookmarked,
       }));
       setErrors(e => ({
         ...e,
         label: Validation.validate("label", initialLabel),
       }));
     },
-    [initialLabel, initialDescription]
+    [initialLabel, initialDescription, isInitiallyBookmarked]
   );
 
   function onChangeLabel(event: React.ChangeEvent<HTMLInputElement>) {

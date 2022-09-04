@@ -16,12 +16,13 @@ export default function EditCaption() {
   } else if (selectedElement.isCaptionalizable === false) {
     return <NotCaptionalizableElement selectedElement={selectedElement} />;
   } else {
-    const { captionParts: docCaptionParts } = selectedElement;
+    const { caption } = selectedElement;
     return (
       <EditCaptionForm
-        initialLabel={docCaptionParts.label}
-        number={docCaptionParts.number}
-        initialDescription={docCaptionParts.description}
+        initialLabel={caption.label}
+        number={caption.number}
+        initialDescription={caption.description}
+        isInitiallyBookmarked={caption.isBookmarked}
         selectedElementType={selectedElement.type}
       />
     );
