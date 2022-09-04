@@ -18,7 +18,10 @@ export default function upsertBookmark(
   if (bookmark) {
     // We could just return the bookmark here, but removing the bookmark
     // and inserting a new one guarantees that the inserted bookmark
-    // will have the format we want.
+    // will have the format we want. On the other hand, this makes
+    // the link to this bookmark on an existing list stale/not functional.
+    // Ideally, we would update the link to the bookmark and text of the
+    // link on the existing list as well.
     bookmark.remove();
   }
 

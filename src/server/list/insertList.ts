@@ -61,7 +61,7 @@ function getListInitialParagraphAndDeleteSelectedElements() {
   const selection = DocumentApp.getActiveDocument().getSelection();
   const body = DocumentApp.getActiveDocument().getBody();
   if (!selection) {
-    // Appends the paragraph to the end of the document
+    // Appends the paFragraph to the end of the document
     return body.appendParagraph("");
   }
 
