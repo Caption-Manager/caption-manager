@@ -17,24 +17,22 @@ export default function Help() {
   }, []);
 
   return (
-    <div>
-      <Container fluid>
-        <p>
-          Coming{" "}
-          <Transition
-            animation={"pulse"}
-            duration={{
-              hide: PULSE_INTERVAL_IN_MS,
-              show: PULSE_INTERVAL_IN_MS,
-            }}
-            visible={visible}
-          >
-            <Label color="green" horizontal>
-              Soon...
-            </Label>
-          </Transition>
-        </p>
-      </Container>
-    </div>
+    <Container fluid>
+      <p>
+        Coming{" "}
+        <Transition
+          animation={"pulse"}
+          duration={{
+            hide: PULSE_INTERVAL_IN_MS,
+            show: PULSE_INTERVAL_IN_MS,
+          }}
+          visible={visible}
+        >
+          <Label as={"span"} color="green" horizontal>
+            Soon...
+          </Label>
+        </Transition>
+      </p>
+    </Container>
   );
 }

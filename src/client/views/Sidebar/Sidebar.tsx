@@ -24,12 +24,7 @@ export default function Sidebar() {
         overflow: "scroll",
       }}
     >
-      <Accordion
-        defaultActiveIndex={activeIndexes}
-        fluid
-        styled
-        exclusive={false}
-      >
+      <Accordion fluid styled exclusive={false}>
         <AccordionItem
           title="Edit a caption"
           index={0}

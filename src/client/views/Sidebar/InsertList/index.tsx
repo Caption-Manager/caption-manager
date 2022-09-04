@@ -153,10 +153,11 @@ function ElementDropdown({
       placeholder="Select an element"
       fluid
       required
-      selection
+      selection // This emits a warning but is the only way I could find to style as a selection
     >
       <Dropdown.Menu>
         <Dropdown.Item
+          className="hello"
           value={"INLINE_IMAGE"}
           icon="image"
           text="Image"

@@ -1,5 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import Sidebar from "./Sidebar";
 
-ReactDOM.render(<Sidebar />, document.getElementById("index"));
+const root = createRoot(document.getElementById("index"));
+root.render(<Sidebar />);
