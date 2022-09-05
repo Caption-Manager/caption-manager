@@ -149,7 +149,7 @@ function ElementDropdown({
       value={value}
       text={HumanReadable.type(value)}
       error={error}
-      label={"Element"}
+      label={"Targeted element type"}
       placeholder="Select an element"
       fluid
       required
@@ -157,7 +157,6 @@ function ElementDropdown({
     >
       <Dropdown.Menu>
         <Dropdown.Item
-          className="hello"
           value={"INLINE_IMAGE"}
           icon="image"
           text="Image"
@@ -196,13 +195,15 @@ function ListTypeRadioButtons({
 }: ListTypeRadioButtonsProps) {
   return (
     <React.Fragment>
-      <Form.Field required label="Type" style={{ marginBottom: 0 }} />
+      <Form.Field
+        required
+        label="How you want the list to look"
+        style={{ marginBottom: 0 }}
+      />
       <Grid columns={2} centered stretched>
         <Grid.Column textAlign="center">
           <TypeRadioButton
-            icon={
-              <Icon name="ordered list" size="big" style={{ marginLeft: 8 }} />
-            }
+            icon={<Icon name="list" size="big" style={{ marginLeft: 8 }} />}
             checked={value === "DEFAULT"}
             onClick={() => onButtonClick("DEFAULT")}
           >
