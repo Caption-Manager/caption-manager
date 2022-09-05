@@ -35,7 +35,7 @@ function NoSelectedElement() {
       <Message info>
         <Message.Header>No selected element</Message.Header>
         <p>
-          Select an image, table or equation in document to edit or insert a
+          Select an image, table or equation in document to insert or update a
           caption.
         </p>
       </Message>
@@ -53,7 +53,7 @@ function NotCaptionalizableElement({
       <Message warning>
         <Message.Header>Invalid selected element</Message.Header>
         <p>
-          You can't update or edit a caption in a{" "}
+          You can't insert or update a caption in a{" "}
           <b>{HumanReadable.type(selectedElementType)}</b> element. Select an
           image, table or equation instead.
         </p>

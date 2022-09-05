@@ -8,7 +8,7 @@ import {
 } from "semantic-ui-react";
 import UpsertCaption from "./UpsertCaption";
 import InsertList from "./InsertList";
-import QuickStart from "./QuickStart";
+import QuickStart from "./QuickStart/index"; // TODO: remove unnecessary "index"
 // Constants
 import { SIDEBAR_WIDTH } from "./constants";
 
@@ -26,7 +26,7 @@ export default function Sidebar() {
     >
       <Accordion fluid styled exclusive={false}>
         <AccordionItem
-          title="Update or insert a caption"
+          title="Insert or update a caption"
           index={0}
           onClick={onItemClick}
           active={activeIndexes.includes(0)}
@@ -49,6 +49,7 @@ export default function Sidebar() {
           index={2}
           onClick={onItemClick}
           active={activeIndexes.includes(2)}
+          contentStyle={{ padding: 0, border: 0 }}
         >
           <QuickStart />
         </AccordionItem>
@@ -83,6 +84,7 @@ interface AccordionItemProps {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     data: AccordionTitleProps
   ) => void;
+  contentStyle?: React.CSSProperties;
 }
 
 function AccordionItem({
@@ -90,6 +92,7 @@ function AccordionItem({
   index,
   title,
   onClick,
+  contentStyle,
   children,
 }: AccordionItemProps) {
   return (
@@ -98,7 +101,9 @@ function AccordionItem({
         <Icon name="dropdown" />
         {title}
       </Accordion.Title>
-      <Accordion.Content active={active}>{children}</Accordion.Content>
+      <Accordion.Content active={active} style={contentStyle}>
+        {children}
+      </Accordion.Content>
     </React.Fragment>
   );
 }
