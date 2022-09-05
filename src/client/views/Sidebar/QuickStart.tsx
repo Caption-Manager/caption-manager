@@ -2,8 +2,8 @@ import * as React from "react";
 import { Container, Label, Transition } from "semantic-ui-react";
 
 const PULSE_INTERVAL_IN_MS = 1000;
-
-export default function Help() {
+"";
+export default function QuickStart() {
   const [visible, setVisible] = React.useState(true);
 
   React.useEffect(function pulseLabelOnInterval() {

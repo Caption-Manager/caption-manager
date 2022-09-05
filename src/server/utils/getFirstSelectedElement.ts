@@ -1,7 +1,7 @@
 /**
  * Gets the first user selected element on active document.
  *
- * @return {GoogleAppsScript.Document.Element}
+ * @return {GoogleAppsScript.Document.Element} The first selected element.
  * @customfunction
  */
 export default function getFirstSelectedElement(): GoogleAppsScript.Document.Element {

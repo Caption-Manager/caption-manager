@@ -44,7 +44,7 @@ interface ValidationErrors {
   label: string;
 }
 
-export default function EditCaptionForm({
+export default function UpsertCaptionForm({
   initialLabel,
   number,
   initialDescription,

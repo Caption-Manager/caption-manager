@@ -3,22 +3,22 @@ import React from "react";
 import useDocumentInfo from "./useDocumentInfo";
 // Components
 import { Message } from "semantic-ui-react";
-import EditCaptionForm from "./EditCaptionForm";
+import UpsertCaptionForm from "./UpsertCaptionForm";
 // Utils
-import { capitalizeOnlyFirstLetter } from "../../../../common/utils";
-// Types
-import { NotCaptionalizableElementInfo } from "../../../../common/types";
+import * as HumanReadable from "../../../../common/utils/HumanReadable";
 
-export default function EditCaption() {
+export default function UpsertCaption() {
   const { selectedElement } = useDocumentInfo();
   if (!selectedElement) {
     return <NoSelectedElement />;
   } else if (selectedElement.isCaptionalizable === false) {
-    return <NotCaptionalizableElement selectedElement={selectedElement} />;
+    return (
+      <NotCaptionalizableElement selectedElementType={selectedElement.type} />
+    );
   } else {
     const { caption } = selectedElement;
     return (
-      <EditCaptionForm
+      <UpsertCaptionForm
         initialLabel={caption.label}
         number={caption.number}
         initialDescription={caption.description}
@@ -44,18 +44,18 @@ function NoSelectedElement() {
 }
 
 function NotCaptionalizableElement({
-  selectedElement,
+  selectedElementType,
 }: {
-  selectedElement: NotCaptionalizableElementInfo;
+  selectedElementType: string;
 }) {
   return (
     <React.Fragment>
       <Message warning>
         <Message.Header>Invalid selected element</Message.Header>
         <p>
-          You can't insert or edit a caption in a{" "}
-          <b>{capitalizeOnlyFirstLetter(selectedElement.type)}</b> element.
-          Select an image, table or equation instead.
+          You can't update or edit a caption in a{" "}
+          <b>{HumanReadable.type(selectedElementType)}</b> element. Select an
+          image, table or equation instead.
         </p>
       </Message>
     </React.Fragment>

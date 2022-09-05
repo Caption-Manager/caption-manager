@@ -6,9 +6,9 @@ import {
   AccordionTitleProps,
   Icon,
 } from "semantic-ui-react";
-import EditCaption from "./EditCaption";
+import UpsertCaption from "./UpsertCaption";
 import InsertList from "./InsertList";
-import Help from "./Help";
+import QuickStart from "./QuickStart";
 // Constants
 import { SIDEBAR_WIDTH } from "./constants";
 
@@ -26,14 +26,13 @@ export default function Sidebar() {
     >
       <Accordion fluid styled exclusive={false}>
         <AccordionItem
-          title="Edit a caption"
+          title="Update or insert a caption"
           index={0}
           onClick={onItemClick}
           active={activeIndexes.includes(0)}
         >
-          {/* This prevents unnecessary polling while 
-          the component is not mounted */}
-          {activeIndexes.includes(0) && <EditCaption />}
+          {/* This prevents unnecessary polling while the component is not mounted */}
+          {activeIndexes.includes(0) && <UpsertCaption />}
         </AccordionItem>
 
         <AccordionItem
@@ -46,12 +45,12 @@ export default function Sidebar() {
         </AccordionItem>
 
         <AccordionItem
-          title="Help"
+          title="Quick start"
           index={2}
           onClick={onItemClick}
           active={activeIndexes.includes(2)}
         >
-          <Help />
+          <QuickStart />
         </AccordionItem>
       </Accordion>
     </Segment>
