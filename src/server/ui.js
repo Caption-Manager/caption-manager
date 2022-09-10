@@ -5,6 +5,16 @@ export function onInstall() {
 }
 
 export function onOpen() {
+  // We should use createAddonMenu instead, because this can lead
+  // to unexpect ui as shown in https://developers.google.com/apps-script/add-ons/concepts/menus
+
+  /*  "Caution: Unpublished add-ons can also create custom top-level menus, but these are automatically 
+  moved under the Add-ons menu if the add-on is published and may not result in the user experience you intended. 
+  If you intend to publish the add-on, always use Ui.createAddonMenu() to define the add-on menu."
+  */
+
+  // But we can't see the add-on menu on development mode
+
   const addOnMenu = DocumentApp.getUi().createMenu("Caption Manager");
 
   const imageSubMenu = DocumentApp.getUi()
