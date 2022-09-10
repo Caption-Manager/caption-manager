@@ -1,4 +1,14 @@
-import { onOpen, openSidebar } from "./ui";
+import {
+  onOpen,
+  onInstall,
+  insertImageDefaultList,
+  insertImageBookmarkedList,
+  insertTableDefaultList,
+  insertTableBookmarkedList,
+  insertEquationDefaultList,
+  insertEquationBookmarkedList,
+  openSidebar,
+} from "./ui";
 import { getDocumentInfo, onSaveCaption } from "./caption";
 import { insertList } from "./list";
 
@@ -6,6 +16,13 @@ import { insertList } from "./list";
 export {
   // Ui
   onOpen,
+  onInstall,
+  insertImageDefaultList,
+  insertImageBookmarkedList,
+  insertTableDefaultList,
+  insertTableBookmarkedList,
+  insertEquationDefaultList,
+  insertEquationBookmarkedList,
   openSidebar,
   // Caption
   getDocumentInfo,

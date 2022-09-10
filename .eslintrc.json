@@ -9,7 +9,8 @@
     "import/prefer-default-export": "warn",
     "import/no-extraneous-dependencies": "warn",
     "prefer-object-spread": "warn",
-    "spaced-comment": "off"
+    "spaced-comment": "off",
+    "no-use-before-define": "off"
   },
   "parserOptions": {
     "requireConfiFile": false
