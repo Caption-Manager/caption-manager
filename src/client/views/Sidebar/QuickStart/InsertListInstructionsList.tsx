@@ -1,15 +1,11 @@
 import * as React from "react";
 import { List } from "semantic-ui-react";
-import OpenSidebarInstructionsList from "./OpenSidebarInstructionsList";
 
 export default function InsertListInstructionsList() {
   return (
     <List ordered>
-      <OpenSidebarInstructionsList />
-
       <List.Item>
-        Open the <b>"Insert a list"</b>
-        editor above.
+        Open the <b>"Insert list"</b> panel, the second item of this sidebar.
       </List.Item>
 
       <List.Item>
@@ -26,12 +22,11 @@ export default function InsertListInstructionsList() {
       </List.Item>
 
       <List.Item>
-        Select the targeted <b>list type</b> of your list (how you want the list
-        to look).
+        Select the targeted <b>list type</b> of your list.
       </List.Item>
 
       <List.Item>
-        Click on the "<b>Insert list</b>" button.
+        Click on the "<b>Insert list</b>" button and wait a few seconds.
       </List.Item>
     </List>
   );

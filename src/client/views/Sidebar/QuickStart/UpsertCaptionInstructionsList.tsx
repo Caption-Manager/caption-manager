@@ -1,22 +1,19 @@
 import * as React from "react";
 import { List } from "semantic-ui-react";
-import OpenSidebarInstructionsList from "./OpenSidebarInstructionsList";
 
 export default function UpsertCaptionsInstructionsList() {
   return (
     <List ordered>
-      <OpenSidebarInstructionsList />
-
       <List.Item>
-        Open the <b>"Insert or update a caption"</b>
-        editor above.
+        Open the <b>"Insert or update a caption"</b> panel, the first item of
+        this sidebar.
       </List.Item>
 
       <List.Item>
         Select an image, table or equation on document.
         <List.Description>
           If the selected element already has a <b>caption</b>, the{" "}
-          <b>"Insert or update a caption"</b> editor will be filled with the
+          <b>"Insert or update a caption"</b> panel will be filled with the
           corresponding caption information.
         </List.Description>
       </List.Item>
@@ -24,7 +21,7 @@ export default function UpsertCaptionsInstructionsList() {
       <List.Item>
         Provide a <b>caption description</b>.
         <List.Description>
-          Any text that describes the caption, it will appear after the caption
+          Any text that describes the caption. It will appear after the caption
           label and number.
         </List.Description>
       </List.Item>
@@ -36,9 +33,10 @@ export default function UpsertCaptionsInstructionsList() {
             Provide a <b>caption label</b>.
           </List.Item>
           <List.Description style={{ marginBottom: 5 }}>
-            Type a label that best describes the selected element, such as a
-            figure, table, or equation. Labels are attached to the selected
-            element type and, after edited, are saved through document sessions.
+            Type a label that best describes the selected element, such as
+            "Figure", "Table", or "Equation". Labels are attached to the
+            selected element type and, after edited, are saved through document
+            sessions.
           </List.Description>
 
           <List.Item>
@@ -46,7 +44,7 @@ export default function UpsertCaptionsInstructionsList() {
             <b>Auto Update Captions</b>.
             <List.Description style={{ marginBottom: 5 }}>
               If enabled, all captions of the selected element type will be
-              updated with the given label and corresponding correct number.
+              updated with the given label and corresponding number.
             </List.Description>
           </List.Item>
 
@@ -61,15 +59,16 @@ export default function UpsertCaptionsInstructionsList() {
               >
                 Bookmark
               </a>
-              , which can be referenced to help people find content or move
-              around your document.
+              , which can be referenced to help people find the caption in your
+              document.
             </List.Description>
           </List.Item>
         </List.List>
       </List.Item>
 
       <List.Item>
-        Press enter or click on the "<b>Save Caption</b>" button.
+        Press enter or click on the "<b>Save Caption</b>" button and wait a few
+        seconds.
       </List.Item>
     </List>
   );
