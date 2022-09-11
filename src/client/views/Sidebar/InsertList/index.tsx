@@ -87,7 +87,9 @@ export default function InsertList() {
     try {
       await GAS.insertList(values.element, values.type);
     } catch (error) {
-      setSubmitError(error.message || "Please try again later");
+      setSubmitError(
+        "Some unexpected error occurred. We couldn't insert the list correctly."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -149,7 +151,7 @@ function ElementDropdown({
       value={value}
       text={HumanReadable.type(value)}
       error={error}
-      label={"Targeted element type"}
+      label={"Element type"}
       placeholder="Select an element"
       fluid
       required
@@ -195,11 +197,7 @@ function ListTypeRadioButtons({
 }: ListTypeRadioButtonsProps) {
   return (
     <React.Fragment>
-      <Form.Field
-        required
-        label="How you want the list to look"
-        style={{ marginBottom: 0 }}
-      />
+      <Form.Field required label="List type" style={{ marginBottom: 0 }} />
       <Grid columns={2} centered stretched>
         <Grid.Column textAlign="center">
           <TypeRadioButton

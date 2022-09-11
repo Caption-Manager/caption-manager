@@ -119,7 +119,9 @@ export default function UpsertCaptionForm({
         { autoUpdateCaptions, bookmark }
       );
     } catch (error) {
-      setSubmitError(error.message || "We couldn't update your caption");
+      setSubmitError(
+        "Some unexpected error occurred. We couldn't save your caption."
+      );
     } finally {
       setIsSubmiting(false);
     }
