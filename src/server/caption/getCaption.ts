@@ -108,17 +108,19 @@ function getCaptionAfterVerifyParts(
   const { number } = getCaptionPartsFromString(maybeCaption.getText());
   if (isNaN(number)) return null;
 
-  // At this point we know have something like `{string} {number}`
-  // So probably this is indeed a Caption. But we could add more
-  // checks like comparing Text element styles or checking the description.
+  // At this point we know the caption text has the following structure:
+  // `{string} {number}`.
 
-  // Also, this can cause bugs if the user has a captionizable element without caption
-  // whose next text has the structure `{string} {number} {string}`.
-  // One idea was to have an unique identifier to the caption, like specific
-  // empty characters (see https://emptycharacter.com/). Then we could identify a
-  // caption by verifying if it conforms to the interface
-  // `${string} {number}{specific empty space}`. The problem with this approach is that
-  // if the user decides to manually change the caption and deletes the specific empty
-  // space, it would no longer be recognized as a caption.
+  // 1) We don't check if the caption label matches a document label.
+  // Because if the user changes the document label and for some reason (like
+  // a non-enabled "autoUpdateCaptions" option) the other captions are not updated,
+  // the user will have to manually, one by one, change the label of these other captions.
+
+  // 2) The current verifcation process leads to a know caveat.
+  // If the user has a captionizable element (image, table, equation) *without* a caption
+  // AND whose immediate next text or text of next paragraph has the structure `{string} {number}`,
+  // this text will be wrongly recognised as a caption. This is not a big deal, because it's a corner
+  // case scenario (generally we expected all captionalizable elements to have captions). But it's
+  // important to document this for users.
   return maybeCaption as Caption;
 }
