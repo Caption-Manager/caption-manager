@@ -4,19 +4,16 @@
   "description": "Google Docs add-on to manage captions",
   "repository": {
     "type": "git",
-    "url": "https://github.com/leonardolombardi07/caption-manager/"
+    "url": "https://github.com/Caption-Manager/caption-manager"
   },
   "scripts": {
-    "login": "clasp login",
-    "setup": "rimraf .clasp.json && clasp create --type sheets --title \"My React Project\" --rootDir ./dist",
-    "open": "clasp open --addon",
     "setup:https": "mkdirp certs && mkcert -key-file ./certs/key.pem -cert-file ./certs/cert.pem localhost 127.0.0.1",
     "build:dev": "cross-env NODE_ENV=development webpack",
-    "build": "cross-env NODE_ENV=production webpack",
-    "deploy:dev": "rimraf dist && npm run build:dev && npx clasp push",
-    "deploy": "rimraf dist && npm run build && npx clasp push",
+    "build:prod": "cross-env NODE_ENV=production webpack",
+    "push:dev": "rimraf dist && npm run build:dev && clasp push",
+    "push:prod": "rimraf dist && npm run build:prod && clasp push",
     "serve": "cross-env NODE_ENV=development webpack-dev-server",
-    "start": "npm run deploy:dev && npm run serve"
+    "start": "npm run push:dev && npm run serve"
   },
   "keywords": [
     "react",
