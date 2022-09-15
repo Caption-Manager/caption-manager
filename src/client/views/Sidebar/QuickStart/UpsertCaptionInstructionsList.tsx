@@ -5,12 +5,12 @@ export default function UpsertCaptionsInstructionsList() {
   return (
     <List ordered>
       <List.Item>
-        Open the <b>"Insert or update a caption"</b> panel, the first item of
+        Open the <b>"Insert or update a caption"</b> panel, the first panel of
         this sidebar.
       </List.Item>
 
       <List.Item>
-        Select an image, table or equation on document.
+        Select an image, table, or equation on the document.
         <List.Description>
           If the selected element already has a <b>caption</b>, the{" "}
           <b>"Insert or update a caption"</b> panel will be filled with the

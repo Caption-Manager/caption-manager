@@ -5,9 +5,9 @@ export default function InsertListFromAddOnMenuInstructionsList() {
   return (
     <List ordered>
       <List.Item>
-        Click where you want to insert the list on document.
+        Click where you want to insert the list on the document.
         <List.Description>
-          The list will be inserted on the next paragraph which is part of the
+          The list will be inserted in the next paragraph which is part of the
           main structure of the document.
         </List.Description>
       </List.Item>
@@ -17,7 +17,7 @@ export default function InsertListFromAddOnMenuInstructionsList() {
       </List.Item>
 
       <List.Item>
-        Tap on a targeted <b>element type</b> (image, table or equation).
+        Tap on a targeted <b>element type</b> (image, table, or equation).
       </List.Item>
 
       <List.Item>

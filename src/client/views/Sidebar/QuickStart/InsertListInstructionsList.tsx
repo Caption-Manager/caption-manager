@@ -9,15 +9,15 @@ export default function InsertListInstructionsList() {
       </List.Item>
 
       <List.Item>
-        Click where you want to insert the list on document.
+        Click where you want to insert the list on the document.
         <List.Description>
-          The list will be inserted on the next paragraph which is part of the
+          The list will be inserted in the next paragraph which is part of the
           main structure of the document.
         </List.Description>
       </List.Item>
 
       <List.Item>
-        Select the targeted <b>element type</b> (image, table or equation) of
+        Select the targeted <b>element type</b> (image, table, or equation) of
         your list.
       </List.Item>
 

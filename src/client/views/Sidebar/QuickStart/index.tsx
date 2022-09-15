@@ -1,9 +1,11 @@
 import * as React from "react";
 // Components
-import { Header, Accordion, Segment, Icon } from "semantic-ui-react";
+import { Header, Accordion, Segment, Icon, Message } from "semantic-ui-react";
 import UpsertCaptionsInstructionsList from "./UpsertCaptionInstructionsList";
 import InsertListInstructionsList from "./InsertListInstructionsList";
 import InsertListFromAddOnMenuInstructionsList from "./InsertListFromAddOnMenuInstructiontsList";
+
+const docsUrl = "https://caption-manager.com/";
 
 export default function QuickStart() {
   return (
@@ -40,6 +42,15 @@ export default function QuickStart() {
           <InsertListFromAddOnMenuInstructionsList />
         </AccordionListItem>
       </Section>
+
+      <Message basic style={{ position: "fixed", width: "100%", bottom: 0 }}>
+        If you want a more complete tutorial, <br />
+        go to{" "}
+        <a href={docsUrl} target={"_blank"}>
+          {docsUrl}
+        </a>
+        .
+      </Message>
     </Segment>
   );
 }
@@ -53,7 +64,7 @@ interface SectionProps {
 function Section({ title, description, children }: SectionProps) {
   const headerStyles = { paddingLeft: 10, paddingRight: 10, paddingBottom: 0 };
   return (
-    <Segment basic style={{ paddingLeft: 0, paddingRight: 0 }}>
+    <Segment basic style={{ paddingLeft: 0, paddingRight: 0, marginTop: 0 }}>
       <Header>
         <Header.Content as={"h3"} style={headerStyles}>
           {title}
