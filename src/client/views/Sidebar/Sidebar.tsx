@@ -31,8 +31,7 @@ export default function Sidebar() {
           onClick={onItemClick}
           active={activeIndexes.includes(0)}
         >
-          {/* This prevents unnecessary polling while the component is not mounted */}
-          {activeIndexes.includes(0) && <UpsertCaption />}
+          <UpsertCaption />
         </AccordionItem>
 
         <AccordionItem
