@@ -168,7 +168,7 @@ function insertCaptionItem(
  * @customfunction
  */
 function getBookmarkUrl(id: string): string {
-  return `https://docs.google.com/document/d/${DocumentApp.getActiveDocument().getId()}/edit#bookmark=${id}`;
+  return `#bookmark=${id}`;
 }
 
 /**
