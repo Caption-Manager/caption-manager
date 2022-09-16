@@ -265,4 +265,4 @@ All available methods from the Google Apps Script API are shown with full defini
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-Again, thanks a lot to the creator of [React-Google-Apps-Script](https://github.com/enuchi/React-Google-Apps-Script/contributors) [apps-script-starter](https://github.com/labnol/apps-script-starter), [@enuchi](https://github.com/enuchi). 
+Again, thanks a lot to the creator of [React-Google-Apps-Script](https://github.com/enuchi/React-Google-Apps-Script/), [@enuchi](https://github.com/enuchi). 
