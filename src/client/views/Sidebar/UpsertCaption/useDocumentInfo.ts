@@ -2,7 +2,7 @@ import * as React from "react";
 import GAS from "../../../services/GAS";
 import { DocumentInfo } from "../../../../common/types";
 
-const INITIAL_DOCUMENT_INFO = { selectedElement: null };
+const INITIAL_DOCUMENT_INFO: DocumentInfo = { selectedElement: null };
 
 // See:
 // https://stackoverflow.com/questions/24773177/how-to-poll-a-google-doc-from-an-add-on/24773178#24773178

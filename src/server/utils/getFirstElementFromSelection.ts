@@ -1,10 +1,10 @@
 /**
- * Gets the first user selected element on active document.
+ * Gets the first element from user's selection on active document.
  *
- * @return {GoogleAppsScript.Document.Element} The first selected element.
+ * @return {GoogleAppsScript.Document.Element|null} The first selected element, if any.
  * @customfunction
  */
-export default function getFirstSelectedElement(): GoogleAppsScript.Document.Element {
+export default function getFirstElementFromSelection(): GoogleAppsScript.Document.Element | null {
   const selection = DocumentApp.getActiveDocument().getSelection();
   if (!selection) return null;
   const selectedRangeElement = selection.getRangeElements()[0];

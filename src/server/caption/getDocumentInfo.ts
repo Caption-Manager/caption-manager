@@ -1,11 +1,15 @@
-import getFirstSelectedElement from "../utils/getFirstSelectedElement";
 import isCaptionalizable from "./isCaptionalizable";
 import getCaptionInfo from "./getCaptionInfo";
 import {
   DocumentInfo,
   SelectedElementInfo,
   CaptionalizableSelectedElementType,
+  NotCaptionalizableElementInfo,
+  CaptionalizableElementInfo,
 } from "../../common/types";
+import getFirstElementFromSelection from "../utils/getFirstElementFromSelection";
+import getCursorElement from "../utils/getCursorElement";
+import getCaptionalizableCursorParentElement from "./getCaptionalizableCursorParentElement";
 
 export default function getDocumentInfo(): DocumentInfo {
   return {
@@ -14,21 +18,48 @@ export default function getDocumentInfo(): DocumentInfo {
 }
 
 function getSelectedElementInfo(): SelectedElementInfo {
-  const selectedElement = getFirstSelectedElement();
-  if (!selectedElement) return null;
+  const firstElementFromSelection = getFirstElementFromSelection();
 
-  if (!isCaptionalizable(selectedElement)) {
-    return {
-      isCaptionalizable: false,
-      type: selectedElement.getType().toString(),
-    };
+  if (firstElementFromSelection) {
+    if (isCaptionalizable(firstElementFromSelection))
+      return getCaptionalizableElementInfo(firstElementFromSelection);
+    else return getNotCaptionalizableElementInfo(firstElementFromSelection);
   }
 
+  const cursorElement = getCursorElement();
+  if (cursorElement) {
+    const captionalizableCursorParentElement = getCaptionalizableCursorParentElement(
+      cursorElement
+    );
+    if (captionalizableCursorParentElement)
+      return getCaptionalizableElementInfo(captionalizableCursorParentElement);
+    // We could return a not captionalizable element here, but I think
+    // restricting a selected element to selections (document.getSelection) and cursor elements
+    // child of a captionalizable element (cursor inside table cell, cursor inside
+    // equation) leads to better UX.
+    return null;
+    // else return getNotCaptionalizableElementInfo(cursorElement);
+  }
+
+  // No first element from selection or cursor. Not even sure if this is possible.
+  return null;
+}
+
+function getNotCaptionalizableElementInfo(
+  element: GoogleAppsScript.Document.Element
+): NotCaptionalizableElementInfo {
+  return {
+    isCaptionalizable: false,
+    type: element.getType().toString(),
+  };
+}
+
+function getCaptionalizableElementInfo(
+  element: GoogleAppsScript.Document.Element
+): CaptionalizableElementInfo {
   return {
     isCaptionalizable: true,
-    type: selectedElement
-      .getType()
-      .toString() as CaptionalizableSelectedElementType,
-    caption: getCaptionInfo(selectedElement),
+    type: element.getType().toString() as CaptionalizableSelectedElementType,
+    caption: getCaptionInfo(element),
   };
 }

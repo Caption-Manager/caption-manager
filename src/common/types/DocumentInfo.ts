@@ -32,8 +32,7 @@ export interface NotCaptionalizableElementInfo {
  */
 export type SelectedElementInfo =
   | CaptionalizableElementInfo
-  | NotCaptionalizableElementInfo
-  | null;
+  | NotCaptionalizableElementInfo;
 
 /**
  * Data of document used on client.
