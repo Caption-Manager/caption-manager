@@ -8,6 +8,7 @@ import {
   insertEquationDefaultList,
   insertEquationBookmarkedList,
   openSidebar,
+  openCaptionStyleModal,
 } from "./ui";
 import { getDocumentInfo, onSaveCaption } from "./caption";
 import { insertList } from "./list";
@@ -24,6 +25,7 @@ export {
   insertEquationDefaultList,
   insertEquationBookmarkedList,
   openSidebar,
+  openCaptionStyleModal,
   // Caption
   getDocumentInfo,
   onSaveCaption,

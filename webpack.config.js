@@ -49,6 +49,13 @@ const clientEntrypoints = [
     filename: "sidebar", // we'll add the .html suffix to these
     template: "./src/client/views/Sidebar/index.html",
   },
+
+  {
+    name: "CaptionStyleModal",
+    entry: "./src/client/views/CaptionStyleModal/index.js",
+    filename: "caption-style-modal", // we'll add the .html suffix to these
+    template: "./src/client/views/CaptionStyleModal/index.html",
+  },
 ];
 
 // define certificate locations

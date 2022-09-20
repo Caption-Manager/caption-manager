@@ -1,4 +1,4 @@
-type ValidationTypes = "element" | "list_type" | "label";
+type ValidationTypes = "element" | "list_type" | "label" | "hex";
 
 export function validate(type: ValidationTypes, value: string): string | null {
   switch (type) {
@@ -16,6 +16,11 @@ export function validate(type: ValidationTypes, value: string): string | null {
       const moreThanTwoWords = value.split(" ").length > 1;
       if (moreThanTwoWords) return "Currently a label can only have one word";
       return null;
+    }
+
+    case "hex": {
+      const hexRegex = /^#([0-9a-f]{3}){1,2}$/i;
+      return !hexRegex.test(value) ? "Please provide a valid hex color" : null;
     }
 
     default:

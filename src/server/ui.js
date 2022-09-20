@@ -42,6 +42,8 @@ export function onOpen() {
     .addItem("Open sidebar", openSidebar.name)
     .addSeparator()
     .addSubMenu(insertListSubMenu)
+    .addSeparator()
+    .addItem("Edit caption styles", openCaptionStyleModal.name)
     .addToUi();
 }
 
@@ -74,4 +76,9 @@ export function insertEquationBookmarkedList() {
 export function openSidebar() {
   const html = HtmlService.createHtmlOutputFromFile("sidebar");
   DocumentApp.getUi().showSidebar(html);
+}
+
+export function openCaptionStyleModal() {
+  const html = HtmlService.createHtmlOutputFromFile("caption-style-modal");
+  DocumentApp.getUi().showModalDialog(html, "Edit caption style");
 }
