@@ -12,6 +12,7 @@ export default function getDefaultDocumentCaptionStyles() {
 const {
   HORIZONTAL_ALIGNMENT,
   FONT_SIZE,
+  FONT_FAMILY,
   BOLD,
   ITALIC,
   UNDERLINE,
@@ -24,15 +25,20 @@ function getStylesFromFirstCaption(): Styles | null {
     const firstCaptionParagraphAttributes = getCaptionParagraph(
       firstCaption
     ).getAttributes();
+    // We must give default values because some of the style attributes
+    // return null unless set explicitly in code.
+    // See: https://stackoverflow.com/questions/49573171/google-app-script-getting-null-values-from-getattributes
     return {
-      alignment: mapDocumentHorizontalAlignmentToCommon(
-        firstCaptionParagraphAttributes[HORIZONTAL_ALIGNMENT]
-      ),
-      fontSize: firstCaption.getFontSize(),
-      bold: firstCaption.isBold(),
-      italic: firstCaption.isItalic(),
-      underline: firstCaption.isUnderline(),
-      color: firstCaption.getForegroundColor(),
+      alignment:
+        mapDocumentHorizontalAlignmentToCommon(
+          firstCaptionParagraphAttributes[HORIZONTAL_ALIGNMENT]
+        ) || "center",
+      fontSize: firstCaption.getFontSize() || 11,
+      fontFamily: firstCaption.getFontFamily() || "Arial",
+      bold: firstCaption.isBold() || false,
+      italic: firstCaption.isItalic() || false,
+      underline: firstCaption.isUnderline() || false,
+      color: firstCaption.getForegroundColor() || "#000000",
     };
   }
 
@@ -57,6 +63,7 @@ function getStylesFromNormalParagraphHeading(): Styles {
     alignment: mapDocumentHorizontalAlignmentToCommon(
       attributes[HORIZONTAL_ALIGNMENT]
     ),
+    fontFamily: attributes[FONT_FAMILY],
     fontSize: attributes[FONT_SIZE],
     bold: attributes[BOLD],
     italic: attributes[ITALIC],

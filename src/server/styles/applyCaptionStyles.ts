@@ -27,6 +27,7 @@ function applyParagraphStyles(
 
 function applyTextStyles(text: Caption, styles: Styles): void {
   text.setFontSize(styles.fontSize);
+  text.setFontFamily(styles.fontFamily);
   text.setBold(styles.bold);
   text.setItalic(styles.italic);
   text.setUnderline(styles.underline);

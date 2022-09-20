@@ -2,6 +2,7 @@ import React from "react";
 // Components
 import {
   Button,
+  Dropdown,
   Form,
   Loader,
   Message,
@@ -15,6 +16,8 @@ import GAS from "../../services/GAS";
 import { FALLBACK_CAPTION_STYLES } from "../../../common/constants";
 // Types
 import { Styles } from "../../../common/types";
+// Data
+import { googleFonts } from "./googleFonts";
 
 export default function CaptionStyleModal() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -47,7 +50,12 @@ export default function CaptionStyleModal() {
     <Form>
       <Segment style={{ paddingTop: 5 }} textAlign="center">
         <RichTextEditor styles={styles} onChangeStyle={onChangeStyle} />
+        <FontFamilyDropdown
+          value={styles.fontFamily}
+          onChangeStyle={onChangeStyle}
+        />
         <CaptionTextArea styles={styles} />
+        <DismissableMessage />
       </Segment>
 
       <div style={{ position: "fixed", bottom: 0, width: "100%" }}>
@@ -80,7 +88,7 @@ function CaptionTextArea({ styles }: { styles: Styles }) {
       disabled
       style={
         {
-          marginTop: "1em",
+          marginBottom: "1em",
           maxHeight: 120,
           resize: "none",
           color: styles.color,
@@ -122,5 +130,42 @@ function LoadingPlaceholder() {
         Loading document styles...
       </Loader>
     </Segment>
+  );
+}
+
+interface FontFamilyDropdownProps {
+  value: string;
+  onChangeStyle: (key: keyof Styles, value: any) => void;
+}
+
+function FontFamilyDropdown({ value, onChangeStyle }: FontFamilyDropdownProps) {
+  return (
+    <Dropdown
+      value={value}
+      onChange={(e, { value }) => onChangeStyle("fontFamily", value)}
+      placeholder="Select Font"
+      fluid
+      search
+      selection
+      options={googleFonts}
+      style={{ margin: "1em 0" }}
+    />
+  );
+}
+
+function DismissableMessage() {
+  const [isVisible, setIsVisible] = React.useState(true);
+  if (!isVisible) return null;
+
+  return (
+    <Message
+      onDismiss={() => setIsVisible(false)}
+      header={"Heads up!"}
+      content={
+        "Currently we don't support live visualization of the selected Google Font on the illustrative caption above. But rest assured changes will be reflected on your Google Document when you save styles."
+      }
+      size="small"
+      style={{ textAlign: "left", marginBottom: "3em", marginTop: 0 }}
+    />
   );
 }

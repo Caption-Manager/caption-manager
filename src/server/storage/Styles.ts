@@ -12,6 +12,10 @@ export function getDocumentCaptionStyles(): Styles {
     );
     // TODO: add some validation here to make sure the
     // object conforms to the Styles interface
+    // This is very important because if we upgrade the add-on
+    // to add a new property on styles and we don't verify anything here,
+    // user will get stale/non-conforming data as styles and this
+    // can cause bugs
     if (docCaptionStyles) return JSON.parse(docCaptionStyles);
     else return getDefaultDocumentCaptionStyles();
   } catch (error) {

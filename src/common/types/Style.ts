@@ -6,6 +6,7 @@ interface ParagraphStyles {
 
 interface TextSytles {
   fontSize: number;
+  fontFamily: string; // TODO: type this to allow only valid fonts
   bold: boolean;
   italic: boolean;
   underline: boolean;
