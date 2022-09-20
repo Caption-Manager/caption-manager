@@ -160,16 +160,31 @@ export default function UpsertCaptionForm({
         selectedElementType={selectedElementType}
       />
 
-      <Button
-        loading={isSubmiting}
-        disabled={disableSubmitButton}
-        onClick={handleSubmit}
-        onKeyPress={onKeyPress}
-        primary
-        style={{ marginTop: 20 }}
+      <div
+        style={{
+          marginTop: 20,
+          display: "flex",
+          justifyContent: "space-between",
+        }}
       >
-        Save caption
-      </Button>
+        <Button
+          loading={isSubmiting}
+          disabled={disableSubmitButton}
+          onClick={handleSubmit}
+          onKeyPress={onKeyPress}
+          primary
+          style={{ width: 125 }}
+        >
+          Save caption
+        </Button>
+
+        <Button
+          onClick={() => GAS.openCaptionStyleModal()}
+          style={{ width: 125 }}
+        >
+          Edit styles
+        </Button>
+      </div>
 
       {submitError && (
         <Message negative>

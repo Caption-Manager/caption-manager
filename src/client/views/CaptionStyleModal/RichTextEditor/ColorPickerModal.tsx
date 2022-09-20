@@ -29,7 +29,7 @@ interface Props {
 export default function ColorPickerModal({ color, onChangeColor }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [hexError, setHexError] = React.useState(null);
-  const [hexColor, setHexColor] = React.useState("");
+  const [hexColor, setHexColor] = React.useState(color.replace("#", ""));
   const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
   function onChangeHexColor(value: string) {
