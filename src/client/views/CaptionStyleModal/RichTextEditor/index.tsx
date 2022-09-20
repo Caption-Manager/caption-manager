@@ -2,9 +2,9 @@ import React from "react";
 // Components
 import { Button, Icon, Segment } from "semantic-ui-react";
 import FontSizeEditor from "./FontSizeEditor";
+import ColorPickerModal from "./ColorPickerModal";
 // Types
 import { FormValues } from "../CaptionStyleModal";
-import ColorPickerModal from "./ColorPickerModal";
 
 interface Props {
   values: FormValues;

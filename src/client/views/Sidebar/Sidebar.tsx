@@ -8,7 +8,7 @@ import {
 } from "semantic-ui-react";
 import UpsertCaption from "./UpsertCaption";
 import InsertList from "./InsertList";
-import QuickStart from "./QuickStart/index"; // TODO: remove unnecessary "index"
+import QuickStart from "./QuickStart";
 // Constants
 import { SIDEBAR_WIDTH } from "./constants";
 
