@@ -1,7 +1,7 @@
 import * as React from "react";
 import { List } from "semantic-ui-react";
 
-export default function UpsertCaptionsInstructionsList() {
+export default function UpsertCaptionInstructions() {
   return (
     <List ordered>
       <List.Item>

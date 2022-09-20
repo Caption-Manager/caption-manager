@@ -1,13 +1,9 @@
-import * as React from "react";
+import React from "react";
 import { List } from "semantic-ui-react";
 
-export default function InsertListInstructionsList() {
+export default function InsertListFromAddOnMenuInstructions() {
   return (
     <List ordered>
-      <List.Item>
-        Open the <b>"Insert list"</b> panel, the second item of this sidebar.
-      </List.Item>
-
       <List.Item>
         Click where you want to insert the list on the document.
         <List.Description>
@@ -17,16 +13,15 @@ export default function InsertListInstructionsList() {
       </List.Item>
 
       <List.Item>
-        Select the targeted <b>element type</b> (image, table, or equation) of
-        your list.
+        Tap on the <b>Insert list</b> menu.
       </List.Item>
 
       <List.Item>
-        Select the targeted <b>list type</b> of your list.
+        Tap on a targeted <b>element type</b> (image, table, or equation).
       </List.Item>
 
       <List.Item>
-        Click on the "<b>Insert list</b>" button and wait a few seconds.
+        Click on a <b>list type</b> and wait a few seconds.
       </List.Item>
     </List>
   );

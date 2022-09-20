@@ -1,11 +1,11 @@
 import * as React from "react";
 // Components
 import { Header, Accordion, Segment, Icon, Message } from "semantic-ui-react";
-import UpsertCaptionsInstructionsList from "./UpsertCaptionInstructionsList";
-import InsertListInstructionsList from "./InsertListInstructionsList";
-import InsertListFromAddOnMenuInstructionsList from "./InsertListFromAddOnMenuInstructiontsList";
+import UpsertCaptionInstructions from "./UpsertCaptionInstructions";
+import InsertListInstructions from "./InsertListInstructions";
+import InsertListFromAddOnMenuInstructions from "./InsertListFromAddOnMenuInstructions";
 
-const docsUrl = "https://caption-manager.com/";
+const DOCS_URL = "https://caption-manager.com/";
 
 export default function QuickStart() {
   return (
@@ -15,7 +15,7 @@ export default function QuickStart() {
         description="You can insert and update captions for images, tables and equations elements."
       >
         <AccordionListItem title="Insert or update a caption">
-          <UpsertCaptionsInstructionsList />
+          <UpsertCaptionInstructions />
         </AccordionListItem>
       </Section>
 
@@ -35,19 +35,19 @@ export default function QuickStart() {
         }
       >
         <AccordionListItem title="Insert a list">
-          <InsertListInstructionsList />
+          <InsertListInstructions />
         </AccordionListItem>
 
         <AccordionListItem title="Insert a list from add-ons menu">
-          <InsertListFromAddOnMenuInstructionsList />
+          <InsertListFromAddOnMenuInstructions />
         </AccordionListItem>
       </Section>
 
       <Message basic style={{ position: "fixed", width: "100%", bottom: 0 }}>
         If you want a more complete tutorial, <br />
         go to{" "}
-        <a href={docsUrl} target={"_blank"}>
-          {docsUrl}
+        <a href={DOCS_URL} target={"_blank"}>
+          {DOCS_URL}
         </a>
         .
       </Message>
