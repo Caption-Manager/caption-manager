@@ -1,15 +1,8 @@
+import { FALLBACK_CAPTION_STYLES } from "../../common/constants";
 import { Styles } from "../../common/types";
+import getDefaultDocumentCaptionStyles from "../styles/getDefaultCaptionStyles";
 
 const DOCUMENT_CAPTION_STYLES_KEY = "DOCUMENT_CAPTION_STYLES_KEY";
-
-const DEFAULT_DOCUMENT_CAPTION_STYLES: Styles = {
-  fontSize: 11,
-  bold: false,
-  italic: false,
-  underline: false,
-  color: "#000000",
-  alignment: "center",
-};
 
 export function getDocumentCaptionStyles(): Styles {
   try {
@@ -20,10 +13,10 @@ export function getDocumentCaptionStyles(): Styles {
     // TODO: add some validation here to make sure the
     // object conforms to the Styles interface
     if (docCaptionStyles) return JSON.parse(docCaptionStyles);
-    else return DEFAULT_DOCUMENT_CAPTION_STYLES;
+    else return getDefaultDocumentCaptionStyles();
   } catch (error) {
     // TODO: maybe warn the user? Provide better cache?
-    return DEFAULT_DOCUMENT_CAPTION_STYLES;
+    return FALLBACK_CAPTION_STYLES;
   }
 }
 

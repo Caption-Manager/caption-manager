@@ -53,14 +53,12 @@ export default function UpsertCaptionForm({
 }: Props) {
   const [isSubmiting, setIsSubmiting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
-
   const [values, setValues] = React.useState<FormValues>({
     label: initialLabel,
     description: initialDescription,
     autoUpdateCaptions: true,
     bookmark: isInitiallyBookmarked,
   });
-
   const [errors, setErrors] = React.useState<ValidationErrors>({
     label: null,
   });
@@ -80,6 +78,20 @@ export default function UpsertCaptionForm({
     },
     [initialLabel, initialDescription, isInitiallyBookmarked]
   );
+
+  const [isOpeningModal, setIsOpeningModal] = React.useState(false);
+
+  async function handleOpenModal() {
+    setIsOpeningModal(true);
+    try {
+      await GAS.openCaptionStyleModal();
+    } catch (error) {
+      // This should be impossible, but we deal with it anyway
+      alert("Something went wrong while trying to open caption styles modal");
+    } finally {
+      setIsOpeningModal(false);
+    }
+  }
 
   function onChangeLabel(event: React.ChangeEvent<HTMLInputElement>) {
     const newLabel = event.target.value;
@@ -179,7 +191,9 @@ export default function UpsertCaptionForm({
         </Button>
 
         <Button
-          onClick={() => GAS.openCaptionStyleModal()}
+          loading={isOpeningModal}
+          disabled={isOpeningModal}
+          onClick={handleOpenModal}
           style={{ width: 125 }}
         >
           Edit styles

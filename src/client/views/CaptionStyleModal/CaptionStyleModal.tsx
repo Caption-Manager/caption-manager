@@ -11,6 +11,8 @@ import {
 import RichTextEditor from "./RichTextEditor";
 // Services
 import GAS from "../../services/GAS";
+// Constants
+import { FALLBACK_CAPTION_STYLES } from "../../../common/constants";
 // Types
 import { Styles } from "../../../common/types";
 
@@ -94,18 +96,11 @@ function CaptionTextArea({ values }: { values: FormValues }) {
   );
 }
 
-const FALLBACK_FORM_VALUES: Styles = {
-  fontSize: 11,
-  bold: false,
-  italic: false,
-  underline: false,
-  color: "#000000",
-  alignment: "center",
-};
-
 function useDocumentValues() {
   const [isLoading, setIsLoading] = React.useState(true);
-  const [values, setValues] = React.useState<FormValues>(FALLBACK_FORM_VALUES);
+  const [values, setValues] = React.useState<FormValues>(
+    FALLBACK_CAPTION_STYLES
+  );
 
   React.useEffect(function onMount() {
     (async function fetchDocumentCaptionStyles() {

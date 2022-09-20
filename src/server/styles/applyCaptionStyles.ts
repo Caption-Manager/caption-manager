@@ -12,19 +12,17 @@ export default function applyCaptionStyles(
   paragraph: GoogleAppsScript.Document.Paragraph
 ): void {
   const styles = getDocumentCaptionStyles();
-
   applyParagraphStyles(paragraph, styles);
-  const maybeText = paragraph.getChild(0);
-  if (maybeText.getType() === DocumentApp.ElementType.TEXT) {
-    applyTextStyles(maybeText.asText(), styles);
-  }
+  applyTextStyles(paragraph.getChild(0).asText(), styles);
 }
 
 function applyParagraphStyles(
   paragraph: GoogleAppsScript.Document.Paragraph,
   styles: Styles
 ) {
-  paragraph.setAlignment(mapStrToHorizontalAlignment(styles.alignment));
+  paragraph.setAlignment(
+    mapCommonToDocumentHorizontalAlignment(styles.alignment)
+  );
 }
 
 function applyTextStyles(text: Caption, styles: Styles): void {
@@ -35,7 +33,7 @@ function applyTextStyles(text: Caption, styles: Styles): void {
   text.setForegroundColor(styles.color);
 }
 
-function mapStrToHorizontalAlignment(
+function mapCommonToDocumentHorizontalAlignment(
   str: HorizontalAlignment
 ): GoogleAppsScript.Document.HorizontalAlignment {
   const { LEFT, CENTER, RIGHT, JUSTIFY } = DocumentApp.HorizontalAlignment;
@@ -48,5 +46,7 @@ function mapStrToHorizontalAlignment(
       return RIGHT;
     case "justify":
       return JUSTIFY;
+    default:
+      return CENTER;
   }
 }
