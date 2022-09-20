@@ -80,5 +80,5 @@ export function openSidebar() {
 
 export function openCaptionStyleModal() {
   const html = HtmlService.createHtmlOutputFromFile("caption-style-modal");
-  DocumentApp.getUi().showModalDialog(html, "Edit caption style");
+  DocumentApp.getUi().showModalDialog(html, "Edit caption styles");
 }
