@@ -4,14 +4,14 @@ import { Button, Icon, Segment } from "semantic-ui-react";
 import FontSizeEditor from "./FontSizeEditor";
 import ColorPickerModal from "./ColorPickerModal";
 // Types
-import { FormValues } from "../CaptionStyleModal";
+import { Styles } from "../../../../common/types";
 
 interface Props {
-  values: FormValues;
-  onChangeValue: (key: keyof FormValues, value: any) => void;
+  styles: Styles;
+  onChangeStyle: (key: keyof Styles, value: any) => void; // TODO: use Typescript to infer the correct type of value
 }
 
-export default function RichTextEditor({ values, onChangeValue }: Props) {
+export default function RichTextEditor({ styles, onChangeStyle }: Props) {
   return (
     <Segment.Inline
       style={{
@@ -21,70 +21,70 @@ export default function RichTextEditor({ values, onChangeValue }: Props) {
       }}
     >
       <FontSizeEditor
-        fontSize={values.fontSize}
-        onChangeFontSize={newValue => onChangeValue("fontSize", newValue)}
+        value={styles.fontSize}
+        onChangeValue={newFontSize => onChangeStyle("fontSize", newFontSize)}
       />
 
       <Button.Group basic size="small">
         <Button
           icon
-          active={values.bold}
-          onClick={() => onChangeValue("bold", !values.bold)}
+          active={styles.bold}
+          onClick={() => onChangeStyle("bold", !styles.bold)}
         >
           <Icon name="bold" />
         </Button>
 
         <Button
           icon
-          active={values.italic}
-          onClick={() => onChangeValue("italic", !values.italic)}
+          active={styles.italic}
+          onClick={() => onChangeStyle("italic", !styles.italic)}
         >
           <Icon name="italic" />
         </Button>
 
         <Button
           icon
-          active={values.underline}
-          onClick={() => onChangeValue("underline", !values.underline)}
+          active={styles.underline}
+          onClick={() => onChangeStyle("underline", !styles.underline)}
         >
           <Icon name="underline" />
         </Button>
 
         <ColorPickerModal
-          color={values.color}
-          onChangeColor={newColor => onChangeValue("color", newColor)}
+          color={styles.color}
+          onChangeColor={newColor => onChangeStyle("color", newColor)}
         />
       </Button.Group>
 
       <Button.Group basic size="small">
         <Button
           icon
-          active={values.alignment === "left"}
-          onClick={() => onChangeValue("alignment", "left")}
+          active={styles.alignment === "left"}
+          onClick={() => onChangeStyle("alignment", "left")}
         >
           <Icon name="align left" />
         </Button>
 
         <Button
           icon
-          active={values.alignment === "center"}
-          onClick={() => onChangeValue("alignment", "center")}
+          active={styles.alignment === "center"}
+          onClick={() => onChangeStyle("alignment", "center")}
         >
           <Icon name="align center" />
         </Button>
 
         <Button
           icon
-          active={values.alignment === "right"}
-          onClick={() => onChangeValue("alignment", "right")}
+          active={styles.alignment === "right"}
+          onClick={() => onChangeStyle("alignment", "right")}
         >
           <Icon name="align right" />
         </Button>
 
         <Button
           icon
-          active={values.alignment === "justify"}
-          onClick={() => onChangeValue("alignment", "justify")}
+          active={styles.alignment === "justify"}
+          onClick={() => onChangeStyle("alignment", "justify")}
         >
           <Icon name="align justify" />
         </Button>

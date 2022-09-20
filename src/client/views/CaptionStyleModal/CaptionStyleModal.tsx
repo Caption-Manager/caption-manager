@@ -16,15 +16,14 @@ import { FALLBACK_CAPTION_STYLES } from "../../../common/constants";
 // Types
 import { Styles } from "../../../common/types";
 
-export type FormValues = Styles;
-
 export default function CaptionStyleModal() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
-  const { values, setValues, isLoadingValues } = useDocumentValues();
+  const { styles, setStyles, isLoadingDocumentStyles } = useDocumentStyles();
 
-  function onChangeFormValue(key: keyof FormValues, value: any) {
-    setValues(previous => ({ ...previous, [key]: value }));
+  function onChangeStyle(key: keyof Styles, value: any) {
+    // TODO: use Typescript to infer the correct type of value
+    setStyles(previous => ({ ...previous, [key]: value }));
   }
 
   async function handleSubmit() {
@@ -32,7 +31,7 @@ export default function CaptionStyleModal() {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      await GAS.updateAllCaptionsStyles(values);
+      await GAS.updateAllCaptionsStyles(styles);
     } catch (error) {
       setSubmitError(error.message || "We couldn't save your styles");
     } finally {
@@ -40,15 +39,15 @@ export default function CaptionStyleModal() {
     }
   }
 
-  if (isLoadingValues) {
+  if (isLoadingDocumentStyles) {
     return <LoadingPlaceholder />;
   }
 
   return (
     <Form>
       <Segment style={{ paddingTop: 5 }} textAlign="center">
-        <RichTextEditor values={values} onChangeValue={onChangeFormValue} />
-        <CaptionTextArea values={values} />
+        <RichTextEditor styles={styles} onChangeStyle={onChangeStyle} />
+        <CaptionTextArea styles={styles} />
       </Segment>
 
       <div style={{ position: "fixed", bottom: 0, width: "100%" }}>
@@ -73,7 +72,7 @@ export default function CaptionStyleModal() {
   );
 }
 
-function CaptionTextArea({ values }: { values: FormValues }) {
+function CaptionTextArea({ styles }: { styles: Styles }) {
   return (
     <TextArea
       value={"Figure 1 - Some descriptive text"}
@@ -84,29 +83,27 @@ function CaptionTextArea({ values }: { values: FormValues }) {
           marginTop: "1em",
           maxHeight: 120,
           resize: "none",
-          color: values.color,
-          fontSize: values.fontSize,
-          fontWeight: values.bold ? "bold" : "normal",
-          fontStyle: values.italic ? "italic" : "normal",
-          textDecoration: values.underline ? "underline" : undefined,
-          textAlign: values.alignment as any,
+          color: styles.color,
+          fontSize: styles.fontSize,
+          fontWeight: styles.bold ? "bold" : "normal",
+          fontStyle: styles.italic ? "italic" : "normal",
+          textDecoration: styles.underline ? "underline" : undefined,
+          textAlign: styles.alignment as any,
         } as React.CSSProperties
       }
     />
   );
 }
 
-function useDocumentValues() {
+function useDocumentStyles() {
   const [isLoading, setIsLoading] = React.useState(true);
-  const [values, setValues] = React.useState<FormValues>(
-    FALLBACK_CAPTION_STYLES
-  );
+  const [styles, setStyles] = React.useState<Styles>(FALLBACK_CAPTION_STYLES);
 
   React.useEffect(function onMount() {
-    (async function fetchDocumentCaptionStyles() {
+    (async function() {
       try {
         const docStyles = await GAS.getDocumentCaptionStyles();
-        setValues(docStyles);
+        setStyles(docStyles);
       } catch (error) {
         // TODO: warn user here somehow?
       } finally {
@@ -115,7 +112,7 @@ function useDocumentValues() {
     })();
   }, []);
 
-  return { values, setValues, isLoadingValues: isLoading };
+  return { styles, setStyles, isLoadingDocumentStyles: isLoading };
 }
 
 function LoadingPlaceholder() {

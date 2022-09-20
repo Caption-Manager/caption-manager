@@ -20,24 +20,24 @@ const hideNumericInputArrowCss = `
 `;
 
 interface Props {
-  fontSize: number;
-  onChangeFontSize: (newValue: number) => void;
+  value: number;
+  onChangeValue: (newValue: number) => void;
 }
 
-export default function FontSizeEditor({ fontSize, onChangeFontSize }: Props) {
+export default function FontSizeEditor({ value, onChangeValue }: Props) {
   function verifiedOnChange(number: number) {
     if (number < 0) return;
     if (Number.isNaN(number)) return;
-    if (number > 400) return onChangeFontSize(400);
-    onChangeFontSize(number);
+    if (number > 400) return onChangeValue(400);
+    onChangeValue(number);
   }
 
   return (
     <Button.Group basic size="mini">
       <Button
         icon
-        onClick={() => verifiedOnChange(fontSize - 1)}
-        disabled={fontSize <= 0}
+        onClick={() => verifiedOnChange(value - 1)}
+        disabled={value <= 0}
       >
         <Icon name="minus" />
       </Button>
@@ -45,15 +45,15 @@ export default function FontSizeEditor({ fontSize, onChangeFontSize }: Props) {
       <style>{hideNumericInputArrowCss}</style>
       <input
         type={"number"}
-        value={fontSize}
+        value={value}
         style={{ width: 40, fontSize: 14, padding: 5, textAlign: "center" }}
         onChange={event => verifiedOnChange(Number(event.target.value))}
       />
 
       <Button
         icon
-        onClick={() => verifiedOnChange(fontSize + 1)}
-        disabled={fontSize >= 400}
+        onClick={() => verifiedOnChange(value + 1)}
+        disabled={value >= 400}
       >
         <Icon name="plus" />
       </Button>
