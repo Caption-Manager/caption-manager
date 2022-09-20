@@ -1,7 +1,7 @@
 import { CaptionParts } from "../../common/types";
 import removeBookmark from "../bookmark/removeBookmark";
 import upsertBookmark from "../bookmark/upsertBookmark";
-import setDocumentLabel from "../storage/setDocumentLabel";
+import { setDocumentLabel } from "../storage/Labels";
 import getCaption from "./getCaption";
 import getCaptionalizableSelectedElement from "./getCaptionalizableSelectedElement";
 import updateCaptions from "./updateCaptions";

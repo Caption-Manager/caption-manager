@@ -1,7 +1,7 @@
 import getCaption from "./getCaption";
 import getCaptions from "./getCaptions";
 import { getDescription } from "./getCaptionPartsFromString";
-import getDocumentLabels from "../storage/getDocumentLabels";
+import { getDocumentLabels } from "../storage/Labels";
 import { CaptionInfo } from "../../common/types";
 import { Path } from "../path";
 import getBookmark from "../bookmark/getBookmark";
