@@ -8,11 +8,11 @@ import getBookmark from "../bookmark/getBookmark";
 
 /**
  * Gets a @type {CaptionInfo} representation of the caption of a given element.
- * If the element doesn't contain a caption, creates a caption with the user-specified label
- * correct number given its position in document and an empty description.
+ * If the element doesn't contain a caption, creates a caption with the user-specified label,
+ * corresponding number given its position in document and an empty description.
  *
  * @param {GoogleAppsScript.Document.Element} element An element.
- * @return {CaptionInfo} An object containing information of the catpion.
+ * @return {CaptionInfo} An object containing information about the catpion.
  * @customfunction
  */
 export default function getCaptionInfo(

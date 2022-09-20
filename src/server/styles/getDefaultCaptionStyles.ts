@@ -1,4 +1,5 @@
 import { HorizontalAlignment, Styles } from "../../common/types";
+import { CAPTIONALIZABLE_ELEMENT_TYPES } from "../caption/constants";
 import getCaptionParagraph from "../caption/getCaptionParagraph";
 import getCaptions from "../caption/getCaptions";
 
@@ -38,14 +39,8 @@ function getStylesFromFirstCaption(): Styles | null {
   return null;
 }
 
-const CAPTION_TYPES = [
-  DocumentApp.ElementType.INLINE_IMAGE,
-  DocumentApp.ElementType.TABLE_CELL,
-  DocumentApp.ElementType.EQUATION,
-];
-
 function getFirstCaption() {
-  for (const type of CAPTION_TYPES) {
+  for (const type of CAPTIONALIZABLE_ELEMENT_TYPES) {
     const captions = getCaptions(type);
     if (captions[0]) return captions[0];
   }

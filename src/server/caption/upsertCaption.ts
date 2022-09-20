@@ -6,10 +6,10 @@ import { CaptionText } from "../../common/types";
 
 /**
  * Update (if the @type {Caption} already exists) or insert a @type {Caption} with
- * the specified @type {CaptionText} for the currently selected element.
- * If no element or an invalid element is selected on document, throws an error.
+ * the specified @type {CaptionText} for the given element.
  *
- * @param {CaptionText} text A string that has a label, number and description.
+ * @param {GoogleAppsScript.Document.Element} element An element to update or insert the caption on.
+ * @param {CaptionText} text A text representation of the caption.
  * @return {void}
  * @customfunction
  */
@@ -26,11 +26,10 @@ export default function upsertCaption(
 }
 
 /**
- * Inserts a @type {Caption} with specified @type {CaptionText} for the currently selected
- * element.
+ * Inserts a @type {Caption} with specified @type {CaptionText} for the given element.
  *
- * @param {GoogleAppsScript.Document.Element} element Selected element to insert the caption.
- * @param {CaptionText} text A string that has a label, number and description.
+ * @param {GoogleAppsScript.Document.Element} element An element to update or insert the caption on.
+ * @param {CaptionText} text A text representation of the caption.
  * @return {void}
  * @customfunction
  */

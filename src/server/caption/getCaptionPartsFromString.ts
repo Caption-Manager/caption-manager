@@ -4,7 +4,7 @@ import { CaptionDescription, CaptionParts } from "../../common/types";
  * Gets an object representation of the text of a caption from
  * the string text.
  *
- * @param {string} string The string of a caption.
+ * @param {string} string The string representing the text of a caption.
  * @return {CaptionParts} An object representation of the caption text.
  * @customfunction
  */

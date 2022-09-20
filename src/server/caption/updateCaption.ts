@@ -3,11 +3,10 @@ import { Caption, CaptionText } from "../../common/types";
 import { removeLineBreaks } from "../../common/utils";
 
 /**
- * Updates a @type {Caption} with specified @type {CaptionText} for the currently selected
- * element.
+ * Updates a @type {Caption} with specified @type {CaptionText}.
  *
- * @param {Caption} caption The selected caption to update.
- * @param {CaptionText} text A string that has a label, number and description.
+ * @param {Caption} caption The caption to update.
+ * @param {CaptionText} text A text representation of a caption.
  * @return {void}
  * @customfunction
  */

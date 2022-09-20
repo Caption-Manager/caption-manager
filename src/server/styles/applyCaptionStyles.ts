@@ -2,7 +2,7 @@ import { Caption, HorizontalAlignment, Styles } from "../../common/types";
 import { getDocumentCaptionStyles } from "../storage/Styles";
 
 /**
- * Apply styles to a given caption.
+ * Apply document caption styles to a given caption.
  *
  * @param {GoogleAppsScript.Document.Paragraph} paragraph The paragraph where the caption is contained.
  * @return {void}

@@ -3,11 +3,11 @@ import updateCaption from "./updateCaption";
 import { getDescription } from "./getCaptionPartsFromString";
 
 /**
- * Update all captions that have the same type as the selected element on document.
- * This will update the text of each caption with the specified label and the correct numbering and description.
- * If no element or an invalid element is selected on document, throws an error.
+ * Update all captions for the type of element provided.
+ * This will update the text of each caption with the specified label and the correct number and description.
  *
- * @param {string} label The label specified to update captions.
+ * @param {GoogleAppsScript.Document.ElementType} type A type of element that can contain captions.
+ * @param {string} label A label to update on all captions for the provided type.
  * @return {void}
  * @customfunction
  */

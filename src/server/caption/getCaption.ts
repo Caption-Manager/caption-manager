@@ -98,7 +98,7 @@ function getCaptionFromNextBodyChildParagraph(
  * Gets the @type {Caption} after verifying that its parts indeed look like a caption
  * If it doesn't looke like a @type {Caption}, returns null.
  *
- * @param {GoogleAppsScript.Document.Element} maybeCaption An element that maya be a Caption.
+ * @param {GoogleAppsScript.Document.Element} maybeCaption An element that may be a Caption.
  * @return {Caption|null} The Caption element or null if it doesn't look like a caption.
  * @customfunction
  */
