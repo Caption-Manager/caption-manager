@@ -57,7 +57,7 @@ export default function CaptionStyleModal() {
           fluid
           size="large"
         >
-          Apply styles
+          Save styles
         </Button>
 
         {submitError && (
