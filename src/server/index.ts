@@ -12,6 +12,8 @@ import {
 } from "./ui";
 import { getDocumentInfo, onSaveCaption } from "./caption";
 import { insertList } from "./list";
+import { updateAllCaptionsStyles } from "./styles";
+import { getDocumentCaptionStyles } from "./storage";
 
 // Public functions must be exported as named exports
 export {
@@ -31,4 +33,8 @@ export {
   onSaveCaption,
   // List
   insertList,
+  // Styles
+  updateAllCaptionsStyles,
+  // Storage
+  getDocumentCaptionStyles,
 };

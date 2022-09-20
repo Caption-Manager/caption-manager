@@ -1,0 +1,1 @@
+export { getDocumentCaptionStyles } from "./Styles";

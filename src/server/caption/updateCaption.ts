@@ -1,7 +1,5 @@
-import applyCaptionStyles from "./applyCaptionStyles";
+import applyCaptionStyles from "../styles/applyCaptionStyles";
 import { Caption, CaptionText } from "../../common/types";
-import getBookmark from "../bookmark/getBookmark";
-import upsertBookmark from "../bookmark/upsertBookmark";
 import { removeLineBreaks } from "../../common/utils";
 
 /**

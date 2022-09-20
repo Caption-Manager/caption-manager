@@ -1,26 +1,25 @@
 import React from "react";
 // Components
-import { Button, Form, Message, Segment, TextArea } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Loader,
+  Message,
+  Segment,
+  TextArea,
+} from "semantic-ui-react";
 import RichTextEditor from "./RichTextEditor";
+// Services
+import GAS from "../../services/GAS";
+// Types
+import { Styles } from "../../../common/types";
 
-type Alignment = "left" | "center" | "right" | "justify";
-
-const INITIAL_FORM_VALUES = {
-  fontSize: 16,
-  bold: false,
-  italic: false,
-  underline: false,
-  color: "#000",
-  alignment: "left" as Alignment,
-};
-
-export type FormValues = typeof INITIAL_FORM_VALUES;
+export type FormValues = Styles;
 
 export default function CaptionStyleModal() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
-
-  const [values, setValues] = React.useState<FormValues>(INITIAL_FORM_VALUES);
+  const { values, setValues, isLoadingValues } = useDocumentValues();
 
   function onChangeFormValue(key: keyof FormValues, value: any) {
     setValues(previous => ({ ...previous, [key]: value }));
@@ -28,21 +27,19 @@ export default function CaptionStyleModal() {
 
   async function handleSubmit() {
     if (isSubmitting) return;
-
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      await (function wait() {
-        return new Promise(resolve => {
-          setTimeout(() => resolve(""), 1000);
-        });
-      })();
-      throw new Error("Invalid font");
+      await GAS.updateAllCaptionsStyles(values);
     } catch (error) {
       setSubmitError(error.message || "We couldn't save your styles");
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (isLoadingValues) {
+    return <LoadingPlaceholder />;
   }
 
   return (
@@ -94,5 +91,44 @@ function CaptionTextArea({ values }: { values: FormValues }) {
         } as React.CSSProperties
       }
     />
+  );
+}
+
+const FALLBACK_FORM_VALUES: Styles = {
+  fontSize: 11,
+  bold: false,
+  italic: false,
+  underline: false,
+  color: "#000000",
+  alignment: "center",
+};
+
+function useDocumentValues() {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [values, setValues] = React.useState<FormValues>(FALLBACK_FORM_VALUES);
+
+  React.useEffect(function onMount() {
+    (async function fetchDocumentCaptionStyles() {
+      try {
+        const docStyles = await GAS.getDocumentCaptionStyles();
+        setValues(docStyles);
+      } catch (error) {
+        // TODO: warn user here somehow?
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
+
+  return { values, setValues, isLoadingValues: isLoading };
+}
+
+function LoadingPlaceholder() {
+  return (
+    <Segment placeholder>
+      <Loader active size="medium">
+        Loading document styles...
+      </Loader>
+    </Segment>
   );
 }

@@ -1,7 +1,7 @@
 import getCaption from "./getCaption";
 import updateCaption from "./updateCaption";
 import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
-import applyCaptionStyles from "./applyCaptionStyles";
+import applyCaptionStyles from "../styles/applyCaptionStyles";
 import { CaptionText } from "../../common/types";
 
 /**
