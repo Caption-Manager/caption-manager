@@ -5,6 +5,7 @@ export const GOOGLE_FONT_NAMES = [
   "Noto Sans JP",
   "Montserrat",
   "Lato",
+  "Arial",
   "Poppins",
   "Source Sans Pro",
   "Roboto Condensed",
