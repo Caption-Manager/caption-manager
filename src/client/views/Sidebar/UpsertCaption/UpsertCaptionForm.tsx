@@ -172,33 +172,16 @@ export default function UpsertCaptionForm({
         selectedElementType={selectedElementType}
       />
 
-      <div
-        style={{
-          marginTop: 20,
-          display: "flex",
-          justifyContent: "space-between",
-        }}
+      <Button
+        loading={isSubmiting}
+        disabled={disableSubmitButton}
+        onClick={handleSubmit}
+        onKeyPress={onKeyPress}
+        primary
+        style={{ marginTop: 20 }}
       >
-        <Button
-          loading={isSubmiting}
-          disabled={disableSubmitButton}
-          onClick={handleSubmit}
-          onKeyPress={onKeyPress}
-          primary
-          style={{ width: 125 }}
-        >
-          Save caption
-        </Button>
-
-        <Button
-          loading={isOpeningModal}
-          disabled={isOpeningModal}
-          onClick={handleOpenModal}
-          style={{ width: 125 }}
-        >
-          Edit styles
-        </Button>
-      </div>
+        Save caption
+      </Button>
 
       {submitError && (
         <Message negative>
