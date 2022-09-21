@@ -17,7 +17,7 @@ import { FALLBACK_CAPTION_STYLES } from "../../../common/constants";
 // Types
 import { Styles } from "../../../common/types";
 // Data
-import { googleFonts } from "./googleFonts";
+import { GOOGLE_FONT_NAMES } from "./googleFonts";
 
 export default function CaptionStyleModal() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -138,16 +138,22 @@ interface FontFamilyDropdownProps {
   onChangeStyle: (key: keyof Styles, value: any) => void;
 }
 
+const familyDropdownOptions = GOOGLE_FONT_NAMES.map(name => ({
+  key: name,
+  value: name,
+  text: name,
+}));
+
 function FontFamilyDropdown({ value, onChangeStyle }: FontFamilyDropdownProps) {
   return (
     <Dropdown
       value={value}
       onChange={(e, { value }) => onChangeStyle("fontFamily", value)}
-      placeholder="Select Font"
+      placeholder="Select a font"
       fluid
       search
       selection
-      options={googleFonts}
+      options={familyDropdownOptions}
       style={{ margin: "1em 0" }}
     />
   );
