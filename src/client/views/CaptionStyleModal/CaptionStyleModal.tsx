@@ -153,13 +153,22 @@ function FontFamilyDropdown({ value, onChangeStyle }: FontFamilyDropdownProps) {
   );
 }
 
+const HAS_DISMISSED_KEY = "HAS_DISMISSED_KEY";
+
 function DismissableMessage() {
-  const [isVisible, setIsVisible] = React.useState(true);
+  const hasDismissed = localStorage.getItem(HAS_DISMISSED_KEY);
+  const [isVisible, setIsVisible] = React.useState(!hasDismissed);
+
   if (!isVisible) return null;
+
+  function onDismiss() {
+    localStorage.setItem(HAS_DISMISSED_KEY, "true");
+    setIsVisible(false);
+  }
 
   return (
     <Message
-      onDismiss={() => setIsVisible(false)}
+      onDismiss={onDismiss}
       header={"Heads up!"}
       content={
         "Currently we don't support live visualization of the selected Google Font on the illustrative caption above. But rest assured changes will be reflected on your Google Document when you save styles."
