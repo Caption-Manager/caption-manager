@@ -145,7 +145,7 @@ interface FontFamilyDropdownProps {
   onChangeStyle: (key: keyof Styles, value: any) => void;
 }
 
-const familyDropdownOptions = GOOGLE_FONT_NAMES.map(name => ({
+const fontFamilyDropdownOptions = GOOGLE_FONT_NAMES.map(name => ({
   key: name,
   value: name,
   text: name,
@@ -160,7 +160,7 @@ function FontFamilyDropdown({ value, onChangeStyle }: FontFamilyDropdownProps) {
       fluid
       search
       selection
-      options={familyDropdownOptions}
+      options={fontFamilyDropdownOptions}
       style={{ margin: "1em 0" }}
     />
   );
