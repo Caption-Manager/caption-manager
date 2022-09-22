@@ -17,29 +17,29 @@ export function onOpen() {
 
   const addOnMenu = DocumentApp.getUi().createMenu("Caption Manager");
 
-  const insertListOfImagesMenu = DocumentApp.getUi()
-    .createMenu("Image")
+  const insertListOfImagesSubMenu = DocumentApp.getUi()
+    .createMenu("Insert list of images")
     .addItem("Default", insertImageDefaultList.name)
     .addItem("Bookmarked", insertImageBookmarkedList.name);
 
-  const insertListOfTablesMenu = DocumentApp.getUi()
-    .createMenu("Table")
+  const insertListOfTablesSubMenu = DocumentApp.getUi()
+    .createMenu("Insert list of tables")
     .addItem("Default", insertTableDefaultList.name)
     .addItem("Bookmarked", insertTableBookmarkedList.name);
 
-  const insertListOfEquationsMenu = DocumentApp.getUi()
-    .createMenu("Equation")
+  const insertListOfEquationsSubMenu = DocumentApp.getUi()
+    .createMenu("Insert list of equations")
     .addItem("Default", insertEquationDefaultList.name)
     .addItem("Bookmarked", insertEquationBookmarkedList.name);
 
   addOnMenu
     .addItem("Open sidebar", openSidebar.name)
     .addSeparator()
-    .addItem("Insert list of Images", insertListOfImagesMenu)
-    .addItem("Insert List of Tables", insertListOfTablesMenu)
-    .addItem("Insert List of Equations", insertListOfEquationsMenu)
+    .addSubMenu(insertListOfImagesSubMenu)
+    .addSubMenu(insertListOfTablesSubMenu)
+    .addSubMenu(insertListOfEquationsSubMenu)
     .addSeparator()
-    .addItem("Edit caption styles", openCaptionStyleModal.name)
+    .addItem("Edit styles", openCaptionStyleModal.name)
     .addToUi();
 }
 

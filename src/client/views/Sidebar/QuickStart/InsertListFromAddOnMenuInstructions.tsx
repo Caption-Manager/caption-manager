@@ -1,6 +1,6 @@
 import React from "react";
 import { List } from "semantic-ui-react";
-import OpenAddOnMenu from "./OpenAddOnMenuInstructions";
+import OpenAddOnMenuInstructions from "./OpenAddOnMenuInstructions";
 
 export default function InsertListFromAddOnMenuInstructions() {
   return (
@@ -13,18 +13,17 @@ export default function InsertListFromAddOnMenuInstructions() {
         </List.Description>
       </List.Item>
 
-      <OpenAddOnMenu />
+      <OpenAddOnMenuInstructions />
 
       <List.Item>
-        Tap on "<b>Insert list</b>"" menu.
+        Tap on "<b>Insert list of images</b>" or <br />"
+        <b>Insert list of tables</b>" or <br />"<b>Insert list of equations</b>"
+        menu.
       </List.Item>
 
       <List.Item>
-        Tap on a targeted <b>element type</b> (image, table, or equation).
-      </List.Item>
-
-      <List.Item>
-        Click on a <b>list type</b> and wait a few seconds.
+        Click on a <b>list type</b> (default or bookmarked) and wait a few
+        seconds.
       </List.Item>
     </List>
   );

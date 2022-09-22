@@ -8,7 +8,7 @@ export default function EditStylesFromAddOnMenuInstructions() {
       <OpenAddOnMenuInstructions />
 
       <List.Item>
-        Click on "<b>Edit Styles</b>". A dialog modal will open.
+        Click on "<b>Edit styles</b>". A dialog modal will open.
       </List.Item>
 
       <List.Item>
