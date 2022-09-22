@@ -75,7 +75,10 @@ interface SectionProps {
 function Section({ title, description, children }: SectionProps) {
   const headerStyles = { paddingLeft: 10, paddingRight: 10, paddingBottom: 0 };
   return (
-    <Segment basic style={{ paddingLeft: 0, paddingRight: 0, marginTop: 0 }}>
+    <Segment
+      basic
+      style={{ paddingLeft: 0, paddingRight: 0, marginTop: 0, marginBottom: 0 }}
+    >
       <Header>
         <Header.Content as={"h3"} style={headerStyles}>
           {title}
