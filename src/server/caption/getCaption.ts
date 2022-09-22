@@ -50,7 +50,7 @@ function getCaptionFromText(
 
   // This can only happen with equations or images, as these elements can preceede a Text element
   if (
-    [
+    ![
       DocumentApp.ElementType.EQUATION,
       DocumentApp.ElementType.INLINE_IMAGE,
     ].includes(element.getType())
