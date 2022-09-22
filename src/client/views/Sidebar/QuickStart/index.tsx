@@ -4,6 +4,7 @@ import { Header, Accordion, Segment, Icon, Message } from "semantic-ui-react";
 import UpsertCaptionInstructions from "./UpsertCaptionInstructions";
 import InsertListInstructions from "./InsertListInstructions";
 import InsertListFromAddOnMenuInstructions from "./InsertListFromAddOnMenuInstructions";
+import EditStylesFromAddOnMenuInstructions from "./EditStylesFromAddOnMenuInstructions";
 
 const DOCS_URL = "https://caption-manager.com/";
 
@@ -18,7 +19,6 @@ export default function QuickStart() {
           <UpsertCaptionInstructions />
         </AccordionListItem>
       </Section>
-
       <Section
         title="Insert a list"
         description={
@@ -42,6 +42,17 @@ export default function QuickStart() {
           <InsertListFromAddOnMenuInstructions />
         </AccordionListItem>
       </Section>
+      <Section
+        title="Edit caption styles"
+        description="You can save custom styles for all your captions through the modal dialog."
+      >
+        <AccordionListItem title="Edit caption styles from add-ons menu">
+          <EditStylesFromAddOnMenuInstructions />
+        </AccordionListItem>
+      </Section>
+
+      {/* Spacer to make sure the content is not hidded by the fixed message below */}
+      <div style={{ marginBottom: 100 }} />
 
       <Message basic style={{ position: "fixed", width: "100%", bottom: 0 }}>
         If you want a more complete tutorial, <br />

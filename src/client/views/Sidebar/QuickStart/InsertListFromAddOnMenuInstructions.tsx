@@ -1,5 +1,6 @@
 import React from "react";
 import { List } from "semantic-ui-react";
+import OpenAddOnMenu from "./OpenAddOnMenuInstructions";
 
 export default function InsertListFromAddOnMenuInstructions() {
   return (
@@ -12,8 +13,10 @@ export default function InsertListFromAddOnMenuInstructions() {
         </List.Description>
       </List.Item>
 
+      <OpenAddOnMenu />
+
       <List.Item>
-        Tap on the <b>Insert list</b> menu.
+        Tap on "<b>Insert list</b>"" menu.
       </List.Item>
 
       <List.Item>

@@ -67,7 +67,7 @@ export default function UpsertCaptionInstructions() {
       </List.Item>
 
       <List.Item>
-        Press enter or click on the "<b>Save Caption</b>" button and wait a few
+        Press enter or click on "<b>Save Caption</b>" button and wait a few
         seconds.
       </List.Item>
     </List>

@@ -5,7 +5,7 @@ export default function InsertListInstructions() {
   return (
     <List ordered>
       <List.Item>
-        Open the <b>"Insert list"</b> panel, the second item of this sidebar.
+        Open the "<b>Insert list</b>" panel, the second item of this sidebar.
       </List.Item>
 
       <List.Item>
@@ -26,7 +26,7 @@ export default function InsertListInstructions() {
       </List.Item>
 
       <List.Item>
-        Click on the "<b>Insert list</b>" button and wait a few seconds.
+        Click on "<b>Insert list</b>" button and wait a few seconds.
       </List.Item>
     </List>
   );
