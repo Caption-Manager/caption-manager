@@ -3,7 +3,7 @@ import getBookmark from "./getBookmark";
 
 /**
  * Removes a bookmark from a caption, if the bookmark exists.
- * @param {Caption?} caption A caption to remove the bookmark from.
+ * @param {Caption} caption A caption to remove the bookmark from.
  * @return {void}
  * @customfunction
  */

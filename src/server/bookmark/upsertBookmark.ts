@@ -2,11 +2,8 @@ import { Caption } from "../../common/types";
 import getBookmark from "./getBookmark";
 
 /**
- * Removes (if a bookmark exists) and then inserts a bookmark for the caption
+ * Returns a bookmark (if it exists) or inserts a bookmark for the caption
  * provided as argument.
- * If no caption is given, gets the caption from the selected. If no element
- * or an invalid element is selected on document, or no Caption is found for t
- * hat element, throws an error.
  * @param {Caption?} caption A caption to insert the bookmark on.
  * @return {GoogleAppsScript.Document.Bookmark} The updated or inserted bookmark.
  * @customfunction
@@ -36,7 +33,7 @@ export default function upsertBookmark(
 }
 
 /**
- * Inserts a bookmark in the beggining of the caption.
+ * Inserts a bookmark in the end of the caption.
  *
  * @param {Caption} caption A caption to insert the  bookmark.
  * @return {GoogleAppsScript.Document.Bookmark} The inserted bookmark.
