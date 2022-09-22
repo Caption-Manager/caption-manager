@@ -4,8 +4,12 @@ import {
   Button,
   Dropdown,
   Form,
+  Header,
+  Icon,
+  Label,
   Loader,
   Message,
+  Modal,
   Segment,
   TextArea,
 } from "semantic-ui-react";
@@ -55,7 +59,6 @@ export default function CaptionStyleModal() {
           onChangeStyle={onChangeStyle}
         />
         <CaptionTextArea styles={styles} />
-        <DismissableMessage />
       </Segment>
 
       <div style={{ position: "fixed", bottom: 0, width: "100%" }}>
@@ -82,24 +85,28 @@ export default function CaptionStyleModal() {
 
 function CaptionTextArea({ styles }: { styles: Styles }) {
   return (
-    <TextArea
-      value={"Figure 1 - Some descriptive text"}
-      rows={1}
-      disabled
-      style={
-        {
-          marginBottom: "1em",
-          maxHeight: 120,
-          resize: "none",
-          color: styles.color,
-          fontSize: styles.fontSize,
-          fontWeight: styles.bold ? "bold" : "normal",
-          fontStyle: styles.italic ? "italic" : "normal",
-          textDecoration: styles.underline ? "underline" : undefined,
-          textAlign: styles.alignment as any,
-        } as React.CSSProperties
-      }
-    />
+    <div style={{ position: "relative" }}>
+      <TextArea
+        value={"Figure 1 - Some descriptive text"}
+        rows={1}
+        disabled
+        style={
+          {
+            marginBottom: "1em",
+            maxHeight: 120,
+            resize: "none",
+            color: styles.color,
+            fontSize: styles.fontSize,
+            fontWeight: styles.bold ? "bold" : "normal",
+            fontStyle: styles.italic ? "italic" : "normal",
+            textDecoration: styles.underline ? "underline" : undefined,
+            textAlign: styles.alignment as any,
+          } as React.CSSProperties
+        }
+      />
+
+      <CorneredWarningModal />
+    </div>
   );
 }
 
@@ -159,28 +166,35 @@ function FontFamilyDropdown({ value, onChangeStyle }: FontFamilyDropdownProps) {
   );
 }
 
-const HAS_DISMISSED_KEY = "HAS_DISMISSED_KEY";
-
-function DismissableMessage() {
-  const hasDismissed = localStorage.getItem(HAS_DISMISSED_KEY);
-  const [isVisible, setIsVisible] = React.useState(!hasDismissed);
-
-  if (!isVisible) return null;
-
-  function onDismiss() {
-    localStorage.setItem(HAS_DISMISSED_KEY, "true");
-    setIsVisible(false);
-  }
-
+function CorneredWarningModal() {
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <Message
-      onDismiss={onDismiss}
-      header={"Heads up!"}
-      content={
-        "Currently we don't support live visualization of the selected Google Font on the illustrative caption above. But rest assured changes will be reflected on your Google Document when you save styles."
+    <Modal
+      open={isOpen}
+      trigger={
+        <Button
+          as={Label}
+          corner={"right"}
+          size="mini"
+          onClick={() => setIsOpen(true)}
+        >
+          <Icon name="warning" />
+        </Button>
       }
-      size="small"
-      style={{ textAlign: "left", marginBottom: "3em", marginTop: 0 }}
-    />
+    >
+      <Header icon="warning" content="Heads Up" />
+      <Modal.Content>
+        <p>
+          Currently we <b>don't</b> support live visualization of the selected
+          Google Font on the illustrative caption. But rest assured changes will
+          be reflected on your Google Document when you save styles.
+        </p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color="green" onClick={() => setIsOpen(false)}>
+          <Icon name="checkmark" /> Got it
+        </Button>
+      </Modal.Actions>
+    </Modal>
   );
 }
