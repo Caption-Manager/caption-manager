@@ -56,7 +56,7 @@ export default function CaptionStyleModal() {
         <RichTextEditor styles={styles} onChangeStyle={onChangeStyle} />
         <FontFamilyDropdown
           value={styles.fontFamily}
-          onChangeStyle={onChangeStyle}
+          onChange={onChangeStyle}
         />
         <CaptionTextArea styles={styles} />
       </Segment>
@@ -80,33 +80,6 @@ export default function CaptionStyleModal() {
         )}
       </div>
     </Form>
-  );
-}
-
-function CaptionTextArea({ styles }: { styles: Styles }) {
-  return (
-    <div style={{ position: "relative" }}>
-      <TextArea
-        value={"Figure 1 - Some descriptive text"}
-        rows={1}
-        disabled
-        style={
-          {
-            marginBottom: "1em",
-            maxHeight: 120,
-            resize: "none",
-            color: styles.color,
-            fontSize: styles.fontSize,
-            fontWeight: styles.bold ? "bold" : "normal",
-            fontStyle: styles.italic ? "italic" : "normal",
-            textDecoration: styles.underline ? "underline" : undefined,
-            textAlign: styles.alignment as any,
-          } as React.CSSProperties
-        }
-      />
-
-      <CorneredWarningModal />
-    </div>
   );
 }
 
@@ -140,9 +113,36 @@ function LoadingPlaceholder() {
   );
 }
 
+function CaptionTextArea({ styles }: { styles: Styles }) {
+  return (
+    <div style={{ position: "relative" }}>
+      <TextArea
+        value={"Figure 1 - Some descriptive text"}
+        rows={1}
+        disabled
+        style={
+          {
+            marginBottom: "1em",
+            maxHeight: 120,
+            resize: "none",
+            color: styles.color,
+            fontSize: styles.fontSize,
+            fontWeight: styles.bold ? "bold" : "normal",
+            fontStyle: styles.italic ? "italic" : "normal",
+            textDecoration: styles.underline ? "underline" : undefined,
+            textAlign: styles.alignment as any,
+          } as React.CSSProperties
+        }
+      />
+
+      <CorneredWarningModal />
+    </div>
+  );
+}
+
 interface FontFamilyDropdownProps {
   value: string;
-  onChangeStyle: (key: keyof Styles, value: any) => void;
+  onChange: (key: keyof Styles, value: any) => void;
 }
 
 const fontFamilyDropdownOptions = GOOGLE_FONT_NAMES.map(name => ({
@@ -151,11 +151,11 @@ const fontFamilyDropdownOptions = GOOGLE_FONT_NAMES.map(name => ({
   text: name,
 }));
 
-function FontFamilyDropdown({ value, onChangeStyle }: FontFamilyDropdownProps) {
+function FontFamilyDropdown({ value, onChange }: FontFamilyDropdownProps) {
   return (
     <Dropdown
       value={value}
-      onChange={(e, { value }) => onChangeStyle("fontFamily", value)}
+      onChange={(e, { value }) => onChange("fontFamily", value)}
       placeholder="Select a font"
       fluid
       search
