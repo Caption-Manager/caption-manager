@@ -17,31 +17,27 @@ export function onOpen() {
 
   const addOnMenu = DocumentApp.getUi().createMenu("Caption Manager");
 
-  const imageSubMenu = DocumentApp.getUi()
+  const insertListOfImagesMenu = DocumentApp.getUi()
     .createMenu("Image")
     .addItem("Default", insertImageDefaultList.name)
     .addItem("Bookmarked", insertImageBookmarkedList.name);
 
-  const tableSubMenu = DocumentApp.getUi()
+  const insertListOfTablesMenu = DocumentApp.getUi()
     .createMenu("Table")
     .addItem("Default", insertTableDefaultList.name)
     .addItem("Bookmarked", insertTableBookmarkedList.name);
 
-  const equationSubMenu = DocumentApp.getUi()
+  const insertListOfEquationsMenu = DocumentApp.getUi()
     .createMenu("Equation")
     .addItem("Default", insertEquationDefaultList.name)
     .addItem("Bookmarked", insertEquationBookmarkedList.name);
 
-  const insertListSubMenu = DocumentApp.getUi()
-    .createMenu("Insert a list")
-    .addSubMenu(imageSubMenu)
-    .addSubMenu(tableSubMenu)
-    .addSubMenu(equationSubMenu);
-
   addOnMenu
     .addItem("Open sidebar", openSidebar.name)
     .addSeparator()
-    .addSubMenu(insertListSubMenu)
+    .addItem("Insert list of Images", insertListOfImagesMenu)
+    .addItem("Insert List of Tables", insertListOfTablesMenu)
+    .addItem("Insert List of Equations", insertListOfEquationsMenu)
     .addSeparator()
     .addItem("Edit caption styles", openCaptionStyleModal.name)
     .addToUi();
