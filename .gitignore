@@ -17,3 +17,4 @@ dist/
 
 #secret
 .env
+secrets.txt
