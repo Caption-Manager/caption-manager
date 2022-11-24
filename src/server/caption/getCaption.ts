@@ -105,8 +105,12 @@ function getCaptionFromNextBodyChildParagraph(
 function getCaptionAfterVerifyParts(
   maybeCaption: GoogleAppsScript.Document.Text
 ): Caption | null {
-  const { number } = getCaptionPartsFromString(maybeCaption.getText());
-  if (isNaN(number)) return null;
+  const { label, number } = getCaptionPartsFromString(maybeCaption.getText());
+
+  // We throw a string for log purposes. We'll catch the error and
+  // return null from getCaption anyway
+  if (isNaN(number))
+    throw `Invalid caption: no number after candidate label "${label}"`;
 
   // At this point we know the caption text has the following structure:
   // `{string} {number}`.
