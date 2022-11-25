@@ -15,7 +15,12 @@ export default function getCaptionPartsFromString(
   // to account for a multiple word label
   const [label, number, ...descriptionWords] = string.split(" ");
   const description = descriptionWords.join(" ");
-  return { label, number: Number(number), description };
+  return { label, number: correctlyCorceToNumber(number), description };
+
+  function correctlyCorceToNumber(captionNumberAsString: string): number {
+    if (captionNumberAsString === "") return NaN; // Otherwise Number coerces to 0
+    return Number(captionNumberAsString);
+  }
 }
 
 export function getDescription(string: string): CaptionDescription {

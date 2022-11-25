@@ -16,58 +16,48 @@ export default function getCaption(
   if (element.isAtDocumentEnd()) return null;
 
   try {
-    const captionFromText = getCaptionFromText(element);
-    if (captionFromText) return captionFromText;
+    // Get the text immediately after the element
+    const surroundingText = getSurroundingText(element);
 
-    const captionFromNextBodyChildParagraph = getCaptionFromNextBodyChildParagraph(
-      element
-    );
-    if (captionFromNextBodyChildParagraph)
-      return captionFromNextBodyChildParagraph;
+    // If there's no surrounding text, the caption must be on
+    // the next body child paragraph
+    if (!surroundingText) return getCaptionFromNextBodyChildParagraph(element);
 
-    return null;
+    // Equations can't have surrounding text
+    if (element.getType() === DocumentApp.ElementType.EQUATION) {
+      return null;
+    }
+
+    // We then try to get the caption from the surrounding text
+    // What we are trying to address here is the scenario where we have a caption which is not
+    // in a next body child paragraph, but in the same paragraph of the element, as a text
+    // following the element.
+    // Visually, it looks like a normal Caption though, but it's just a Text starting with
+    // a line break (like "\n Figure 1 - Some description")
+    // TODO: The obtained caption here is in the wrong document position, so we maybe could
+    // move it to the next body child paragraph here
+    return getCaptionAfterVerifyParts(surroundingText);
   } catch (error) {
     return null;
   }
 }
 
 /**
- * Tries to get the @type {Caption} from the text immediately after the @type {GoogleAppsScript.Document.Element}.
- * If no @type {Caption} is found, returns null.
+ * Tries to get a text element surrounding the element @type {GoogleAppsScript.Document.Element}.
+ * If no @type {GoogleAppsScript.Document.Text} is found, returns null.
  *
  * @param {GoogleAppsScript.Document.Element} element An element.
- * @return {Caption|null} The Caption element or null if no caption is found.
+ * @return {Caption|null} A text element or null if no text is found.
  * @customfunction
  */
-function getCaptionFromText(
+function getSurroundingText(
   element: GoogleAppsScript.Document.Element
-): Caption | null {
-  // What we are trying to address here is the scenario where we have a caption which is not
-  // in a following paragraph, but in the same paragraph of the element, as a text
-  // following the element.
-  // Visually, it looks like a normal Caption though, but it's just a Text with starting with
-  // a line break (like "\n Figure 1 - Some description").
-
-  // This can only happen with equations or images, as these elements can preceede a Text element
-  if (
-    ![
-      DocumentApp.ElementType.EQUATION,
-      DocumentApp.ElementType.INLINE_IMAGE,
-    ].includes(element.getType())
-  ) {
-    return null;
-  }
-
-  // If the following element is not a Text element, it's also not a Caption
+): GoogleAppsScript.Document.Text | null {
   const nextSibling = element.getNextSibling();
   if (!nextSibling || nextSibling.getType() !== DocumentApp.ElementType.TEXT) {
     return null;
   }
-
-  const maybeCaption = nextSibling.asText();
-  // It's likely that the obtained caption here is in the wrong position,
-  // so we maybe could adjust the position here, but not sure if this is even desirable
-  return getCaptionAfterVerifyParts(maybeCaption);
+  return nextSibling.asText();
 }
 
 /**
@@ -105,12 +95,8 @@ function getCaptionFromNextBodyChildParagraph(
 function getCaptionAfterVerifyParts(
   maybeCaption: GoogleAppsScript.Document.Text
 ): Caption | null {
-  const { label, number } = getCaptionPartsFromString(maybeCaption.getText());
-
-  // We throw a string for log purposes. We'll catch the error and
-  // return null from getCaption anyway
-  if (isNaN(number))
-    throw `Invalid caption: no number after candidate label "${label}"`;
+  const { number } = getCaptionPartsFromString(maybeCaption.getText());
+  if (isNaN(number)) return null;
 
   // At this point we know the caption text has the following structure:
   // `{string} {number}`.
