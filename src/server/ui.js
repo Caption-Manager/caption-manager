@@ -33,7 +33,7 @@ export function onOpen() {
     .addItem("Bookmarked", insertEquationBookmarkedList.name);
 
   addOnMenu
-    .addItem("Open sidebar", openSidebar.name)
+    .addItem("Start", openSidebar.name)
     .addSeparator()
     .addSubMenu(insertListOfImagesSubMenu)
     .addSubMenu(insertListOfTablesSubMenu)
