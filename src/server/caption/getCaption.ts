@@ -1,6 +1,7 @@
 import getCaptionPartsFromString from "./getCaptionPartsFromString";
 import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
 import { Caption } from "../../common/types";
+import { hasLetters } from "../../common/utils";
 
 /**
  * Gets the @type {Caption} for a given element.
@@ -16,34 +17,23 @@ export default function getCaption(
   if (element.isAtDocumentEnd()) return null;
 
   try {
-    // Get the text immediately after the element
     const surroundingText = getSurroundingText(element);
-
-    // If there's no surrounding text, the caption must be on
-    // the next body child paragraph
-    if (!surroundingText) return getCaptionFromNextBodyChildParagraph(element);
-
-    // Equations can't have surrounding text
-    if (element.getType() === DocumentApp.ElementType.EQUATION) {
-      return null;
+    if (surroundingText && hasLetters(surroundingText.getText())) {
+      // If there's text surrounding the element, maybe it's a caption
+      // in the wrong place
+      return getCaptionFromSurroundingText(element, surroundingText);
+    } else {
+      // If there's no valid surrounding text, the caption, if there is one, must be on
+      // the next body child paragraph
+      return getCaptionFromNextBodyChildParagraph(element);
     }
-
-    // We then try to get the caption from the surrounding text
-    // What we are trying to address here is the scenario where we have a caption which is not
-    // in a next body child paragraph, but in the same paragraph of the element, as a text
-    // following the element.
-    // Visually, it looks like a normal Caption though, but it's just a Text starting with
-    // a line break (like "\n Figure 1 - Some description")
-    // TODO: The obtained caption here is in the wrong document position, so we maybe could
-    // move it to the next body child paragraph here
-    return getCaptionAfterVerifyParts(surroundingText);
   } catch (error) {
     return null;
   }
 }
 
 /**
- * Tries to get a text element surrounding the element @type {GoogleAppsScript.Document.Element}.
+ * Tries to get a text element surrounding (immediately after) the element @type {GoogleAppsScript.Document.Element}.
  * If no @type {GoogleAppsScript.Document.Text} is found, returns null.
  *
  * @param {GoogleAppsScript.Document.Element} element An element.
@@ -58,6 +48,39 @@ function getSurroundingText(
     return null;
   }
   return nextSibling.asText();
+}
+
+/**
+ * Tries to get the @type {Caption} from the element's surrounding text.
+ * This is useful because the caption can be not in the next paragraph,
+ * but in the same paragraph of the element as a Text element.
+ * Visually, it can look like a normal Caption, but in this case it's just a
+ * Text starting with a line break (like "\n Figure 1 - Some description")
+ * If no @type {Caption} is found, returns null.
+ *
+ * @param {GoogleAppsScript.Document.Element} element An element.
+ * @param {GoogleAppsScript.Document.Text} text The surrounding text.
+ * @return {Caption|null} The Caption element or null if no caption is found.
+ * @customfunction
+ */
+function getCaptionFromSurroundingText(
+  element: GoogleAppsScript.Document.Element,
+  text: GoogleAppsScript.Document.Text
+): Caption | null {
+  // We are trying to address here the scenario where we have a caption in the
+  // same paragraph of the element, as a Text element. Visually, it can look like a normal
+  // Caption, but in this case it's just a Text starting with a line break
+  // (like "\n Figure 1 - Some description")
+
+  // We are defining here that Equations can't have captions as surrounding text
+  // This caused a lot of bugs in the past
+  if (element.getType() === DocumentApp.ElementType.EQUATION) {
+    return null;
+  } else {
+    // TODO: The caption is in the wrong position here. Maybe warn the user or try to
+    // move the caption to the next body child paragraph
+    return getCaptionAfterVerifyParts(text);
+  }
 }
 
 /**

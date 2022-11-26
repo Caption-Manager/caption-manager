@@ -10,3 +10,7 @@ export function capitalizeOnlyFirstLetter(string: string): string {
 export function removeLineBreaks(string: string): string {
   return string.replace(/(\r\n|\n|\r)/gm, "");
 }
+
+export function hasLetters(str: string) {
+  return /[a-zA-Z]/.test(str);
+}
