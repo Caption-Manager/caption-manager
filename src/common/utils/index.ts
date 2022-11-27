@@ -2,3 +2,4 @@
 // imported under a specific namespace
 export * from "./String";
 export * from "./Array";
+export * from "./Functional";

@@ -1,7 +1,13 @@
 import getCaptionPartsFromString from "./getCaptionPartsFromString";
 import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
-import { Caption } from "../../common/types";
-import { hasLetters } from "../../common/utils";
+import { Caption, CaptionText } from "../../common/types";
+import {
+  leftTrim,
+  removeLineBreaks,
+  pipe,
+  hasLetters,
+} from "../../common/utils";
+import insertCaption from "./insertCaption";
 
 /**
  * Gets the @type {Caption} for a given element.
@@ -17,75 +23,60 @@ export default function getCaption(
   if (element.isAtDocumentEnd()) return null;
 
   try {
-    const surroundingText = getSurroundingText(element);
-    if (surroundingText && hasLetters(surroundingText.getText())) {
-      // If there's text surrounding the element, maybe it's a caption
-      // in the wrong place
-      return getCaptionFromSurroundingText(element, surroundingText);
-    } else {
-      // If there's no valid surrounding text, the caption, if there is one, must be on
-      // the next body child paragraph
-      return getCaptionFromNextBodyChildParagraph(element);
+    const nextSibling = element.getNextSibling()?.asText();
+    if (
+      nextSibling?.getType() === DocumentApp.ElementType.TEXT &&
+      hasLetters(nextSibling.getText())
+    ) {
+      return getCaptionFromNextSibling(element, nextSibling);
     }
+
+    return getCaptionFromNextBodyChildParagraph(element);
   } catch (error) {
     return null;
   }
 }
 
 /**
- * Tries to get a text element surrounding (immediately after) the element @type {GoogleAppsScript.Document.Element}.
- * If no @type {GoogleAppsScript.Document.Text} is found, returns null.
- *
- * @param {GoogleAppsScript.Document.Element} element An element.
- * @return {Caption|null} A text element or null if no text is found.
- * @customfunction
- */
-function getSurroundingText(
-  element: GoogleAppsScript.Document.Element
-): GoogleAppsScript.Document.Text | null {
-  const nextSibling = element.getNextSibling();
-  if (!nextSibling || nextSibling.getType() !== DocumentApp.ElementType.TEXT) {
-    return null;
-  }
-  return nextSibling.asText();
-}
-
-/**
- * Tries to get the @type {Caption} from the element's surrounding text.
- * This is useful because the caption can be not in the next paragraph,
- * but in the same paragraph of the element as a Text element.
- * Visually, it can look like a normal Caption, but in this case it's just a
- * Text starting with a line break (like "\n Figure 1 - Some description")
+ * Tries to get the @type {Caption} from the element's next sibling.
  * If no @type {Caption} is found, returns null.
  *
  * @param {GoogleAppsScript.Document.Element} element An element.
- * @param {GoogleAppsScript.Document.Text} text The surrounding text.
+ * @param {GoogleAppsScript.Document.Text} nextSibling The element's next sibling.
  * @return {Caption|null} The Caption element or null if no caption is found.
  * @customfunction
  */
-function getCaptionFromSurroundingText(
+function getCaptionFromNextSibling(
   element: GoogleAppsScript.Document.Element,
-  text: GoogleAppsScript.Document.Text
+  nextSibling: GoogleAppsScript.Document.Text
 ): Caption | null {
-  // We are trying to address here the scenario where we have a caption in the
-  // same paragraph of the element, as a Text element. Visually, it can look like a normal
-  // Caption, but in this case it's just a Text starting with a line break
-  // (like "\n Figure 1 - Some description")
-
-  // We are defining here that Equations can't have captions as surrounding text
-  // This caused a lot of bugs in the past
+  // We are *defining* here that an Equation's next sibling can't be a Caption
+  // For Equations, there's a much bigger chance that the next sibling it's just an inlined text
+  // and so there is a greater risk of confusing this text with a Caption
+  // (e.g. in "{equation} approximately 10", "approximately 10" would be mistaken for Caption)
   if (element.getType() === DocumentApp.ElementType.EQUATION) {
     return null;
-  } else {
-    // TODO: The caption is in the wrong position here. Maybe warn the user or try to
-    // move the caption to the next body child paragraph
-    return getCaptionAfterVerifyParts(text);
   }
+
+  // We then address the case where the next sibling can be a caption.
+  // Visually, it may look like a normal Caption, but it's just a Text element starting with a
+  // line break or lots of empty spaces
+  // (e.g. "\n Figure 1 - Some description" or "         Figure 1 - Some description")
+
+  // We remove line breaks and empty spaces
+  const text = pipe(removeLineBreaks, leftTrim)(nextSibling.getText());
+  if (!seemsToBeCaptionText(text)) return null;
+
+  // The next sibling is probably indeed a Caption. So we replace this next sibling Caption
+  // with a next body child Caption. We want the caption to be in the next paragraph, so that
+  // we don't need to remove line breaks and empty spaces everytime we get the caption text
+  nextSibling.removeFromParent();
+  return insertCaption(element, text as CaptionText);
 }
 
 /**
  * Tries to get the @type {Caption} from the next body child paragraph.
- * This is useful because the direct next sibling (element.getNextSibling()) can be a
+ * This is useful because the direct next paragraph can be, for example, a
  * Paragraph inside a Table Cell, which will definitely not contain a Caption.
  * If no @type {Caption} is found, returns null.
  *
@@ -104,22 +95,21 @@ function getCaptionFromNextBodyChildParagraph(
     return null;
 
   const maybeCaption = paragraphFirstChild.asText();
-  return getCaptionAfterVerifyParts(maybeCaption);
+  if (!seemsToBeCaptionText(maybeCaption.getText())) return null;
+
+  return maybeCaption as Caption;
 }
 
 /**
- * Gets the @type {Caption} after verifying that its parts indeed look like a caption
- * If it doesn't looke like a @type {Caption}, returns null.
+ * Validates if a text seems to have the structure of a @type {CaptionText}
  *
- * @param {GoogleAppsScript.Document.Element} maybeCaption An element that may be a Caption.
- * @return {Caption|null} The Caption element or null if it doesn't look like a caption.
+ * @param {string} text A text thay may conform to the @type {CaptionText} structure.
+ * @return {boolean} A flag indicating whether the text has the structure of a @type {CaptionText} or not.
  * @customfunction
  */
-function getCaptionAfterVerifyParts(
-  maybeCaption: GoogleAppsScript.Document.Text
-): Caption | null {
-  const { number } = getCaptionPartsFromString(maybeCaption.getText());
-  if (isNaN(number)) return null;
+function seemsToBeCaptionText(text: string): boolean {
+  const { number } = getCaptionPartsFromString(text);
+  if (isNaN(number)) return false;
 
   // At this point we know the caption text has the following structure:
   // `{string} {number}`.
@@ -129,11 +119,11 @@ function getCaptionAfterVerifyParts(
   // a non-enabled "autoUpdateCaptions" option) the other captions are not updated,
   // the user will have to manually, one by one, change the label of these other captions.
 
-  // 2) The current verifcation process leads to a know caveat.
+  // 2) The current verification process leads to a know caveat.
   // If the user has a captionizable element (image, table, equation) *without* a caption
-  // AND whose immediate next text or text of next paragraph has the structure `{string} {number}`,
+  // AND whose next sibling text or next body child paragraph text has the structure `{string} {number}`,
   // this text will be wrongly recognised as a caption. This is not a big deal, because it's a corner
   // case scenario (generally we expected all captionalizable elements to have captions). But it's
-  // important to document this for users.
-  return maybeCaption as Caption;
+  // important to document this for users also.
+  return true;
 }

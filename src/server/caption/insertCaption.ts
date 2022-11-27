@@ -1,29 +1,6 @@
-import getCaption from "./getCaption";
-import updateCaption from "./updateCaption";
-import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
+import { Caption, CaptionText } from "../../common/types";
 import applyCaptionStyles from "../styles/applyCaptionStyles";
-import { CaptionText } from "../../common/types";
-
-/**
- * Update (if the @type {Caption} already exists) or insert a @type {Caption} with
- * the specified @type {CaptionText} for the given element.
- *
- * @param {GoogleAppsScript.Document.Element} element An element to update or insert the caption on.
- * @param {CaptionText} text A text representation of the caption.
- * @return {void}
- * @customfunction
- */
-export default function upsertCaption(
-  element: GoogleAppsScript.Document.Element,
-  text: CaptionText
-): void {
-  const caption = getCaption(element);
-  if (caption) {
-    updateCaption(caption, text);
-  } else {
-    insertCaption(element, text);
-  }
-}
+import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
 
 /**
  * Inserts a @type {Caption} with specified @type {CaptionText} for the given element.
@@ -33,10 +10,10 @@ export default function upsertCaption(
  * @return {void}
  * @customfunction
  */
-function insertCaption(
+export default function insertCaption(
   element: GoogleAppsScript.Document.Element,
   text: CaptionText
-): void {
+): Caption {
   const body = DocumentApp.getActiveDocument().getBody();
   const nextBodyChildParagraph = getNextBodyChildParagraph(element);
 
@@ -53,4 +30,5 @@ function insertCaption(
   }
 
   applyCaptionStyles(paragraph);
+  return paragraph.getChild(0).asText();
 }
