@@ -1,12 +1,7 @@
 import getCaptionPartsFromString from "./getCaptionPartsFromString";
 import getNextBodyChildParagraph from "./getNextBodyChildParagraph";
 import { Caption, CaptionText } from "../../common/types";
-import {
-  leftTrim,
-  removeLineBreaks,
-  pipe,
-  hasLetters,
-} from "../../common/utils";
+import { leftTrim, removeLineBreaks, pipe } from "../../common/utils";
 import insertCaption from "./insertCaption";
 
 /**
