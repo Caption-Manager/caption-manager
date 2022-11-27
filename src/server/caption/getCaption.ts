@@ -24,54 +24,35 @@ export default function getCaption(
 
   try {
     const nextSibling = element.getNextSibling()?.asText();
-    if (
-      nextSibling?.getType() === DocumentApp.ElementType.TEXT &&
-      hasLetters(nextSibling.getText())
-    ) {
-      return getCaptionFromNextSibling(element, nextSibling);
+    if (nextSibling?.getType() !== DocumentApp.ElementType.TEXT) {
+      return getCaptionFromNextBodyChildParagraph(element);
     }
 
-    return getCaptionFromNextBodyChildParagraph(element);
+    // We are *defining* here that an Equation's next sibling can't be a Caption
+    // For Equations, there's a much bigger chance that the next sibling it's just an inlined text
+    // and so there is a greater risk of confusing this text with a Caption
+    // (e.g. in "{equation} approximately 10", "approximately 10" would be mistaken for Caption)
+    if (element.getType() === DocumentApp.ElementType.EQUATION) {
+      return null;
+    }
+
+    // We then address the case where the next sibling can be a caption.
+    // Visually, it may look like a normal Caption, but it's just a Text element starting with a
+    // line break or lots of empty spaces
+    // (e.g. "\n Figure 1 - Some description" or "         Figure 1 - Some description")
+
+    // We remove line breaks and empty spaces at the start
+    const text = pipe(removeLineBreaks, leftTrim)(nextSibling.getText());
+    if (!seemsToBeCaptionText(text)) return null;
+
+    // The next sibling is probably indeed a Caption. So we replace this next sibling Caption
+    // with a next body child Caption. We want the caption to be in the next paragraph, so that
+    // we don't need to remove line breaks and empty spaces everytime we get the caption text
+    nextSibling.removeFromParent();
+    return insertCaption(element, text as CaptionText);
   } catch (error) {
     return null;
   }
-}
-
-/**
- * Tries to get the @type {Caption} from the element's next sibling.
- * If no @type {Caption} is found, returns null.
- *
- * @param {GoogleAppsScript.Document.Element} element An element.
- * @param {GoogleAppsScript.Document.Text} nextSibling The element's next sibling.
- * @return {Caption|null} The Caption element or null if no caption is found.
- * @customfunction
- */
-function getCaptionFromNextSibling(
-  element: GoogleAppsScript.Document.Element,
-  nextSibling: GoogleAppsScript.Document.Text
-): Caption | null {
-  // We are *defining* here that an Equation's next sibling can't be a Caption
-  // For Equations, there's a much bigger chance that the next sibling it's just an inlined text
-  // and so there is a greater risk of confusing this text with a Caption
-  // (e.g. in "{equation} approximately 10", "approximately 10" would be mistaken for Caption)
-  if (element.getType() === DocumentApp.ElementType.EQUATION) {
-    return null;
-  }
-
-  // We then address the case where the next sibling can be a caption.
-  // Visually, it may look like a normal Caption, but it's just a Text element starting with a
-  // line break or lots of empty spaces
-  // (e.g. "\n Figure 1 - Some description" or "         Figure 1 - Some description")
-
-  // We remove line breaks and empty spaces
-  const text = pipe(removeLineBreaks, leftTrim)(nextSibling.getText());
-  if (!seemsToBeCaptionText(text)) return null;
-
-  // The next sibling is probably indeed a Caption. So we replace this next sibling Caption
-  // with a next body child Caption. We want the caption to be in the next paragraph, so that
-  // we don't need to remove line breaks and empty spaces everytime we get the caption text
-  nextSibling.removeFromParent();
-  return insertCaption(element, text as CaptionText);
 }
 
 /**
